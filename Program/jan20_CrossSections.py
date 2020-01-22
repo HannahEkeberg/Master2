@@ -11,17 +11,13 @@ from des19_BeamCurrent import *
 
 files,names = ziegler_files()
 
-
 dir = 'CrossSections'
-dir_fig = 'CrossSections_curves'
-dir_csv = 'CrossSections_CSV'
-
+dir_fig = 'CrossSections/CrossSections_curves'
+dir_csv = 'CrossSections/CrossSections_CSV'
 if not os.path.exists(dir):
     os.mkdir(dir)
-
 if not os.path.exists(dir_fig):
     os.mkdir(dir_fig)
-
 if not os.path.exists(dir_csv):
     os.mkdir(dir_csv)
 
@@ -34,12 +30,12 @@ class CrossSections:
         self.I = current_class.current_for_CS()
         t_irr = 3600
         #self.I = np.true_divide(self.I, 3600.)   #?????
-
         #self.I = np.ones(10)*128.5
         self.E_Fe, self.E_Ni, self.E_Cu, self.E_Ir, self.dE_Fe, self.dE_Ni, self.dE_Cu, self.dE_Ir = current_class.current_for_CS(return_energies=True)
         self.irr_time       = 3600    #seconds
         self.sigma_irr_time = 3       #seconds
         self.path = os.getcwd() + '/activity_csv/'
+
 
 
     def get_variables(self, react_func, target_func):
@@ -111,12 +107,17 @@ class CrossSections:
         for j in range(n):
 
             CS[j] = A0[j] / (mass_density[j] * self.I[j]*(1-np.exp(-lamb*self.irr_time)))*1e21   #mb  ###1 barn = 1e-24 cm^2
+        #print(CS)
 
+        path = os.getcwd() + '/CrossSections/'
+        np.savetxt(path + 'CrossSections_CSV/{}_CS'.format(reaction), CS)
 
         if plot_CS:
             self.plot_CrossSections(E, CS, reaction)
 
         return A0, E, CS, self.I
+
+
 
     def plot_CrossSections(self, E, CS, reaction):
         plt.plot(E, CS, '.')
@@ -135,7 +136,7 @@ class CrossSections:
 
 
 
-CS = CrossSections(files[0])
+#CS = CrossSections(files[0])
 #path = os.getcwd() + '/activity_csv/'
 #file = path + 'Ni_61Cu.csv'
 
@@ -144,7 +145,7 @@ CS = CrossSections(files[0])
 
 #x = CS.cross_section(Ir_193mPt(), 'Ir', 'Ir_193mPt.csv', 10, 'Ir_193mPt', plot_CS=True)
 #x = CS.cross_section(Cu_57Ni(), 'Cu', 'Cu_57Ni.csv', 10, 'Cu_57Ni', plot_CS=True)
-x = CS.cross_section(Cu_64Cu(), 'Cu', 'Cu_64Cu.csv', 10, 'Cu_64Cu', plot_CS=True)
+#x = CS.cross_section(Cu_64Cu(), 'Cu', 'Cu_64Cu.csv', 10, 'Cu_64Cu', plot_CS=True)
 #print(x)
 
 #CS.Get_CS(file, 10)
