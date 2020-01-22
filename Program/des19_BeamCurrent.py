@@ -363,7 +363,7 @@ class BeamCurrent:
         sigma_I_est = float( np.sqrt(np.diagonal(pcov)) ) #Uncertainty in the fitting parameters
         I_est = popt[0]
 
-        chi_sq = self.chi_sqaured(I, I_est, sigma_I_est)
+        chi_sq = self.chi_sqaured(I, I_est, dI)
 
         if MakePlot == True:
 
@@ -407,14 +407,17 @@ class BeamCurrent:
         dof = 5
         #return np.sum( (data - model/error )**2 )#( / (len(data-dof))
         n = len(data)
-        stdv = np.sqrt(1./n *  (np.sum(data-model)**2))
-        return np.sum((data-model)**2 / stdv**2)
+        #stdv = np.sqrt(1./n *  (np.sum(data-model)**2))
+        #return np.sum((data-model)**2 / stdv**2)
+        print(len(error))
+        chi_sq = np.sum((data - model)**2/error**2) / (len(error) - 1)
 
-        chi = np.sum(((data - model)/error)**2 / len(error) -5)
+        ### Number of datapoints - number of parameters in model.
+
         #print(stdv)
         #print(stdv)
         #pass
-        return chi
+        return chi_sq
 
     def run_variance_minimization(self, name, compartment):
         chi_squared = []
@@ -593,48 +596,68 @@ class run_BeamCurrent:
         if type(names) == str:
             #print(names, files)
             myclass = BeamCurrent(self.files)
-            WE_Ni, chi, I_est, dI_est = myclass.variance_minimization(compartment, names, MakePlot=False)
+            WE_Ni, chi, I_est, dI_est = myclass.variance_minimization(compartment, names, MakePlot=True)
 
         else:
             n           = len(names)
-            Ni_energies = []#np.zeros(n)
-            chi_sq      = []#np.zeros(n)
-            I           = []#np.zeros(n)
-            dI          = []#np.zeros(n)
+            Ni_en_Ni = []   #np.zeros(n)
+            Ni_en_Cu = []   #np.zeros(n)
+            Ni_en_Fe = []   #np.zeros(n)
+            Ni_en_SS = []   #np.zeros(n)
+            chi_sq_Ni      = []#np.zeros(n)
+            chi_sq_Cu      = []#np.zeros(n)
+            chi_sq_Fe      = []#np.zeros(n)
+            chi_sq_SS      = []#np.zeros(n)
+            I           = []   #np.zeros(n)
+            dI          = []   #np.zeros(n)
             for i in range(n):
                 myclass = BeamCurrent(files[i])
                 WE_Ni, chi, I_est, dI_est = myclass.variance_minimization(compartment, names[i], MakePlot=True)
-                Ni_energies.append(WE_Ni)
-                chi_sq.append(chi)
+                #Ni_energies.append(WE_Ni)
+                if 'Ni' in names[i]:
+                    chi_sq_Ni.append(chi)
+                    Ni_en_Ni.append(WE_Ni)
+                if 'Cu' in names[i]:
+                    chi_sq_Cu.append(chi)
+                    Ni_en_Cu.append(WE_Ni)
+                if 'Fe' in names[i]:
+                    chi_sq_Fe.append(chi)
+                    Ni_en_Fe.append(WE_Ni)
+                if 'SS' in names[i]:
+                    chi_sq_SS.append(chi)
+                    Ni_en_SS.append(WE_Ni)
+
+                #chi_sq.append(chi)
                 I.append(I_est)
                 dI.append(dI_est)
 
                 I = myclass.current_for_CS()
-                print(names[i], I)
+                #print(names[i], I)
 
 
-            Ni_energies, chi_sq = zip(*sorted(zip(Ni_energies, chi_sq)))
+            #Ni_energies, chi_sq = zip(*sorted(zip(Ni_energies, chi_sq)))
 
-            index = chi_sq.index(min(chi_sq))
-            print("Compartment:", compartment+1)
-            print(r"Lowest $\chi^2$:", chi_sq[index])
-            print("Scaling parameter:", names[index])
-            print("Beam current:", I[index], r'$\pm$', dI[index]  )
+            #index = chi_sq.index(min(chi_sq))
+            #print("Compartment:", compartment+1)
+            #print(r"Lowest $\chi^2$:", chi_sq[index])
+            #print("Scaling parameter:", names[index])
+            #print("Beam current:", I[index], r'$\pm$', dI[index]  )
+            #print(len(Ni_energies))
+            #print(len(chi_sq_Cu))
+
 
             if makePlot==True:
-                plt.plot(Ni_energies, chi_sq)
+
+                plt.plot(Ni_en_Ni, chi_sq_Ni, label=r'$\chi^2$ Ni')
+                plt.plot(Ni_en_Cu, chi_sq_Cu, label=r'$\chi^2$ Cu')
+                plt.plot(Ni_en_Fe, chi_sq_Fe, label=r'$\chi^2$ Fe')
+                plt.plot(Ni_en_SS, chi_sq_SS, label=r'$\chi^2$ SS')
+                #plt.show()
+
+                #plt.plot(Ni_energies, chi_sq_, '.')
                 plt.title(r'$\chi^2$ minimization - Compartment {}'.format(compartment+1))
                 plt.xlabel('Deuteron energy entering stack compartment number {} (MeV)'.format(compartment+1))
                 plt.ylabel(r'$\chi^2$')
+                plt.legend()
                 plt.savefig('BeamCurrent/Chi_minimization/chi_squared_comp_{}'.format(compartment+1), dpi=300)
                 plt.show()
-
-
-files,names = ziegler_files()
-BC = run_BeamCurrent(files[0], names[0])
-#BC.run_varmin(files, names, 7, makePlot=True)
-#BC.run_beam_current()
-#BC.flux_distribution('Ni')
-#BC.flux_distribution('Cu')
-#BC.flux_distribution('Fe')
-BC.flux_distribution('Ir')
