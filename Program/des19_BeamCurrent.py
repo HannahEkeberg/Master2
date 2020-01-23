@@ -29,44 +29,7 @@ Finally plotting E,I with errorbars.
 
 from scipy.signal import chirp, find_peaks, peak_widths
 
-"""
-class Dense:
-    def __init__(self, compartment, files, names):
-        self.compartment = compartment-1
-        self.files = files
-        self.names = names
 
-    def var_min(self):
-        if type(self.files) == str:
-            beam_curr = BeamCurrent(self.files, sort_ziegler, Fe_foil, Ni_foil, Cu_foil)
-            E_Ni, chi_sq = beam_curr.variance_minimization(self.compartment, self.names)
-            print(E_Ni, chi_sq)
-        else:
-            chi_squared = []
-            Ni_energies = []
-            for i in range(len(self.files)):
-                beam_curr = BeamCurrent(self.files[i], sort_ziegler, Fe_foil, Ni_foil, Cu_foil)
-                E_Ni, chi_sq = beam_curr.variance_minimization(self.compartment, self.names[i])
-                Ni_energies.append(E_Ni)
-                chi_squared.append(chi_sq)
-            #print(chi_sqaured)
-            #self.plot_func(Ni_energies, chi_squared)
-            self.lowest_val(chi_squared, self.names, Ni_energies)
-
-    def plot_func(self, x, y):
-        plt.plot(x,y, '.')
-        plt.show()
-
-    def lowest_val(self,chi,name, E):
-        if type(chi) == list:
-            #print(min(chi))
-            index = chi.index(min(chi))
-            print(name[index], chi[index], E[index])
-        else:
-            pass
-
-
-"""
 root_dir = 'BeamCurrent'
 current_dir = 'BeamCurrent/current_all'
 chi_dir = 'BeamCurrent/chi_minimization'
@@ -244,6 +207,17 @@ class BeamCurrent:
         else:
             I = A0 *elementary_charge*1e9 / (mass_density*(1-np.exp(-lambda_*irr_time))*reaction_integral)
             dI = I * np.sqrt((sigma_A0/A0)**2 + (sigma_mass_density/mass_density)**2 + (sigma_irr_time/irr_time)**2 + uncertainty_integral**2)
+            """
+            Units: I = nA
+            A0 = Bq = s^-1
+            e^- = 1.60e-27 C = 1.60e-27 As
+            dphi/dE = #deuterions * e^-   #needed to change from # deuterions to C.
+
+            A --> nA:  *1e9 
+
+
+            """
+
 
         if print_terms:
             print("mass density", mass_density)
@@ -399,7 +373,8 @@ class BeamCurrent:
             plt.title(r'Linear fit for foils compartment {} - {}. $\chi^2$={:.2f} '.format(compartment+1, name, chi_sq))
             plt.legend(fontsize='x-small')
             plt.savefig('BeamCurrent/chi_minimization/minimization_{}_'.format(compartment+1)+name+'.png', dpi=300)
-            plt.show()
+            plt.close()
+            #plt.show()
 
         return WE_Ni, chi_sq, I_est, sigma_I_est
 
@@ -409,7 +384,7 @@ class BeamCurrent:
         n = len(data)
         #stdv = np.sqrt(1./n *  (np.sum(data-model)**2))
         #return np.sum((data-model)**2 / stdv**2)
-        print(len(error))
+        #print(len(error))
         chi_sq = np.sum((data - model)**2/error**2) / (len(error) - 1)
 
         ### Number of datapoints - number of parameters in model.
@@ -523,20 +498,46 @@ class BeamCurrent:
         #print("65Zn",I_Cu_65Zn)
 
 
-        def mean_val(list_of_vals):
-            return np.mean(list_of_vals, axis=0)
+        def mean_val(list_of_vals, list_of_dvals):
+            ### Average weighted Beam current
+            weight = []
+            for i in list_of_dvals:
+                weight.append(1/i**2)
+                #weight= 1/list_of_dvals**2
+            av = np.average(list_of_vals, axis=None, weights=weight)
+            return av
 
         I   = []
         ### Making I_Fe_56Co a 10-lenght array filling empty spaces with zeros
         I_Fe_56Co = np.pad(I_Fe_56Co, (0, n-len(I_Fe_56Co)),'constant')
+        dI_Fe_56Co = np.pad(dI_Fe_56Co, (0, n-len(dI_Fe_56Co)),'constant')
         I_list = [I_Fe_56Co, I_Ni_61Cu, I_Ni_56Co, I_Ni_58Co, I_Cu_62Zn, I_Cu_63Zn, I_Cu_65Zn]
+        dI_list = [dI_Fe_56Co, dI_Ni_61Cu, dI_Ni_56Co, dI_Ni_58Co, dI_Cu_62Zn, dI_Cu_63Zn, dI_Cu_65Zn]
+
+        for val in dI_list:
+            # For values where I ==0 and dI =NaN. Change to zero.
+            for i,e in enumerate(val):
+                import math
+                if math.isnan(e)==True:
+                    e = np.nan_to_num(e)
+                    val[i] = e
 
         for i in range(n):
-            list_of_vals = []
-            for currents in I_list:
-                if currents[i]>0:   #Not including values that are zero.
+            list_of_vals  = [] #np.zeros(n) #[]
+            list_of_dvals = [] #np.zeros(n) #[]
+            for index, currents in enumerate(I_list):
+                if currents[i]>0:
+                    ## Not taking average of values that are zero.
                     list_of_vals.append(currents[i])
-            I.append(mean_val(list_of_vals))
+                    sigma_currents = dI_list[index]
+                    list_of_dvals.append(sigma_currents[i])
+
+
+            I_mean = mean_val(list_of_vals, list_of_dvals)
+
+            I.append(mean_val(list_of_vals, list_of_dvals ))
+
+
         if return_energies==True:
             return WE_Fe, WE_Ni, WE_Cu, WE_Ir, sigma_WE_Fe, sigma_WE_Ni, sigma_WE_Cu, sigma_WE_Ir
         else:
@@ -604,13 +605,16 @@ class run_BeamCurrent:
             Ni_en_Cu = []   #np.zeros(n)
             Ni_en_Fe = []   #np.zeros(n)
             Ni_en_SS = []   #np.zeros(n)
+            Ni_en_BC = []   #np.zeros(n)
             chi_sq_Ni      = []#np.zeros(n)
             chi_sq_Cu      = []#np.zeros(n)
             chi_sq_Fe      = []#np.zeros(n)
             chi_sq_SS      = []#np.zeros(n)
+            chi_sq_BC      = []
             I           = []   #np.zeros(n)
             dI          = []   #np.zeros(n)
             for i in range(n):
+                print("File:", i)
                 myclass = BeamCurrent(files[i])
                 WE_Ni, chi, I_est, dI_est = myclass.variance_minimization(compartment, names[i], MakePlot=True)
                 #Ni_energies.append(WE_Ni)
@@ -626,6 +630,9 @@ class run_BeamCurrent:
                 if 'SS' in names[i]:
                     chi_sq_SS.append(chi)
                     Ni_en_SS.append(WE_Ni)
+                if 'BC' in names[i]:
+                    chi_sq_BC.append(chi)
+                    Ni_en_BC.append(WE_Ni)
 
                 #chi_sq.append(chi)
                 I.append(I_est)
@@ -648,10 +655,11 @@ class run_BeamCurrent:
 
             if makePlot==True:
 
-                plt.plot(Ni_en_Ni, chi_sq_Ni, label=r'$\chi^2$ Ni')
-                plt.plot(Ni_en_Cu, chi_sq_Cu, label=r'$\chi^2$ Cu')
-                plt.plot(Ni_en_Fe, chi_sq_Fe, label=r'$\chi^2$ Fe')
-                plt.plot(Ni_en_SS, chi_sq_SS, label=r'$\chi^2$ SS')
+                plt.plot(Ni_en_Ni, chi_sq_Ni, '.', label=r'$\chi^2$ Ni')
+                plt.plot(Ni_en_Cu, chi_sq_Cu, '.', label=r'$\chi^2$ Cu')
+                plt.plot(Ni_en_Fe, chi_sq_Fe, '.', label=r'$\chi^2$ Fe')
+                plt.plot(Ni_en_SS, chi_sq_SS, '.', label=r'$\chi^2$ SS')
+                plt.plot(Ni_en_BC, chi_sq_BC, '.', label=r'$\chi^2$ BC')
                 #plt.show()
 
                 #plt.plot(Ni_energies, chi_sq_, '.')

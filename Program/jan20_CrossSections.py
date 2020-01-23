@@ -9,7 +9,10 @@ from beam_current_FoilReact import *
 from ZieglerFiles import ziegler_files
 from des19_BeamCurrent import *
 
-files,names = ziegler_files()
+
+from scipy.constants import N_A, elementary_charge
+
+#files,names = ziegler_files()
 
 dir = 'CrossSections'
 dir_fig = 'CrossSections/CrossSections_curves'
@@ -27,9 +30,16 @@ class CrossSections:
         self.ziegler_file = ziegler_file
         current_class = BeamCurrent(self.ziegler_file)
         #current_class = BeamCurrent(self.ziegler_file,)
-        self.I = current_class.current_for_CS()
-        t_irr = 3600
-        #self.I = np.true_divide(self.I, 3600.)   #?????
+        self.I = current_class.current_for_CS()   #nA
+
+        ### Need the beam current to be in deuterions/s and not nA.
+        ### Must convert beamcurrent by dividing by number of seconds
+        ### Must also make number of deuterions instead of [As] --> /elementary_charge
+        ### Must also change units for monitor CS from mb to cm^2: *1e-27
+        unit_factor = 3600*1e-27/elementary_charge
+        self.I = np.true_divide(self.I, unit_factor)   #?????
+
+
         #self.I = np.ones(10)*128.5
         self.E_Fe, self.E_Ni, self.E_Cu, self.E_Ir, self.dE_Fe, self.dE_Ni, self.dE_Cu, self.dE_Ir = current_class.current_for_CS(return_energies=True)
         self.irr_time       = 3600    #seconds
@@ -89,6 +99,8 @@ class CrossSections:
         ###  example :  cross_section(Cu_57Ni, 'Cu', 'Cu_57Ni.csv/', 10)
         lamb = react_func[-1]
         mass_density, sigma_mass_density, E, dE = self.mass_density(foil)
+        E  = np.flip(E)
+        dE = np.flip(dE)
         A0 = np.zeros(n)
         sigma_A0 = np.zeros(n)
         CS = np.zeros(n)
@@ -107,7 +119,7 @@ class CrossSections:
         for j in range(n):
 
             CS[j] = A0[j] / (mass_density[j] * self.I[j]*(1-np.exp(-lamb*self.irr_time)))*1e21   #mb  ###1 barn = 1e-24 cm^2
-        #print(CS)
+        print(CS)
 
         path = os.getcwd() + '/CrossSections/'
         np.savetxt(path + 'CrossSections_CSV/{}_CS'.format(reaction), CS)
@@ -120,6 +132,7 @@ class CrossSections:
 
 
     def plot_CrossSections(self, E, CS, reaction):
+
         plt.plot(E, CS, '.')
         plt.xlabel('Beam energy (MeV)')
         plt.ylabel('Cross section (mb)')

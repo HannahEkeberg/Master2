@@ -7,6 +7,11 @@ from des19_BeamCurrent import *
 #from ZieglerFiles import ziegler_files
 
 files,names = ziegler_files()
+
+
+#BC = BeamCurrent(files[6])
+#I = BC.current_for_CS(return_energies=False)
+#print(I)
 #CS = CrossSections(files[57])
 #path = os.getcwd() + '/activity_csv/'
 #file = path + 'Ni_61Cu.csv'
@@ -32,10 +37,11 @@ def get_vals(react_func, target, csv_file, n, reaction):
 
 #get_vals(Cu_64Cu(), 'Cu', 'Cu_64Cu.csv', 10, 'Cu_64Cu')
 #get_vals(Cu_65Ni(), 'Ni', 'Cu_65Ni.csv', 10, 'Cu_65Ni')
+get_vals(Ir_193mPt(), 'Ir', 'Ir_193mPt.csv', 10, 'Ir_193mPt')
 
 
-BC = run_BeamCurrent(files, names)
-BC.run_varmin(files, names, 3, makePlot=True)
+#BC = run_BeamCurrent(files, names)
+#BC.run_varmin(files, names, 3, makePlot=True)
 #BC.run_beam_current()
 #BC.flux_distribution('Ni')
 #BC.flux_distribution('Cu')
