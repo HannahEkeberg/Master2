@@ -49,10 +49,10 @@ fe_rhodrs = [20.030    20.017    19.948];
 
 
 % foil selection !
-fn = ir_fn;   %fn=filename
-energies = ir_energies;
-rhodrs = ir_rhodrs;
-mu_attenuation = load('../ir_xcom.txt');
+fn = cu_fn;   %fn=filename
+energies = cu_energies;
+rhodrs = cu_rhodrs;
+mu_attenuation = load('../cu_xcom.txt');
 % foil selection !
 
 
@@ -67,8 +67,7 @@ yp2=ppval(pp2,xp);
 loglog(mu_attenuation(:,1).*1e3,mu_attenuation(:,2),'--',xp,yp2);
 xlabel('Gamma-Ray Energy (keV)')
 ylabel('\mu (cm^2/g)')
-clf;
-
+%clf;
 
 
 %
@@ -196,9 +195,9 @@ ni_fn = string(ni_fn{1});
 ir_fn = string(ir_fn{1});
 
 % Select foils to analyze
-fn = ir_fn;
-key_energies = ir_key_energies;
-glines = ir_glines;
+fn = cu_fn;
+key_energies = cu_key_energies;
+glines = cu_glines;
 
 
 
@@ -209,81 +208,100 @@ shelves = zeros(1,length(fn));
 detectors = shelves;
 
 
-for i=1:length(fn)
+for i=1:length(fn)  %fn = filenames- over all filenames
     
-    fname = char(fn(i));
-    fid = fopen(fname);
+    fname = char(fn(i));    %Current filename
+    fid = fopen(fname);    %opening
     
     % Get raw text for header regex extraction
-    raw_str = fileread(char(fn(i)));
+    raw_str = fileread(char(fn(i)));   %Raw text read - find header and block of data
+    whichline = 2+find(contains(regexp(raw_str,'\n','split'),'Signif'));
     
-    % Parse column data to cell structure
+    % Parse column data to d cell structure
     %   '37' refers to the number of header lines in the report file 
-    C3 = textscan(fid,'%f %f %f %f %f %d %f %f %f %d','headerlines',37);
+    C3 = textscan(fid,'%f %f %f %f %f %d %f %f %f %d','headerlines',whichline);   %Text scan. Giant data block. A cell array, a multidimensional array(array of objects)
+    % C3{1,1}: 
     fclose(fid);
     
     % Get shelf position, for efficiency correction
-    shelf = regexp(raw_str, 'Shelf:\s+(\d+)[on]?', 'tokens');
-    shelves(i) = cell2mat(cellfun(@(x) str2double(x{:}), shelf, 'UniformOutput', false));
-    shelf = shelves(i);
+    shelf = regexp(raw_str, 'Shelf:\s+(\d+)[on]?', 'tokens');     %shelf number, find "shelf" in the report files. regexp means regular expression '...' (type of search) 
+    shelves(i) = cell2mat(cellfun(@(x) str2double(x{:}), shelf, 'UniformOutput', false)); %takes the rest of the text after "shelf:", and convert from string to number 
+    shelf = shelves(i);    % taking that number and saving it to a variable called shelves. 
     
     % Get detector ID, for efficiency correction
-    detector = regexp(raw_str, 'Detector:\s+(\d+)[on]?', 'tokens');
+    detector = regexp(raw_str, 'Detector:\s+(\d+)[on]?', 'tokens');   %Do the same thing for detectors!
     detectors(i) = cell2mat(cellfun(@(x) str2double(x{:}), detector, 'UniformOutput', false));
     detector = detectors(i);
     
 %     Select efficiency curve based on shelf
     if detector==1
         if shelf==10
-            effcal = @(x)(efficiency_matrix(1,1).*exp(-efficiency_matrix(1,2).*x.^efficiency_matrix(1,3)) .* (1-exp(-efficiency_matrix(1,4).*x.^efficiency_matrix(1,5)))  );
+            %effcal = @(x)(efficiency_matrix(1,1).*exp(-efficiency_matrix(1,2).*x.^efficiency_matrix(1,3)) .* (1-exp(-efficiency_matrix(1,4).*x.^efficiency_matrix(1,5)))  );
+         effcal =    'eff_HPGE1_10.mat';
         elseif shelf==30
-            effcal = @(x)(efficiency_matrix(2,1).*exp(-efficiency_matrix(2,2).*x.^efficiency_matrix(2,3)) .* (1-exp(-efficiency_matrix(2,4).*x.^efficiency_matrix(2,5)))  );
+            %effcal = @(x)(efficiency_matrix(2,1).*exp(-efficiency_matrix(2,2).*x.^efficiency_matrix(2,3)) .* (1-exp(-efficiency_matrix(2,4).*x.^efficiency_matrix(2,5)))  );
+         effcal =    'eff_HPGE1_30.mat';
         elseif shelf==50
             effcal = @(x)((32/51.3).^2.*efficiency_matrix(2,1).*exp(-efficiency_matrix(2,2).*x.^efficiency_matrix(2,3)) .* (1-exp(-efficiency_matrix(2,4).*x.^efficiency_matrix(2,5)))  );
         end
     elseif detector==2
         if shelf==10
-            effcal = @(x)(efficiency_matrix(3,1).*exp(-efficiency_matrix(3,2).*x.^efficiency_matrix(3,3)) .* (1-exp(-efficiency_matrix(3,4).*x.^efficiency_matrix(3,5)))  );
+            %effcal = @(x)(efficiency_matrix(3,1).*exp(-efficiency_matrix(3,2).*x.^efficiency_matrix(3,3)) .* (1-exp(-efficiency_matrix(3,4).*x.^efficiency_matrix(3,5)))  );
+         effcal =    'eff_HPGE2_10.mat';
         elseif shelf==30
-            effcal = @(x)(efficiency_matrix(4,1).*exp(-efficiency_matrix(4,2).*x.^efficiency_matrix(4,3)) .* (1-exp(-efficiency_matrix(4,4).*x.^efficiency_matrix(4,5)))  );
+            %effcal = @(x)(efficiency_matrix(4,1).*exp(-efficiency_matrix(4,2).*x.^efficiency_matrix(4,3)) .* (1-exp(-efficiency_matrix(4,4).*x.^efficiency_matrix(4,5)))  );
+          effcal =   'eff_HPGE2_30.mat';
         elseif shelf==45
             effcal = @(x)((34.8/45.4).^2.*efficiency_matrix(4,1).*exp(-efficiency_matrix(4,2).*x.^efficiency_matrix(4,3)) .* (1-exp(-efficiency_matrix(4,4).*x.^efficiency_matrix(4,5)))  );
         end
     elseif detector==3
         if shelf==53
-            effcal = @(x)(efficiency_matrix(5,1).*exp(-efficiency_matrix(5,2).*x.^efficiency_matrix(5,3)) .* (1-exp(-efficiency_matrix(5,4).*x.^efficiency_matrix(5,5)))  );
+            %effcal = @(x)(efficiency_matrix(5,1).*exp(-efficiency_matrix(5,2).*x.^efficiency_matrix(5,3)) .* (1-exp(-efficiency_matrix(5,4).*x.^efficiency_matrix(5,5)))  );
+            'eff_IDM1_53.mat';
         end
     elseif detector==4
         if shelf==32
-            effcal = @(x)(efficiency_matrix(6,1).*exp(-efficiency_matrix(6,2).*x.^efficiency_matrix(6,3)) .* (1-exp(-efficiency_matrix(6,4).*x.^efficiency_matrix(6,5)))  );
+            'eff_IDM2_32.mat';
+            %effcal = @(x)(efficiency_matrix(6,1).*exp(-efficiency_matrix(6,2).*x.^efficiency_matrix(6,3)) .* (1-exp(-efficiency_matrix(6,4).*x.^efficiency_matrix(6,5)))  );
         end
     elseif detector==5
         if shelf==40
-            effcal = @(x)(efficiency_matrix(7,1).*exp(-efficiency_matrix(7,2).*x.^efficiency_matrix(7,3)) .* (1-exp(-efficiency_matrix(7,4).*x.^efficiency_matrix(7,5)))  );
+            %effcal = @(x)(efficiency_matrix(7,1).*exp(-efficiency_matrix(7,2).*x.^efficiency_matrix(7,3)) .* (1-exp(-efficiency_matrix(7,4).*x.^efficiency_matrix(7,5)))  );
+            effcal = 'eff_IDM3_40.mat';
         end
     elseif detector==6
         if shelf==25
-            effcal = @(x)(efficiency_matrix(8,1).*exp(-efficiency_matrix(8,2).*x.^efficiency_matrix(8,3)) .* (1-exp(-efficiency_matrix(8,4).*x.^efficiency_matrix(8,5)))  );
+            effcal ='eff_IDM4_25.mat';
+            %effcal = @(x)(efficiency_matrix(8,1).*exp(-efficiency_matrix(8,2).*x.^efficiency_matrix(8,3)) .* (1-exp(-efficiency_matrix(8,4).*x.^efficiency_matrix(8,5)))  );
         end
     elseif detector==7
         if shelf==5
-            effcal = @(x)(efficiency_matrix(9,1).*exp(-efficiency_matrix(9,2).*x.^efficiency_matrix(9,3)) .* (1-exp(-efficiency_matrix(9,4).*x.^efficiency_matrix(9,5)))  );
+            %effcal = @(x)(efficiency_matrix(9,1).*exp(-efficiency_matrix(9,2).*x.^efficiency_matrix(9,3)) .* (1-exp(-efficiency_matrix(9,4).*x.^efficiency_matrix(9,5)))  );
+           effcal = 'eff_room131_5.mat';
         elseif shelf==10
-            effcal = @(x)(efficiency_matrix(10,1).*exp(-efficiency_matrix(10,2).*x.^efficiency_matrix(10,3)) .* (1-exp(-efficiency_matrix(10,4).*x.^efficiency_matrix(10,5)))  );
+            %effcal = @(x)(efficiency_matrix(10,1).*exp(-efficiency_matrix(10,2).*x.^efficiency_matrix(10,3)) .* (1-exp(-efficiency_matrix(10,4).*x.^efficiency_matrix(10,5)))  );
+           effcal = 'eff_room131_10.mat';
         elseif shelf==15
-            effcal = @(x)(efficiency_matrix(11,1).*exp(-efficiency_matrix(11,2).*x.^efficiency_matrix(11,3)) .* (1-exp(-efficiency_matrix(11,4).*x.^efficiency_matrix(11,5)))  );
+           effcal = 'eff_room131_15.mat';
+            %effcal = @(x)(efficiency_matrix(11,1).*exp(-efficiency_matrix(11,2).*x.^efficiency_matrix(11,3)) .* (1-exp(-efficiency_matrix(11,4).*x.^efficiency_matrix(11,5)))  );
         elseif shelf==18
-            effcal = @(x)(efficiency_matrix(12,1).*exp(-efficiency_matrix(12,2).*x.^efficiency_matrix(12,3)) .* (1-exp(-efficiency_matrix(12,4).*x.^efficiency_matrix(12,5)))  );    
+          effcal =  'eff_room131_18.mat';
+            %effcal = @(x)(efficiency_matrix(12,1).*exp(-efficiency_matrix(12,2).*x.^efficiency_matrix(12,3)) .* (1-exp(-efficiency_matrix(12,4).*x.^efficiency_matrix(12,5)))  );    
         elseif shelf==22
-            effcal = @(x)(efficiency_matrix(13,1).*exp(-efficiency_matrix(13,2).*x.^efficiency_matrix(13,3)) .* (1-exp(-efficiency_matrix(13,4).*x.^efficiency_matrix(13,5)))  );
+          effcal =  'eff_room131_22.mat';
+            %effcal = @(x)(efficiency_matrix(13,1).*exp(-efficiency_matrix(13,2).*x.^efficiency_matrix(13,3)) .* (1-exp(-efficiency_matrix(13,4).*x.^efficiency_matrix(13,5)))  );
         elseif shelf==30
-            effcal = @(x)(efficiency_matrix(14,1).*exp(-efficiency_matrix(14,2).*x.^efficiency_matrix(14,3)) .* (1-exp(-efficiency_matrix(14,4).*x.^efficiency_matrix(14,5)))  );
+          effcal =  'eff_room131_30.mat';
+            %effcal = @(x)(efficiency_matrix(14,1).*exp(-efficiency_matrix(14,2).*x.^efficiency_matrix(14,3)) .* (1-exp(-efficiency_matrix(14,4).*x.^efficiency_matrix(14,5)))  );
         elseif shelf==40
-            effcal = @(x)(efficiency_matrix(15,1).*exp(-efficiency_matrix(15,2).*x.^efficiency_matrix(15,3)) .* (1-exp(-efficiency_matrix(15,4).*x.^efficiency_matrix(15,5)))  );
+           effcal = 'eff_room131_40.mat';
+            %effcal = @(x)(efficiency_matrix(15,1).*exp(-efficiency_matrix(15,2).*x.^efficiency_matrix(15,3)) .* (1-exp(-efficiency_matrix(15,4).*x.^efficiency_matrix(15,5)))  );
         elseif shelf==50
-            effcal = @(x)(efficiency_matrix(16,1).*exp(-efficiency_matrix(16,2).*x.^efficiency_matrix(16,3)) .* (1-exp(-efficiency_matrix(16,4).*x.^efficiency_matrix(16,5)))  );
+           effcal = 'eff_room131_50.mat';
+            %effcal = @(x)(efficiency_matrix(16,1).*exp(-efficiency_matrix(16,2).*x.^efficiency_matrix(16,3)) .* (1-exp(-efficiency_matrix(16,4).*x.^efficiency_matrix(16,5)))  );
         elseif shelf==60
-            effcal = @(x)(efficiency_matrix(17,1).*exp(-efficiency_matrix(17,2).*x.^efficiency_matrix(17,3)) .* (1-exp(-efficiency_matrix(17,4).*x.^efficiency_matrix(17,5)))  );
+           effcal = 'eff_room131_60.mat';
+            %effcal = @(x)(efficiency_matrix(17,1).*exp(-efficiency_matrix(17,2).*x.^efficiency_matrix(17,3)) .* (1-exp(-efficiency_matrix(17,4).*x.^efficiency_matrix(17,5)))  );
         end     
     end
     
@@ -308,21 +326,21 @@ for i=1:length(fn)
     % data = cell2mat(cellfun(@(x) str2double(x{:}), data, 'UniformOutput', false));
     
     % Extract header
-    mass = regexp(raw_str, 'Mass:\s+(\d+)', 'tokens');
+    mass = regexp(raw_str, 'Mass:\s+(\d+)', 'tokens');     %Finding foil ID, 'tokens'=going to do textprocessing - flag
     mass = cell2mat(cellfun(@(x) str2double(x{:}), mass, 'UniformOutput', false));
     mass_str = num2str(mass);
     foil_id = str2num(mass_str(1:end-2));
     
-    ct = regexp(raw_str, 'Datetime:\s+([-\w: ]+)', 'tokens');
+    ct = regexp(raw_str, 'Datetime:\s+([-\w: ]+)', 'tokens');  %Count time
 %     ct{1,1}{1,1}
 %     ct = cell2mat(cellfun(@(x) str2double(x{:}), ct, 'UniformOutput', false))
     ct = juliandate(datetime(ct{1,1}{1,1}));
     
-    cl = regexp(raw_str, 'Live:\s+(\d+)', 'tokens');
+    cl = regexp(raw_str, 'Live:\s+(\d+)', 'tokens');   %live time
     cl = cell2mat(cellfun(@(x) str2double(x{:}), cl, 'UniformOutput', false));
     
     % Append data from header to columns
-    sto_mat(:,4) = mass;
+    sto_mat(:,4) = mass;    %going into datamatrix
     sto_mat(:,5) = ct;
     sto_mat(:,6) = cl;
     
@@ -333,9 +351,21 @@ for i=1:length(fn)
     % Igamma = cell2mat(cellfun(@(x) str2double(x{:}), Igamma, 'UniformOutput', false))
 
     
+    %%%Need to calculate the correct efficiency
+    
+    [eff, unc_eff, pcov, popt] = efficiency_calibration(C3{1,1}, effcal);   %C3{1,1} = E gamma array, effcal is the efficiency calibration matrix for the current shelf, made in the large if test
+    
+    
     % Pull out gamma-ray energies and net counts
 %                     energy        net counts (efficiency and attenuation corrected)                                      %error
-    sto_mat(:,1:3) = [C3{1,1}      double(C3{1,6})./(effcal(C3{1,1}).*exp(-ppval(pp2,C3{1,1}).* 0.5e-3 .* rhodrs(foil_id)) )       C3{1,7}];
+    sto_mat(:,1:3) = [C3{1,1}      double(C3{1,6})./((eff).*exp(-ppval(pp2,C3{1,1}).* 0.5e-3 .* rhodrs(foil_id)) )       C3{1,7}];   %C3 is data from fitz reports
+    %C3{1,1} E gamma
+    %Cs{1,6} net counts corrected for efficiency and self attentuation
+    %Then divide by efficiency effcal(C3{1,1}) and e^{-mu( rho dr )}
+    %C3{1,7} percent uncertainty in the peak area.
+    % 
+    %      
+    
 %     sto_mat(:,1:3) = [C3{1,1}      double(C3{1,6})./(effcal.*         exp(-ppval(pp2,C3{1,1}).* 0.5e-3 .* rhodrs(foil_id)) )       C3{1,7}];
 %     sto_mat(:,10) = shelf;
     

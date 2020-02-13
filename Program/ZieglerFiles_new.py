@@ -1,8 +1,9 @@
 import os
 def ziegler_files():
     #path= '/Users/hannah/Documents/UIO/Masteroppgaven/Ziegler/'
-    path = os.getcwd() + '/new_ziegler/'
-
+    path = os.getcwd() + '/cleaned_zieglerfiles/'
+    #path = os.getcwd() + '/new_ziegler/'
+    #print("hlo")
 
     ### FILENAMES:
     ### Bn10 : Beam negative 10%
@@ -390,7 +391,7 @@ def ziegler_files():
             Bn100_Dp50, Bn75_Dp50, Bn50_Dp50, Bn25_Dp50, B0_Dp50, Bp25_Dp50, Bp50_Dp50, Bp75_Dp50, Bp100_Dp50,
             Bn100_Dp75, Bn75_Dp75, Bn50_Dp75, Bn25_Dp75, B0_Dp75, Bp25_Dp75, Bp50_Dp75, Bp75_Dp75, Bp100_Dp75,
             Bn100_Dp100, Bn75_Dp100, Bn50_Dp100, Bn25_Dp100, B0_Dp100, Bp25_Dp100, Bp50_Dp100, Bp75_Dp100, Bp100_Dp100,
-            #Bn100_Dp125, Bn75_Dp125, Bn50_Dp125, Bn25_Dp125, B0_Dp125, Bp25_Dp125, Bp50_Dp125, Bp75_Dp125, Bp100_Dp125,
+            ##Bn100_Dp125, Bn75_Dp125, Bn50_Dp125, Bn25_Dp125, B0_Dp125, Bp25_Dp125, Bp50_Dp125, Bp75_Dp125, Bp100_Dp125,
             Bn100_Dp150, Bn75_Dp150, Bn50_Dp150, Bn25_Dp150, B0_Dp150, Bp25_Dp150, Bp50_Dp150, Bp75_Dp150, Bp100_Dp150
             ]
 

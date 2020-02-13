@@ -19,7 +19,8 @@ import os
 class Detector_Information_fitz:
 
     def __init__(self):
-        self.path = '/Users/hannahekeberg/Documents/Master_git/Calibration/fitz_cal_files/'
+        #self.path = '/Users/hannahekeberg/Documents/Master_git/Calibration/fitz_cal_files/'
+        self.path = os.getcwd() + '/../Calibration/fitz_cal_files/'
         self.date_cal="01/01/2009 12:00:00" #date of source calibrated, same for all sources
         #path to fitz calibration files
         #self.path = '/Users/hannah/Documents/UIO/Masteroppgaven/Master_DataAnalysis/Calibration/fitz_cal_files/'
@@ -158,6 +159,7 @@ class Detector_Information_fitz:
         #B = np.array((0.19967883159005945, 0.9172501496981269,0.23290419673636917,3.4780001711411926e-05,2.4817855558702493 ))
         #B = np.array((0.19967883159005945e-1, 0.8172501496981269e0,0.23290419673636917e-1,3.4780001711411926e-5,2.4817855558702493 ))
         B = np.array((0.078, 2.15e0, 0.2637, 5.29e-5, 2.33))    #Works
+        B = np.array((0.5, 1.2, 0.7, 0.001, 2.34))
         return live_time, time_delay, B, f_Cs137, f_Ba133, f_Eu152
 
     def IDM1_53(self):   #Almost work

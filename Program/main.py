@@ -1,16 +1,202 @@
 from jan20_CrossSections import CrossSections
-from ZieglerFiles import ziegler_files
-from single_decay_A0 import *
+from ZieglerFiles_new import ziegler_files
+#from single_decay_A0 import *
 from des19_BeamCurrent import *
+
+from BC_ziegler_run import *
+
+#from feb20_activity import *
+from foil_info import *
+
+
+#func=Cu_62Zn(); A0_guess=4000
+#func=Ni_58Co(); A0_guess=[5000, 1000]
+#func = Ni_61Cu(); A0_guess=4000
+#func = Ni_56Co(); A0_guess=[150, 1500]
+#func = Ni_58Co(); A0_guess=[8000, 1000]
+#func = Ir_193mPt(); A0_guess=1500
+#ACT = Activity(func, A0_guess, foilnumb='all')
+
+#ACT.get_vals()
+#ACT.knownparent_activity(Ni_56Ni())
+#ACT.get_parent_activity(Ni_56Ni())
+
 #from foil_info import *
 #from beam_current_FoilReact import *
 #from ZieglerFiles import ziegler_files
 
+### GOOD LINES ARE
+### 179 B+10%_D+0,5
+### 139 B0%_D-1%
+### 221 B+2,5%_D+3,5%
+#BC= BeamCurrent(files[50])
+
+
 files,names = ziegler_files()
 
+def find_index(list, element):
+    return list.index(element)
 
-#BC = BeamCurrent(files[6])
-#I = BC.current_for_CS(return_energies=False)
+#### positive B and positive D compensate each other- same for neg neg
+
+#index = find_index(names, 'B-2,5%_D-7,5%')
+#index = find_index(names, 'B+10%_D0%')
+index = find_index(names, 'B0%_D-5%')
+RZ = Run_Ziegler(files, names)
+BC = BeamCurrent(files[index])
+CS = CrossSections(files[index])
+
+#CS.exfordata_npat()
+
+#BC = BeamCurrent(files[index])
+#BC.CurrentPlot_compartment(names[index])
+#BC.variance_minimization(9, names[index], MakePlot=True )
+#BC.CurrentPlot(names[index])
+#BC.current_for_CS()
+
+
+#Cu_57Ni()
+#single_decay_data(Cu_57Ni(), "Cu_57Ni", 10, Save_csv=True)    #EXCELLENT
+#single_decay_data(Cu_64Cu(), "Cu_64Cu", 10, Save_csv=True)      #EXCELLENT
+#two_step_up_npat(Ni_58Co(), "Ni_58mCo_npat", "Ni_58Co_npat", 10, '58COm', '58COg', Save_csv=True)
+#two_step_up_data(Ni_58Co(),"Ni_58mCo", "Ni_58Co", 10, Save_csv= True)
+#two_step_kp_data(Ni_56Ni(), Ni_56Co(), "Ni_56Co", 10, Save_csv= True)
+
+
+CS.make_CS(Ir_193mPt(), 'Ir', 'Ir_193mPt.csv', 10, 'Ir_193mPt')
+#CS.make_CS(Cu_57Ni(), 'Cu', 'Cu_57Ni.csv', 10, 'Cu_57Ni')
+#CS.make_CS(Ni_56Ni(), 'Ni', 'Ni_56Ni.csv', 10, 'Ni_56Ni')
+#CS.make_CS(Ni_61Cu(), 'Ni', 'Ni_61Cu.csv', 10, 'Ni_61Cu')
+#print("**")
+
+#CS.make_CS(Cu_64Cu(), 'Cu', 'Cu_64Cu.csv', 10, 'Cu_64Cu')
+
+
+#get_vals(Cu_64Cu(), 'Cu', 'Cu_64Cu.csv', 10, 'Cu_64Cu')
+
+
+#CS.mon_CS_test(Fe_56Co(), 'Fe', 'Fe_56Co.csv', 3, 'Fe_56Co', names[index])
+#CS.mon_CS_test(Ni_61Cu(), 'Ni', 'Ni_61Cu.csv', 10, 'Ni_61Cu', names[index])
+#CS.mon_CS_test(Ni_56Co(), 'Ni', 'Ni_56Co.csv', 10, 'Ni_56Co', names[index])
+#CS.mon_CS_test(Ni_58Co(), 'Ni', 'Ni_58Co.csv', 10, 'Ni_58Co', names[index])
+#CS.mon_CS_test(Cu_62Zn(), 'Cu', 'Cu_62Zn.csv', 10, 'Cu_62Zn', names[index])
+#CS.mon_CS_test(Cu_63Zn(), 'Cu', 'Cu_63Zn.csv', 10, 'Cu_63Zn', names[index])
+#CS.mon_CS_test(Cu_65Zn(), 'Cu', 'Cu_65Zn.csv', 10, 'Cu_65Zn', names[index])
+
+
+
+
+#I = BC.current_for_CS()
+#print(I)
+
+
+#RZ.plot_ChiSq(3, 0.05)
+#RZ.plot_ChiSq(7, 0.01)
+#RZ.plot_ChiSq(9, 3)
+#RZ.run_beam_current()
+#print('Cu')
+#RZ.flux_distribution('Cu')
+#print('Ni')
+#RZ.flux_distribution('Ni')
+#print('Ir')
+#RZ.flux_distribution('Ir')
+#print('Fe')
+#RZ.flux_distribution('Fe')
+
+
+
+
+
+
+
+#BC = BeamCurrent(files[numb])
+#BC.variance_minimization(3-1, names[numb], include_56Co=False, MakePlot=True)
+
+#BC.plot_simple_distribution('Cu', names[46])
+#BC.plot_simple_distribution('Ni', names[46])
+#BC.plot_simple_distribution('Fe', names[46])
+#BC.plot_simple_distribution('Ir', names[46])
+
+
+#BC.plot_distribution('Cu', names[45])
+
+#print("**",files[1])
+
+#sort_ziegler(files[1])
+#for i in range(len(names)):
+    #print(i, names[i])
+
+#sort_ziegler(files[0])
+
+
+#BC = BeamCurrent(files[253])
+#BC.CurrentPlot_compartment(names[253])
+#BC.current_for_CS(return_energies=False, mon_test=False)
+#BC.CurrentPlot(names[0])
+#BC.plot_distribution('Cu', names[numb])
+
+
+
+#Important: these files are bad to use. Remove from files, names
+list_of_bad_indices = [45, 62, 63, 71, 72, 80, 81,89, 90, 98, 99, 100, 107, 108, 109, 116, 117, 118,
+                        125, 126, 127, 134, 136,143, 144, 145, 153, 154, 162, 163, 171, 172, 180, 181,
+                        182, 189, 190, 191, 198, 199, 200, 207, 208, 209, 216, 217, 218, 225, 226, 227,
+                        234, 235, 236, 243, 244, 245, 252, 253, 254, 255, 256, 259, 261, 262, 263, 264, 265 ]
+
+#print(files[45])
+#for i in list_of_bad_indices:
+#    files.remove(files[i])
+#    names.remove(names[i])
+#files.remove(files[45])
+#print(files[45])
+
+
+
+
+
+
+"""
+BC.plot_distribution('Cu', names[50])
+BC.plot_distribution('Fe', names[50])
+BC.plot_distribution('Ni', names[50])
+I_Fe, I_Ni, I_Cu=BC.current_for_CS(mon_test=True)
+print("Fe:",I_Fe)
+print("Ni:",I_Ni)
+print("Cu:",I_Cu)
+"""
+
+#CS.make_CS(Fe_56Co(), 'Fe', 'Fe_56Co.csv', 3, 'Fe_56Co')
+
+"""
+CS = CrossSections(files[numb])
+CS.mon_CS_test(Fe_56Co(), 'Fe', 'Fe_56Co.csv', 3, 'Fe_56Co', names[numb])
+CS.mon_CS_test(Ni_61Cu(), 'Ni', 'Ni_61Cu.csv', 10, 'Ni_61Cu', names[numb])
+CS.mon_CS_test(Ni_56Co(), 'Ni', 'Ni_56Co.csv', 10, 'Ni_56Co', names[numb])
+CS.mon_CS_test(Ni_58Co(), 'Ni', 'Ni_58Co.csv', 10, 'Ni_58Co', names[numb])
+CS.mon_CS_test(Cu_62Zn(), 'Cu', 'Cu_62Zn.csv', 10, 'Cu_62Zn', names[numb])
+CS.mon_CS_test(Cu_63Zn(), 'Cu', 'Cu_63Zn.csv', 10, 'Cu_63Zn', names[numb])
+CS.mon_CS_test(Cu_65Zn(), 'Cu', 'Cu_65Zn.csv', 10, 'Cu_65Zn', names[numb])
+"""
+
+
+###FOR CROSS SECTIONS: Cu_64Cu(), 'Cu', 'Cu_64Cu.csv', 10, 'Cu_64Cu')
+
+#I_Fe, I_Ni, I_Cu = BC.current_for_CS(mon_test=True)
+#print(I_Fe)
+
+
+
+
+#A0, E, CS, I = CS.cross_section(Cu_64Cu(), 'Cu', 'Cu_64Cu.csv', 10, 'Cu_64Cu',  plot_CS=False)
+
+
+
+
+
+
+#BC = BeamCurrent(files[70])
+#print(names[70])
+#I = BC.current_for_CS(return_energies=False)[0]
 #print(I)
 #CS = CrossSections(files[57])
 #path = os.getcwd() + '/activity_csv/'
@@ -30,14 +216,14 @@ def get_vals(react_func, target, csv_file, n, reaction):
     CS_class = CrossSections(files[25])
     A0, E, CS, I = CS_class.cross_section(react_func, target, csv_file, n, reaction, plot_CS=True)
     print("A0:", A0)
-    print("E:", E)
+    print("E:",  E)
     print("CS:", CS)
-    print("I:", I)
+    print("I:",  I)
 
 
 #get_vals(Cu_64Cu(), 'Cu', 'Cu_64Cu.csv', 10, 'Cu_64Cu')
 #get_vals(Cu_65Ni(), 'Ni', 'Cu_65Ni.csv', 10, 'Cu_65Ni')
-get_vals(Ir_193mPt(), 'Ir', 'Ir_193mPt.csv', 10, 'Ir_193mPt')
+#get_vals(Ir_193mPt(), 'Ir', 'Ir_193mPt.csv', 10, 'Ir_193mPt')
 
 
 #BC = run_BeamCurrent(files, names)

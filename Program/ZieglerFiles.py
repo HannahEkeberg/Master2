@@ -1,9 +1,10 @@
 
-
+import os
 
 def ziegler_files():
     #path= '/Users/hannah/Documents/UIO/Masteroppgaven/Ziegler/'
-    path = '/Users/hannahekeberg/Documents/Master_git/Ziegler/'
+    #path = '/Users/hannahekeberg/Documents/Master_git/Ziegler/'
+    #path = os.getcwd()+'/../'
 
     SS_n10 = path + 'E_foils_SS_-10_fluxes.csv'
     SS_n5  = path + 'E_foils_SS_-5_fluxes.csv'

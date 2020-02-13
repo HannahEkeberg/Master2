@@ -20,7 +20,8 @@ Cu_65Zn = '/Users/hannah/Documents/UIO/Masteroppgaven/Data/monitor_data_files/cu
 """
 path_A0 = os.getcwd() + '/activity_csv/'
 
-path = '/Users/hannahekeberg/Documents/Master_git/Monitor_datafiles/'
+#path = '/Users/hannahekeberg/Documents/Master_git/Monitor_datafiles/'
+path = os.getcwd() + '/../Monitor_datafiles/'
 
 def getA0(filename, n):# n=numb of foils. Get activity from csv to either foil function
     A0_array = np.zeros(n)
@@ -76,6 +77,9 @@ def Ni_foil(react):
     elif react == 'Ni_56Co':
         A_file = path_A0 + 'Ni_56Co.csv'
         A_56Ni_file = path_A0 + 'Ni_56Ni.csv'
+        #A_file = path_A0 + 'Ni_56Co_npat.csv'
+        #A_56Ni_file = path_A0 + 'Ni_56Ni_npat.csv'
+
         A0_56Co, sigma_A0_56Co = getA0(A_file, n)
         A0_56Ni, sigma_A0_56Ni = getA0(A_56Ni_file, n)
 
@@ -88,8 +92,10 @@ def Ni_foil(react):
 
     elif react == 'Ni_58Co':
         ###Cumulative cross section from IAEA
-        A_file = path_A0 + 'Ni_58Co.csv'
-        A_58mCo_file = path_A0 + 'Ni_58mCo.csv'
+        #A_file = path_A0 + 'Ni_58Co.csv'
+        #A_58mCo_file = path_A0 + 'Ni_58mCo.csv'
+        A_file = path_A0 + 'Ni_58Co_npat.csv'
+        A_58mCo_file = path_A0 + 'Ni_58mCo_npat.csv'
         A0_58Co, sigma_A0_58Co = getA0(A_file, n)
         A0_58mCo, sigma_A0_58mCo = getA0(A_58mCo_file, n)
 

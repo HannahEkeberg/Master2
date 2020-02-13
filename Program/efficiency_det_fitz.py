@@ -2,6 +2,9 @@ import numpy as np, matplotlib.pyplot as plt
 from scipy.optimize import curve_fit
 import sys
 import os
+import scipy.io
+
+
 #sys.path.insert(0, '/Users/hannah/Documents/UIO/Masteroppgaven/Data/Calibration/Programmateriale/Detector_Info/')
 #sys.path.insert(0,'/Users/hannah/Documents/UIO/Masteroppgaven/Data/Calibration/Class_eff_cal/')
 #sys.path.insert(0, '/Users/hannah/⁨Dokumenter⁩/UIO⁩/Masteroppgaven⁩/⁨Data⁩/Calibration/Calibration_files/')
@@ -9,10 +12,6 @@ import os
 
 from detector_info_fitz import Detector_Information_fitz
 
-
-#x = Detector_Information_fitz()
-#z = x.HPGE1_10()
-#print(z)
 
 dir_fig = 'Efficiency_curves'
 dir_csv = 'efficiency_csv'
@@ -113,12 +112,15 @@ class Efficiency_calculations(Detector_Information_fitz):
         eps_est = B0*np.exp(-B1*E_gamma**B2)*(1-np.exp(-B3*E_gamma**B4))
         return eps_est
 
+
+
     def efficiency_estimated(self, E_gamma):
         eps_est = self.B[0]*np.exp(-self.B[1]*E_gamma**self.B[2])*(1-np.exp(-self.B[3]*E_gamma**self.B[4]))
-        save_results_to = os.getcwd()+'/efficiency_csv/'
-        np.savetxt("{}.csv".format(save_results_to +  self.detector), self.B, delimiter=",")
+        #save_results_to = os.getcwd()+'/efficiency_csv/'
+        #np.savetxt("{}.csv".format(save_results_to +  self.detector), self.B, delimiter=",")
+        #print(eps_est)
+        #print(self.B)
         return eps_est
-
 
 
     def plot_data(self):
@@ -155,7 +157,17 @@ class Efficiency_calculations(Detector_Information_fitz):
         #print("E: {}".format(self.E))
         popt, pcov=curve_fit(self.efficiency_estimated_popt, self.E, self.eps, p0=np.array([B0, B1, B2, B3, B4]), sigma=self.sigma_eps, absolute_sigma=True, maxfev=1000000)#self.y_err/self.y) #John's numbers
         #popt = np.array((0.078, 2.0, 0.1637, 5.29e-5, 2.33))
-        sigma_efficiency_estimated = np.sqrt(np.diagonal(pcov))
+        save_results_to = os.getcwd()+'/efficiency_csv/'
+        np.savetxt("{}.csv".format(save_results_to +  self.detector), popt, delimiter=",")
+
+
+        ### The error is calculated in matlab script by Andrew. Make matrix to import in matlab scripts
+        ### One for optimal parameters, and one for the covarian matrix
+        #path_to_matlab_folder
+        scipy.io.savemat('efficiency_csv/eff_{}'.format(self.detector), {'popt_{}'.format(self.detector): popt, 'pcov_{}'.format(self.detector):pcov} )
+
+
+        #sigma_efficiency_estimated = np.sqrt(np.diagonal(pcov))
         #print("popt: {}".format(popt))
 
         xplot = np.linspace(20, 1600, 1000)
@@ -192,8 +204,8 @@ class Efficiency_calculations(Detector_Information_fitz):
         plt.legend(['Fit','Cs137', 'Ba133', 'Eu152'], loc='best')
 
         plt.title('Efficiency calibration of det {}'.format(self.detector))
-        plt.savefig("Efficiency_curves/{}".format(self.detector), dpi=300)
-        plt.show()
+        #plt.savefig("Efficiency_curves/{}".format(self.detector), dpi=300)
+        #plt.show()
         plt.clf()
 
     #def chi(self):
@@ -210,9 +222,10 @@ class Efficiency_calculations(Detector_Information_fitz):
 #    print(x.plot_func())
     #print(x.plot_data())#.efficiency_measured())
 
-
-x=Efficiency_calculations('room131_60')  #Question: can a function name
-print(x.plot_func())
+names=['HPGE1_10','HPGE1_30','HPGE2_10','HPGE2_30', 'IDM1_53','IDM2_32','IDM3_40','IDM4_25', 'room131_5', 'room131_10', 'room131_15', 'room131_18', 'room131_22', 'room131_30', 'room131_40', 'room131_50', 'room131_60'] # ['HPGE', 'HPGE2', 'IDM1', 'IDM2', 'IDM3', 'IDM4', 'room_131_5cm', 'room_131_10cm', 'room_131_15cm', 'room_131_18cm', 'room_131_22cm', 'room_131_30cm', 'room_131_40cm', 'room_131_50cm', 'room_131_60cm']
+for i in names:
+    x=Efficiency_calculations(i)  #Question: can a function name
+    x.plot_func()
 
 
 #chi = x.chi()

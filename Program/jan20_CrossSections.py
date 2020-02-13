@@ -1,13 +1,15 @@
 import numpy as np
 import matplotlib.pyplot as plt
 from scipy.constants import N_A, elementary_charge
+#print(elementary_charge)
 import pandas as pd
 import os
 
 from foil_info import *
 from beam_current_FoilReact import *
-from ZieglerFiles import ziegler_files
+from ZieglerFiles_new import ziegler_files
 from des19_BeamCurrent import *
+#from npat import Reaction, Library
 
 
 from scipy.constants import N_A, elementary_charge
@@ -28,22 +30,27 @@ class CrossSections:
 
     def __init__(self,ziegler_file):
         self.ziegler_file = ziegler_file
-        current_class = BeamCurrent(self.ziegler_file)
+        self.current_class = BeamCurrent(self.ziegler_file)
         #current_class = BeamCurrent(self.ziegler_file,)
-        self.I = current_class.current_for_CS()   #nA
+        #self.I, self.sigma_I_est = self.current_class.current_for_CS()   #nA
+        #print(self.I)
 
         ### Need the beam current to be in deuterions/s and not nA.
         ### Must convert beamcurrent by dividing by number of seconds
         ### Must also make number of deuterions instead of [As] --> /elementary_charge
         ### Must also change units for monitor CS from mb to cm^2: *1e-27
-        unit_factor = 3600*1e-27/elementary_charge
-        self.I = np.true_divide(self.I, unit_factor)   #?????
+        #unit_factor = 3600*1e-27/elementary_charge
+        #self.I = np.true_divide(self.I, unit_factor)   #?????
+        #self.dI = np.true_divide(self.dI, unit_factor)
 
 
         #self.I = np.ones(10)*128.5
-        self.E_Fe, self.E_Ni, self.E_Cu, self.E_Ir, self.dE_Fe, self.dE_Ni, self.dE_Cu, self.dE_Ir = current_class.current_for_CS(return_energies=True)
-        self.irr_time       = 3600    #seconds
-        self.sigma_irr_time = 3       #seconds
+        self.E_Fe, self.E_Ni, self.E_Cu, self.E_Ir, self.dE_Fe, self.dE_Ni, self.dE_Cu, self.dE_Ir = self.current_class.current_for_CS(return_energies=True)
+
+
+        #print(self.E_Ir)
+        self.irr_time       = 3600.    #seconds
+        self.sigma_irr_time = 3.       #seconds
         self.path = os.getcwd() + '/activity_csv/'
 
 
@@ -95,51 +102,291 @@ class CrossSections:
 
 
 
-    def cross_section(self,react_func, foil, filename, n, reaction, plot_CS=False):
+    def get_var(self,react_func, foil, filename, n, reaction):#, plot_CS=False):
         ###  example :  cross_section(Cu_57Ni, 'Cu', 'Cu_57Ni.csv/', 10)
         lamb = react_func[-1]
+        #print(react_func)
+        #print(lamb, "in get_var")
+        #print(lamb)
         mass_density, sigma_mass_density, E, dE = self.mass_density(foil)
         E  = np.flip(E)
         dE = np.flip(dE)
         A0 = np.zeros(n)
         sigma_A0 = np.zeros(n)
-        CS = np.zeros(n)
-        sigma_CS = np.zeros(n)
+        #CS = np.zeros(n)
+        #sigma_CS = np.zeros(n)
         filename = self.path + filename
-
-
-        #lamb, mass_density, sigma_mass_density = self.get_variables()
-
         for i in range(n):
             A0_val = np.genfromtxt(filename, delimiter=',', usecols=[i])
             A0[i] = A0_val[0]
             sigma_A0[i] = A0_val[1]
+            #import math
+            #if math.isnan(A0[i]):
+            #if isinstance(A0[i], NaN):
+                #A0[i]=0
 
+        return lamb, mass_density, sigma_mass_density, E, dE, A0, sigma_A0
+
+    """
+    def exfordata_npat(self):
+        ### Search the TENDL-2015 neutron library for reactions producing 225RA from 226RA
+        f, ax = None, None
+        for lb in ['tendl_d_rp']:
+                rx = Reaction('63CU(d,x)64CUg', lb)
+                print(rx)
+                f, ax = rx.plot(f=f, ax=ax, show=False, label='library', title=True)
+                print(f)
+                print(ax)
+
+        plt.show()
+    """
+
+
+    def make_CS(self, react_func, foil, filename, n ,reaction):
+        lamb, mass_density, sigma_mass_density, E, dE, A0, dA0 = self.get_var(react_func, foil, filename, n, reaction)
+        #lamb, mass_density, sigma_mass_density, E, dE, A0, sigma_A0 = self.get_var(react_func, foil, filename, n, reaction)
+        I, dI = self.current_class.current_for_CS()   #nA
+        I_Fe, I_Ni, I_Cu, sigma_I = self.current_class.current_for_CS(mon_test=True)
+
+        print("I", I)
+        #print("I_Ni", I_Ni)
+
+        #I = I_Ni; dI=sigma_I
+
+        #print("I after", I)
+        #print("I_Ni after", I_Ni)
+        #I = self.I; dI = self.sigma_I_est
+        CS, dCS= self.cross_section_calc(n, A0, dA0, mass_density, sigma_mass_density, I, dI, lamb, reaction)
+        #CS, dCS = self.cross_section_calc(n, A0, sigma_A0, mass_density, sigma_mass_density, I_Fe, sigma_I, lamb, reaction)
+
+        #print("Cs", CS )
+
+        #CS, dCS= self.cross_section_calc(n, A0, dA0, mass_density, sigma_mass_density, I_Ni, sigma_I, lamb, reaction)
+
+        #print("Cs using Ni", CS )
+
+        #print(type(self.E_Ir), type(Cross_section))
+        #print(Cross_section, "OOOOOOOOOOO")
+        # E, dE, Cs, dCS, reaction
+        if foil=='Ir':
+            E = self.E_Ir; dE = self.dE_Ir
+        elif foil=='Cu':
+            E = self.E_Cu; dE = self.dE_Cu
+        elif foil=='Ni':
+            E = self.E_Ni; dE = self.dE_Ni
+        elif foil=='Fe':
+            E = self.E_Fe; dE = self.dE_Fe
+
+        #self.plot_CrossSections(E, dE, CS, dCS, reaction)
+        #plt.plot(E, CS,'o', label='now')
+        #self.mon_CS_test(react_func, foil, filename, n, reaction)
+        #return #E, CS
+
+        #plt.plot(E,CS,'.')
+        #plt.errorbar(E, CS, color='green', linewidth=0.001, xerr=dE,  yerr=dCS, elinewidth=0.5, ecolor='k', capthick=0.5 )
+        #plt.show()
+
+        print("     E     ", "    CS    " )
+        print(np.vstack((E,CS)).T)
+
+
+        #tab_Cu_64Cu
+        tab_E  = [7.38, 10.43, 13.89, 16.35,18.75,20.71,25.51,26.78,30.11 ]
+        tab_dE = [0.32, 0.60, 0.37, 0.52,0.34, 0.43,0.65,0.62,0.59 ]
+        tab_dCS = [26.7, 20.8, 15.8,13.2, 11.4, 13.9,18.3,18.6,21.1 ]
+        tab_CS = [225.8, 174.0, 133.3, 110.1,97.4,99.0, 123.9, 137.3,158.1]
+
+
+        #self.setting_plotvalues(tab_E, tab_dE, tab_CS, tab_dCS, label='exfor')
+        self.setting_plotvalues(E, dE, CS, dCS, label='this work using I')
+        #CS, dCS = self.cross_section_calc(n, A0, dA0, mass_density, sigma_mass_density, I_Ir, sigma_I, lamb, reaction)
+        #self.setting_plotvalues(E, dE, CS, dCS, label='this work using I')
+
+        #self.mon_CS_test(react_func, foil, filename, n, reaction, 'uu')
+
+        self.plot_CrossSections(reaction)
+
+
+    def cross_section_calc(self, n, A0, dA0, mass_density, sigma_mass_density, I, dI, lamb, reaction):
+        CS = np.zeros(n)
+        dCS = np.zeros(n)
+        dI = np.ones(n)*dI
+        dlamb = lamb*0.001 #typical percent uncertainty
+        #E =
+
+        # print("A0: ", A0)
+        # print("dA0: ", dA0)
+        # print("% A0: ", 100*dA0/A0)
+        # print("I: ", I)
+        # print("dI: ", dI)
+        # print("% I: ", 100*dI/I)
+        # print("mass_density: ", mass_density)
+        # print("sigma_mass_density: ", sigma_mass_density)
+        # print("% mass_density: ", 100*sigma_mass_density/mass_density)
+        # print("lamb: ", lamb)
+        # print("dlamb: ", dlamb)
+        # print("% lamb: ", 100*dlamb/lamb)
+        # print("self.irr_time: ", self.irr_time)
 
         for j in range(n):
 
-            CS[j] = A0[j] / (mass_density[j] * self.I[j]*(1-np.exp(-lamb*self.irr_time)))*1e21   #mb  ###1 barn = 1e-24 cm^2
-        print(CS)
+            CS[j] = A0[j] / (mass_density[j] * I[j]*(1/(elementary_charge*1e9))   *(1-np.exp(-lamb*self.irr_time)))/(1e-27)   #mb  ###1 barn = 1e-24 cm^2
 
-        path = os.getcwd() + '/CrossSections/'
-        np.savetxt(path + 'CrossSections_CSV/{}_CS'.format(reaction), CS)
+            if A0[j]==0:
+                dCS[j]=0
+            else:
+                dCS[j] = CS[j]*np.sqrt( (dA0[j]/A0[j])**2 )#+ (dI[j]/I[j])**2 + (sigma_mass_density[j]/mass_density[j])**2 + (dlamb/lamb)**2    )
 
-        if plot_CS:
-            self.plot_CrossSections(E, CS, reaction)
+            #path = os.getcwd() + '/CrossSections/'
+            #np.savetxt(path + 'CrossSections_CSV/{}_CS'.format(reaction))
 
-        return A0, E, CS, self.I
+        #print(CS)
+        #print(dCS, "******************")
+        #print("% CS", 100*dCS/CS)
+        return(CS, dCS)
 
 
 
+    def mon_CS_test(self, react_func, foil, filename, n, reaction,scaling_parameter):
+        #print("*")
+        I_Fe, I_Ni, I_Cu, sigma_I = self.current_class.current_for_CS(mon_test=True)
+        #print(sigma_I)
+        #unit_factor = 3600*1e-27/elementary_charge
+        #unit_factor=1
+        #I_Fe = np.true_divide(I_Fe, unit_factor)   #?????
+        #I_Ni = np.true_divide(I_Ni, unit_factor)   #?????
+        #I_Cu = np.true_divide(I_Cu, unit_factor)   #?????
+        I, sigma_I = self.current_class.current_for_CS()
+
+        #print("I", I)
+        #print("I_Ni", I_Ni)
+        #I_Fe = I
+        #I_Ni = I
+        #I_Cu = I
+
+
+        #sigma_I /= unit_factor
+
+        lamb, mass_density, sigma_mass_density, E, dE, A0, sigma_A0 = self.get_var(react_func, foil, filename, n, reaction)
+        path_to_monitor_data = os.getcwd() + '/../Monitor_datafiles/'
+
+
+        if reaction=='Fe_56Co':
+            CS, dCS = self.cross_section_calc(n, A0, sigma_A0, mass_density, sigma_mass_density, I_Fe, sigma_I, lamb, reaction)
+            E = self.E_Fe; dE = self.dE_Fe
+            filename =  path_to_monitor_data+'fed56cot/fed56cot.txt'
+            E_mon = np.loadtxt(filename, usecols=[0], skiprows=6)
+            Cs_mon = np.loadtxt(filename, usecols=[1], skiprows=6)
+
+            #sigma_Cs = np.loadtxt(filename, usecols=[2], skiprows=6)
+        if reaction=='Ni_61Cu':
+            CS, dCS = self.cross_section_calc(n, A0, sigma_A0, mass_density, sigma_mass_density, I_Ni, sigma_I, lamb, reaction)
+            E = self.E_Ni;dE = self.dE_Ni
+            filename =  path_to_monitor_data+'nid61cut/nid61cut.txt'
+            E_mon = np.loadtxt(filename, usecols=[0], skiprows=6)
+            Cs_mon = np.loadtxt(filename, usecols=[1], skiprows=6)
+        if reaction=='Ni_56Co':
+            CS, dCS = self.cross_section_calc(n, A0, sigma_A0, mass_density, sigma_mass_density, I_Ni, sigma_I, lamb, reaction)
+            E = self.E_Ni;dE = self.dE_Ni
+            filename =  path_to_monitor_data+'nid56cot/nid56cot.txt'
+            E_mon = np.loadtxt(filename, usecols=[0], skiprows=6)
+            Cs_mon = np.loadtxt(filename, usecols=[1], skiprows=6)
+        if reaction=='Ni_58Co':
+            CS, dCS = self.cross_section_calc(n, A0, sigma_A0, mass_density, sigma_mass_density, I_Ni, sigma_I, lamb, reaction)
+            E = self.E_Ni;dE = self.dE_Ni
+            filename =  path_to_monitor_data+'nid58cot/nid58cot.txt'
+            E_mon = np.loadtxt(filename, usecols=[0], skiprows=6)
+            Cs_mon = np.loadtxt(filename, usecols=[1], skiprows=6)
+        if reaction=='Cu_62Zn':
+            CS, dCS = self.cross_section_calc(n, A0, sigma_A0, mass_density, sigma_mass_density, I_Cu, sigma_I, lamb, reaction)
+            E = self.E_Cu;dE = self.dE_Cu
+            filename =  path_to_monitor_data+'cud62znt/cud62znt.txt'
+            E_mon = np.loadtxt(filename, usecols=[0], skiprows=6)
+            Cs_mon = np.loadtxt(filename, usecols=[1], skiprows=6)
+        if reaction=='Cu_63Zn':
+            CS, dCS = self.cross_section_calc(n, A0, sigma_A0, mass_density, sigma_mass_density, I_Cu, sigma_I, lamb, reaction)
+            E = self.E_Cu;dE = self.dE_Cu
+            filename =  path_to_monitor_data+'cud63znt/cud63znt.txt'
+            E_mon = np.loadtxt(filename, usecols=[0], skiprows=6)
+            Cs_mon = np.loadtxt(filename, usecols=[1], skiprows=6)
+        if reaction=='Cu_65Zn':
+            CS, dCS = self.cross_section_calc(n, A0, sigma_A0, mass_density, sigma_mass_density, I_Cu, sigma_I, lamb, reaction)
+            E = self.E_Cu;dE = self.dE_Cu
+            filename =  path_to_monitor_data+'cud65znt/cud65znt.txt'
+            E_mon = np.loadtxt(filename, usecols=[0], skiprows=6)
+            Cs_mon = np.loadtxt(filename, usecols=[1], skiprows=6)
+
+
+        #print(len(CS))
+        #print(E)
+        #plt.plot(E_mon, Cs_mon, label='monitor data')
+        #plt.plot(E_)
+        #self.plot_CrossSections(E, dE, CS, dCS, reaction)
+
+
+        #self.setting_plotvalues(E_mon, 0, Cs_mon, 0, label='monitor data', )
+        print(scaling_parameter)
+        plt.plot(E_mon, Cs_mon, label='monitor data')
+        self.setting_plotvalues(E, dE, CS, dCS, 'this data')
+        self.plot_CrossSections(reaction)
+
+        #plt.plot(E_mon, Cs_mon, label='monitor data')
+        #plt.plot(E, CS, 'o', label='this data')
+        #plt.xlabel('Energy (MeV)')
+        #plt.ylabel('Cross section (mb)')
+        #plt.errorbar(E, CS, color='green', linewidth=0.001, xerr=dE,  yerr=dCS, elinewidth=0.5, ecolor='k', capthick=0.5 )
+        #plt.title('Cross section for reaction {}'.format(reaction))
+        #path_to_cs_figs = os.getcwd() + '/CrossSections/CrossSections_curves/'
+        #plt.savefig(path_to_cs_figs + reaction +'{}.png'.format(scaling_parameter), dpi=300)
+        #plt.legend()
+        #plt.show()
+
+
+
+
+    def setting_plotvalues(self, E, dE, CS, dCS, label):
+        #print(len(E),len(dE), len(CS), len(dCS))
+        #E = np.flip(E)#E.reverse()
+        #dE = np.flip(dE)#dE.reverse()
+        #plt.plot(E,CS, '.', label=label)
+        #plt.errorbar(E, CS, color='green', linewidth=0.001, xerr=dE,  yerr=dCS, elinewidth=0.5, ecolor='k', capthick=0.5 )
+        plt.errorbar(E, CS, marker='.', linewidth=0.001, xerr=dE, yerr=dCS, elinewidth=0.5, capthick=0.5, capsize=3.0, label=label )
+        #plt.show()
+
+
+
+    def plot_CrossSections(self,  reaction):
+
+        #plt.plot(E_mon, Cs_mon, label='monitor data')
+        #plt.plot(E, CS, 'o', label='this data')
+        plt.xlabel('Energy (MeV)')
+        plt.ylabel('Cross section (mb)')
+        plt.title('Cross section for reaction {}'.format(reaction))
+        path_to_cs_figs = os.getcwd() + '/CrossSections/CrossSections_curves/'
+        #plt.savefig(path_to_cs_figs + reaction +'{}.png'.format(scaling_parameter), dpi=300)
+        plt.legend()
+        plt.show()
+
+
+
+"""
     def plot_CrossSections(self, E, CS, reaction):
 
         plt.plot(E, CS, '.')
+        plt.errorbar(E, CS, color='green', linewidth=0.001,  yerr=dCs, elinewidth=0.5, ecolor='k', capthick=0.5 )
         plt.xlabel('Beam energy (MeV)')
         plt.ylabel('Cross section (mb)')
-        plt.title('Cross section for reaction {}'.format(reaction))
-        path = os.getcwd()
-        plt.savefig(path + '/CrossSections/CrossSections_curves/{}_CS.png'.format(reaction),dpi=300)
-        plt.show()
+        plt.title('Cross section for reaction {}_{}'.format(reaction))
+        #path = os.getcwd()
+        #plt.savefig(path + '/CrossSections/CrossSections_curves/{}_CS.png'.format(reaction),dpi=300)
+        #plt.show()
+
+
+"""
+
+
+
+
 
 
 

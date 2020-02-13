@@ -1,0 +1,3 @@
+# MATLAB license passcode file.
+SERVER 129.240.12.8 00505600aa01 1719
+USE_SERVER

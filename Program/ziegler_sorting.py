@@ -4,14 +4,22 @@
 import numpy as np
 
 def sort_ziegler(ziegler_file):
-    ziegler_foil = np.loadtxt(ziegler_file, dtype="str", delimiter=",", usecols=[0], skiprows=1)
-    ziegler_E = np.genfromtxt(ziegler_file, delimiter=',', usecols=[1], skip_header=1)
-    ziegler_flux = np.genfromtxt(ziegler_file, delimiter=',', usecols=[2], skip_header=1)
+    #ziegler_foil = np.loadtxt(ziegler_file, dtype="str", delimiter=",", usecols=[0], skiprows=1)
+    #ziegler_E = np.genfromtxt(ziegler_file, delimiter=',', usecols=[1], skip_header=1)
+    #ziegler_flux = np.genfromtxt(ziegler_file, delimiter=',', usecols=[2], skip_header=1)
     #arrays are 2818 long
 
     ziegler_foil = np.loadtxt(ziegler_file, dtype="str", delimiter=",", usecols=[0], skiprows=1)
+    #ziegler_E = np.loadtxt(ziegler_file, dtype="str", delimiter=",", usecols=[1], skiprows=1)
+    #ziegler_flux = np.loadtxt(ziegler_file, dtype="str", delimiter=",", usecols=[2], skiprows=1)
+    #ziegler_E.astype(np.float)     #for some reason does not save as float...
+    #ziegler_flux.astype(np.float)
+    #print(ziegler_foil)
     ziegler_E = np.genfromtxt(ziegler_file, delimiter=',', usecols=[1], skip_header=1)
+    #print(ziegler_E)
     ziegler_flux = np.genfromtxt(ziegler_file, delimiter=',', usecols=[2], skip_header=1)
+
+
 
     E_Ni01=[]; E_Ni02=[]; E_Ni03=[]; E_Ni04=[]; E_Ni05=[]; E_Ni06=[]; E_Ni07=[]; E_Ni08=[]; E_Ni09=[]; E_Ni10=[]
     F_Ni01=[]; F_Ni02=[]; F_Ni03=[]; F_Ni04=[]; F_Ni05=[]; F_Ni06=[]; F_Ni07=[]; F_Ni08=[]; F_Ni09=[]; F_Ni10=[]

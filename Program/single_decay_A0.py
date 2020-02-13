@@ -4,7 +4,8 @@ from scipy.optimize import curve_fit
 
 #import fme, os
 import os
-
+from npat import DecayChain
+import csv
 
 from foil_info import *
 
@@ -89,6 +90,7 @@ def A0_double_decay_unknown_parent(filename_activity_time, lambda_parent, lambda
     ID = filename_activity_time[-8:-4]
     Nucleus = filename_activity_time[-12:-8]
     print('foil{}_{}'.format(ID, Nucleus))
+    name=name = filename_activity_time[-13:-4]
 
     time = np.genfromtxt(filename_activity_time, delimiter=',', usecols=[0]) #hours since e.o.b
     A = np.genfromtxt(filename_activity_time, delimiter=',', usecols=[1])
@@ -105,41 +107,70 @@ def A0_double_decay_unknown_parent(filename_activity_time, lambda_parent, lambda
         A_est = A0_parent_guess*lambda_daughter / (lambda_parent-lambda_daughter) *( np.exp(-lambda_daughter*time)-np.exp(-lambda_parent*time)) + A0_daughter_guess*np.exp(-lambda_daughter *time)
         return A_est
 
+
+
+
     popt, pcov = curve_fit(non_direct_decay, time[index]*3600, A[index], p0=np.array((A0_parent_guess, A0_daughter_guess)), sigma=sigma_A[index], absolute_sigma=True)
     sigma_activity_estimated = np.sqrt(np.diagonal(pcov))   #Uncertainty in the fitting parameters
     full_width = np.abs(non_direct_decay(xplot*3600,*(popt+sigma_activity_estimated))-non_direct_decay(xplot*3600,*(popt-sigma_activity_estimated))) #full width of confidence band
     percent_uncert = full_width/(2*non_direct_decay(xplot*3600,*popt))  #Distance from fitted line. Half width, sigma_A0/A0 along the line.
     sigma_A0_estimated_isomer = (full_width/2)[0]
-    sigma_A0_estimated_ground_state = (full_width/2)[1]  #uncertainty in the estimated A0. just taking out the first point.
+    #sigma_A0_estimated_ground_state = (full_width/2)[1]  #uncertainty in the estimated A0. just taking out the first point.
     A0_estimated_isomer = popt[0]
     A0_estimated_ground_state = popt[1]
     sigma_A0_estimated = full_width/2 #for 1: isomer, 2: gs of 58Co
     A0_estimated = non_direct_decay(0, popt[0], popt[1])  #58Co  #for 1: isomer, 2: gs of 58Co
 
+    def uncertainty_cov_A0(popt,pcov, lambda_parent, lambda_daughter, time):
+        #Analytical derivations. can also use numerical
+        #dA0_d = np.zeros(len(time))
+        #for i in time:
+        deriv_Ad_Ap = lambda_daughter/(lambda_parent-lambda_daughter)*(np.exp(-lambda_daughter*time)-np.exp(-lambda_parent*time))
+        deriv_Ad_Ad = np.exp(-lambda_daughter*time)
+        J = np.array((deriv_Ad_Ap, deriv_Ad_Ad)) #Jacobian
+
+        dA0_d = np.sqrt( np.dot(np.dot(J,pcov),J.T ) )
+        #print(dA0_d)
+        return dA0_d
+
+    sigma_A0_estimated_ground_state=np.zeros(len(xplot))
+    for i in range(len(xplot)):
+        sigma_A0_estimated_ground_state[i] = uncertainty_cov_A0(popt, pcov, lambda_parent, lambda_daughter, i)
+
+
+
+
+
+
 
     #plot
     if makePlot == True:
         plt.plot(xplot, non_direct_decay(xplot*3600,*popt), 'r-', color='red')
-        plt.plot(xplot,non_direct_decay(xplot*3600,*(popt+sigma_activity_estimated)), color='blue', linewidth=0.4)
-        plt.plot(xplot,non_direct_decay(xplot*3600,*(popt-sigma_activity_estimated)), color='green', linewidth=0.4)
+        #plt.plot(xplot,non_direct_decay(xplot*3600,*(popt+sigma_activity_estimated)), color='blue', linewidth=0.4)
+        #plt.plot(xplot,non_direct_decay(xplot*3600,*(popt-sigma_activity_estimated)), color='green', linewidth=0.4)
+        plt.plot(xplot,non_direct_decay(xplot*3600,*popt)+sigma_A0_estimated_ground_state, color='green', linewidth=0.4)
+        plt.plot(xplot,non_direct_decay(xplot*3600,*popt)-sigma_A0_estimated_ground_state, color='green', linewidth=0.4)
+
         plt.plot(time[index],A[index], '.')
         plt.errorbar(time[index], A[index], color='green', linewidth=0.001,yerr=sigma_A[index], elinewidth=0.5, ecolor='k', capthick=0.5)   # cap thickness for error bar color='blue')
         plt.title('Activity for foil {} nucleus {}'.format(ID, Nucleus) )
         plt.xlabel('time since eob, hours')
         plt.ylabel('Activity, Bq')
         save_results_to = os.getcwd()+'/activity_curves/'
-        np.savetxt("{}.csv".format(save_results_to +  reaction), np.array((A0, sigma_A0)), delimiter=",")
+        #np.savetxt("{}.csv".format(save_results_to +  reaction), np.array((A0, sigma_A0)), delimiter=",")
         #plt.savefig('{}foil_{}.png'.format(save_results_to, Nucleus+ID), dpi=300)
         #plt.savefig('foil_{}_{}'.format(Nucleus, ID), dpi=300)
         plt.show()
 
     #return (A0_estimated)
+    sigma_A0_estimated_ground_state=sigma_A0_estimated_ground_state[0]
     return A0_estimated_isomer, sigma_A0_estimated_isomer, A0_estimated_ground_state, sigma_A0_estimated_ground_state
 
 def A0_double_decay_known_parent(filename_activity_time, A0_parent, lambda_parent, lambda_daughter, makePlot=False):
     ID = filename_activity_time[-8:-4]
     Nucleus = filename_activity_time[-12:-8]
     print('foil{}_{}'.format(ID, Nucleus))
+    name =  filename_activity_time[-13:-4]
 
     time = np.genfromtxt(filename_activity_time, delimiter=',', usecols=[0]) #hours since e.o.b
     A = np.genfromtxt(filename_activity_time, delimiter=',', usecols=[1])
@@ -153,7 +184,8 @@ def A0_double_decay_known_parent(filename_activity_time, A0_parent, lambda_paren
     A0_daughter_guess=80000
 
     def non_direct_decay_known_parent(time,A0_daughter_guess):  #if there are no gammas to be detected from parent
-        A_est = A0_parent *np.exp(-lambda_parent*time) *lambda_daughter / (lambda_daughter-lambda_parent) * (np.exp(-lambda_daughter*time)-np.exp(-lambda_parent*time)) + A0_daughter_guess*np.exp(-lambda_daughter*time)
+        A_est        = A0_parent  *lambda_daughter / (lambda_parent-lambda_daughter) * (np.exp(-lambda_daughter*time)-np.exp(-lambda_parent*time)) + A0_daughter_guess*np.exp(-lambda_daughter*time)
+        #A_est = A0_parent *lambda_daughter / (lambda_daughter-lambda_parent) * (np.exp(-lambda_daughter*time)-np.exp(-lambda_parent*time)) + A0_daughter_guess*np.exp(-lambda_daughter*time)
         #A_est = A0_parent_guess*lambda_daughter / (lambda_parent-lambda_daughter) *( np.exp(-lambda_daughter*time)-np.exp(-lambda_parent*time)) + A0_daughter_guess*np.exp(-lambda_daughter *time)
         return A_est
 
@@ -175,17 +207,159 @@ def A0_double_decay_known_parent(filename_activity_time, A0_parent, lambda_paren
         plt.plot(xplot,non_direct_decay_known_parent(xplot*3600,*(popt-sigma_activity_estimated)), color='green', linewidth=0.4)
         plt.plot(time[index],A[index], '.')
         plt.errorbar(time[index], A[index], color='green', linewidth=0.001,yerr=sigma_A[index], elinewidth=0.5, ecolor='k', capthick=0.5)   # cap thickness for error bar color='blue')
-        plt.title('Activity for foil {} nucleus {}'.format(ID, Nucleus) )
+        #plt.title('Activity for foil {} nucleus {}'.format(ID, Nucleus) )
         plt.xlabel('time since eob, hours')
         plt.ylabel('Activity, Bq')
-        save_results_to = os.getcwd()+'/activity_curves/'
+        save_curves_to = os.getcwd()+'/activity_curves/'
+        plt.title(name)
         #np.savetxt("{}.csv".format(save_results_to +  reaction), np.array((A0, sigma_A0)), delimiter=",")
-        plt.savefig('{}foil_{}.png'.format(save_results_to, Nucleus+ID), dpi=300)
+        #plt.savefig('{}foil_{}.png'.format(save_results_to, Nucleus+ID), dpi=300)
+        plt.savefig(save_curves_to + '_activity_{}.png'.format(name), dpi=300)
         plt.show()
 
     return A0_estimated, sigma_A0_estimated
 
 
+def npat_decaychain(name_of_csv_file, parent_str, daughter_str):
+    #'58COm', '58CO'      parent_str, daughter_str
+    #'56NI', '56Co'
+
+
+
+
+    t_irradiation = 1.0     # in hours
+    #list, lambda_parent, lambda_daughter = func   #Ni_58Co()
+
+    ### 58m/gCo decay chain, units of hours, assumed 2:1 production rate, for t_irradiation hours
+    dc = DecayChain(parent_str, 'h', R={daughter_str:1.0, parent_str:2.0}, time=t_irradiation)
+
+    ### Read in numbers of decays from csv file
+    def decomment(csvfile):
+        for row in csvfile:
+            raw = row.split('#')[0].strip()
+            if raw: yield raw
+
+
+
+    if len(name_of_csv_file)== 2:
+        print(name_of_csv_file[0])
+
+        results_parent = []
+        results_daughter = []
+        with open(name_of_csv_file[0]) as csvfile:
+            reader = csv.reader(decomment(csvfile))
+            for row in reader:
+                results_parent.append(row)
+        with open(name_of_csv_file[1]) as csvfile:
+            reader = csv.reader(decomment(csvfile))
+            for row in reader:
+                results_daughter.append(row)
+
+        #print(results)
+
+        results_daughter = np.asarray(results_daughter, dtype=float)
+        results_parent = np.asarray(results_parent, dtype=float)
+
+        # Reshape csv data structure
+        list_of_counts_daughter = results_daughter[:, np.r_[0, 0, 3, 4]]
+        list_of_counts_daughter[:,1] = list_of_counts_daughter[:,1] + (results_daughter[:,5] / 3600)
+        list_of_counts_parent = results_parent[:, np.r_[0, 0, 3, 4]]
+        list_of_counts_parent[:,1] = list_of_counts_parent[:,1] + (results_parent[:,5] / 3600)
+        #print(list_of_counts)
+
+        ### Calculate decay over timespan of all counts
+        dc.append(DecayChain(parent_str, 'h', time=max(list_of_counts_daughter[:,1])))
+        # dc.plot()
+
+        ### Measured counts: [start_time (d), stop_time (d), decays, unc_decays]
+        ### Times relative to last appended DecayChain, i.e. EoB time
+        dc.counts = {parent_str:list_of_counts_parent, daughter_str:list_of_counts_daughter}
+
+    else:
+        results = []
+        with open(name_of_csv_file) as csvfile:
+            reader = csv.reader(decomment(csvfile))
+            for row in reader:
+                results.append(row)
+
+        results = np.asarray(results, dtype=float)
+
+        # Reshape csv data structure
+        list_of_counts = results[:, np.r_[0, 0, 3, 4]]
+        list_of_counts[:,1] = list_of_counts[:,1] + (results[:,5] / 3600)
+        #print(list_of_counts)
+
+        ### Calculate decay over timespan of all counts
+        dc.append(DecayChain(parent_str, 'h', time=max(list_of_counts[:,1])))
+        # dc.plot()
+
+        ### Measured counts: [start_time (d), stop_time (d), decays, unc_decays]
+        ### Times relative to last appended DecayChain, i.e. EoB time
+        dc.counts = {daughter_str:list_of_counts}
+
+
+
+
+
+
+    ### Find the scaled production rate that gives us these counts
+    # dc.fit_R( unc=True)
+    dc.fit_A0( unc=True)
+    ### Only plot the 5 most active isotopes in the decay chain
+    dc.plot(N_plot=5)
+    print('              ', dc.isotopes)
+    print('Activity (Bq):',dc.A0)
+    print('Uncertainty in Activity (Bq):', dc._unc_A0_fit)
+
+    A_parent = dc.A0[0]
+    A_daughter = dc.A0[1]
+    dA_parent  = dc._unc_A0_fit[0]
+    dA_daughter = dc._unc_A0_fit[1]
+
+    return A_parent, dA_parent, A_daughter, dA_daughter
+
+    #return dc.A0, dc._unc_A0_fit
+
+
+def two_step_up_npat(func, reaction_parent, reaction_daughter, n, parent_str, daughter_str, Save_csv=False):
+    list, lambda_parent, lambda_daughter = func
+    if len(list)==2:
+        A0_parent = np.zeros(n); sigma_A0_parent = np.zeros(n)
+        A0_daughter = np.zeros(n); sigma_A0_daughter = np.zeros(n)
+        for i, e in enumerate(list[0]):
+            print(np.append(list[0,i], list[1,i]))
+            array_join = np.append(list[0,i], list[1,i])
+            A0_estimated_parent, sigma_A0_estimated_parent, A0_estimated_daughter, sigma_A0_estimated_daughter = npat_decaychain(array_join, parent_str, daughter_str)
+            #A0_double_decay_unknown_parent(e, lambda_parent, lambda_daughter, makePlot=True)
+            A0_parent[i] = A0_estimated_parent
+            sigma_A0_parent[i] = sigma_A0_estimated_parent
+            A0_daughter[i] = A0_estimated_daughter
+            sigma_A0_daughter[i] = sigma_A0_estimated_daughter
+            #sigma_A0_daughter = sigma_A0_estimated_daughter[0]
+            if Save_csv == True:
+                save_results_to = os.getcwd()+'/activity_csv/'
+                #print(type(reaction_daughter))
+                print(type(A0_daughter),len(A0_daughter),type(sigma_A0_daughter), len(sigma_A0_daughter) )
+                print(save_results_to+reaction_parent)
+                np.savetxt("{}.csv".format(save_results_to + reaction_parent), np.array((A0_parent, sigma_A0_parent)), delimiter=",")
+                np.savetxt("{}.csv".format(save_results_to + reaction_daughter), np.array((A0_daughter, sigma_A0_daughter)), delimiter=",")
+    else:
+        A0_parent = np.zeros(n); sigma_A0_parent = np.zeros(n)
+        A0_daughter = np.zeros(n); sigma_A0_daughter = np.zeros(n)
+        for i, e in enumerate(list):
+            A0_estimated_parent, sigma_A0_estimated_parent, A0_estimated_daughter, sigma_A0_estimated_daughter = npat_decaychain(e, parent_str, daughter_str) #A0_double_decay_unknown_parent(e, lambda_parent, lambda_daughter, makePlot=True)
+            A0_parent[i] = A0_estimated_parent
+            sigma_A0_parent[i] = sigma_A0_estimated_parent
+            A0_daughter[i] = A0_estimated_daughter
+            sigma_A0_daughter[i] = sigma_A0_estimated_daughter
+            #sigma_A0_daughter = sigma_A0_estimated_daughter[0]
+            if Save_csv == True:
+                save_results_to = os.getcwd()+'/activity_csv/'
+                #print(type(reaction_daughter))
+                print(type(A0_daughter),len(A0_daughter),type(sigma_A0_daughter), len(sigma_A0_daughter) )
+                print(save_results_to+reaction_parent)
+                np.savetxt("{}.csv".format(save_results_to + reaction_parent), np.array((A0_parent, sigma_A0_parent)), delimiter=",")
+                np.savetxt("{}.csv".format(save_results_to + reaction_daughter), np.array((A0_daughter, sigma_A0_daughter)), delimiter=",")
 
 
 def single_decay_data(func, reaction, n, Save_csv=False):  #function, string
@@ -196,17 +370,20 @@ def single_decay_data(func, reaction, n, Save_csv=False):  #function, string
         A0[i] = A0_estimated; sigma_A0[i] = sigma_A0_estimated
         if Save_csv == True:
             save_results_to = os.getcwd()+'/activity_csv/'
-            np.savetxt("{}.csv".format(save_results_to +  reaction), np.array((A0, sigma_A0)), delimiter=",")
+            np.savetxt("{}.csv".format(save_results_to + reaction), np.array((A0, sigma_A0)), delimiter=",")
         #print("A0: {}, sigmaA0: {}".format(A0_estimated, sigma_A0_estimated))
         #print("*****************************************")
 def two_step_kp_data(func_parent, func_daughter, reaction, n, Save_csv=False):
     list_parent, lambda_parent = func_parent
     A0 = np.zeros(n); sigma_A0 = np.zeros(n)
-    A0_list = []
+    A0_list = []; dA0_list = []
     for i,e in enumerate(list_parent):
         A0_estimated_parent, sigma_A0_estimated_parent = A0_single_decay(e,lambda_parent, makePlot=False)
         A0_list.append(A0_estimated_parent)  #add is all A0's for Ni56 from single decay function.
+        dA0_list.append(sigma_A0_estimated_parent)
+
     list_daughter, lambda_parent, lambda_daughter = func_daughter
+    print(A0_list)
     for i,e in enumerate(list_daughter):
         A0_estimated_daughter, sigma_A0_estimated_daughter = A0_double_decay_known_parent(e, A0_list[i], lambda_parent, lambda_daughter, makePlot=True)
         A0[i] = A0_estimated_daughter; sigma_A0[i] = sigma_A0_estimated_daughter
@@ -226,17 +403,36 @@ def two_step_up_data(func, reaction_parent, reaction_daughter, n, Save_csv=False
         sigma_A0_parent[i] = sigma_A0_estimated_parent
         A0_daughter[i] = A0_estimated_daughter
         sigma_A0_daughter[i] = sigma_A0_estimated_daughter
+        #sigma_A0_daughter = sigma_A0_estimated_daughter[0]
         if Save_csv == True:
             save_results_to = os.getcwd()+'/activity_csv/'
-            np.savetxt("{}.csv".format(save_results_to +  reaction_parent), np.array((A0_parent, sigma_A0_parent)), delimiter=",")
-            np.savetxt("{}.csv".format(save_results_to +  reaction_daughter), np.array((A0_daughter, sigma_A0_daughter)), delimiter=",")
+            #print(type(reaction_daughter))
+            print(type(A0_daughter),len(A0_daughter),type(sigma_A0_daughter), len(sigma_A0_daughter) )
+            print(save_results_to+reaction_parent)
+            np.savetxt("{}.csv".format(save_results_to + reaction_parent), np.array((A0_parent, sigma_A0_parent)), delimiter=",")
+            np.savetxt("{}.csv".format(save_results_to + reaction_daughter), np.array((A0_daughter, sigma_A0_daughter)), delimiter=",")
             #np.savetxt("{}.csv".format(reaction_parent), np.array((A0_parent, sigma_A0_parent)), delimiter=",")
             #np.savetxt("{}.csv".format(reaction_daughter), np.array((A0_daughter, sigma_A0_daughter)), delimiter=",")
         #print("Isomer -  A0: {}, sigma A0: {}".format(A0_estimated_parent, sigma_A0_estimated_parent))
         #print("Ground state -  A0: {}, sigma A0: {}".format(A0_estimated_daughter, sigma_A0_estimated_daughter))
         #print("***************************************")
+        #print(A0_daughter,sigma_A0_daughter)
+        #print(save_results_to+reaction_parent)
+### MON FILES:
 
+#single_decay_data(Cu_62Zn(), "Cu_62Zn", 10, Save_csv=True)
+#single_decay_data(Cu_63Zn(), "Cu_63Zn", 10, Save_csv=True)
+#single_decay_data(Cu_65Zn(), "Cu_65Zn", 10, Save_csv=True)
+#single_decay_data(Ni_61Cu(), "Ni_61Cu", 10, Save_csv=True)
 
+#two_step_kp_data(Ni_56Ni(), Ni_56Co(), "Ni_56Co", 10, Save_csv= True)
+#two_step_up_npat(Ni_58Co(), "Ni_58mCo_npat", "Ni_58Co_npat", 10, '58COm', '58COg', Save_csv=True)
+#two_step_up_npat(Ni_56Co(return_two_list=True), "Ni_56Ni_npat", "Ni_56Co_npat", 10, '56NI', '56CO', Save_csv=True)
+#two_step_kp_data(Ni_56Ni(), Ni_56Co(), "Ni_56Co", 10, Save_csv= True)
+#single_decay_data(Ni_56Ni(), "Ni_56Ni", 10, Save_csv=True)
+#single_decay_data(Fe_56Co(), "Fe_56Co", 3, Save_csv=True)
+
+#two_step_kp_data(Ni_56Ni(), Ni_56Co(), "Ni_56Co", 10, Save_csv= True)
 
 
 #single_decay_data(Cu_62Zn(), "Cu_62Zn", 10, Save_csv=True)

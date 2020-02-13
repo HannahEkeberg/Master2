@@ -1,6 +1,7 @@
 import numpy as np, matplotlib.pyplot as plt
 from scipy import interpolate
 from scipy.optimize import curve_fit
+import os
 
 m=60; h=m*60; d=h*24; y=d*356  #converters to seconds
 
@@ -9,67 +10,71 @@ m=60; h=m*60; d=h*24; y=d*356  #converters to seconds
 
 #path = 'UsershannahDocumentsUIOMasteroppgavenDataData_analysiscsv'
 path = '/Users/hannahekeberg/Documents/Master_git/matlab/csv/'
+path = os.getcwd() + '/../matlab/csv/'
 
 ####Cupper foils########
 def Cu_62Zn(): #check,  #mon, single
-    foil1 = path + '62Zn_129.dat'
-    foil2 = path + '62Zn_229.dat'
-    foil3 = path + '62Zn_329.dat'
-    foil4 = path + '62Zn_429.dat'
-    foil5 = path + '62Zn_529.dat'
-    foil6 = path + '62Zn_629.dat'
-    foil7 = path + '62Zn_729.dat'
-    foil8 = path + '62Zn_829.dat'
-    foil9 = path + '62Zn_929.dat'
-    foil10= path + '62Zn_1029.dat'
+    foil1 = path + 'Cu_62Zn_129.dat'
+    foil2 = path + 'Cu_62Zn_229.dat'
+    foil3 = path + 'Cu_62Zn_329.dat'
+    foil4 = path + 'Cu_62Zn_429.dat'
+    foil5 = path + 'Cu_62Zn_529.dat'
+    foil6 = path + 'Cu_62Zn_629.dat'
+    foil7 = path + 'Cu_62Zn_729.dat'
+    foil8 = path + 'Cu_62Zn_829.dat'
+    foil9 = path + 'Cu_62Zn_929.dat'
+    foil10= path + 'Cu_62Zn_1029.dat'
     list = [foil1, foil2, foil3, foil4, foil5, foil6, foil7, foil8, foil9, foil10]
     #print(np.log(2)/(9.193*h))
-    lambda_ = np.log(2.)/(9.193*h)
+    t_half = 9.193*h
+    sigma_t_half = 0.013*h
+    lambda_ = np.log(2.)/(t_half)#(9.193*h)
+    sigma_lambda_ = lambda_*(sigma_t_half / t_half)
 
-    return list, lambda_
+    return list, lambda_#, sigma_lambda_
     #return list, lambda_    #mon, single
 
 def Cu_63Zn(): #check #mon, single
-    foil1 = path + '63Zn_129.dat'
-    foil2 = path + '63Zn_229.dat'
-    foil3 = path + '63Zn_329.dat'
-    foil4 = path + '63Zn_429.dat'
-    foil5 = path + '63Zn_529.dat'
-    foil6 = path + '63Zn_629.dat'
-    foil7 = path + '63Zn_729.dat'
-    foil8 = path + '63Zn_829.dat'
-    foil9 = path + '63Zn_929.dat'
-    foil10= path + '63Zn_1029.dat'
+    foil1 = path + 'Cu_63Zn_129.dat'
+    foil2 = path + 'Cu_63Zn_229.dat'
+    foil3 = path + 'Cu_63Zn_329.dat'
+    foil4 = path + 'Cu_63Zn_429.dat'
+    foil5 = path + 'Cu_63Zn_529.dat'
+    foil6 = path + 'Cu_63Zn_629.dat'
+    foil7 = path + 'Cu_63Zn_729.dat'
+    foil8 = path + 'Cu_63Zn_829.dat'
+    foil9 = path + 'Cu_63Zn_929.dat'
+    foil10= path + 'Cu_63Zn_1029.dat'
     list = [foil1, foil2, foil3, foil4, foil5, foil6, foil7, foil8, foil9, foil10]
     lambda_ = np.log(2)/(38.47*m)
     return list, lambda_    #mon, single
 
 def Cu_65Zn(): #check,  #mon, single
-    foil1 = path + '65Zn_129.dat'
-    foil2 = path + '65Zn_229.dat'
-    foil3 = path + '65Zn_329.dat'
-    foil4 = path + '65Zn_429.dat'
-    foil5 = path + '65Zn_529.dat'
-    foil6 = path + '65Zn_629.dat'
-    foil7 = path + '65Zn_729.dat'
-    foil8 = path + '65Zn_829.dat'
-    foil9 = path + '65Zn_929.dat'
-    foil10= path + '65Zn_1029.dat'
+    foil1 = path + 'Cu_65Zn_129.dat'
+    foil2 = path + 'Cu_65Zn_229.dat'
+    foil3 = path + 'Cu_65Zn_329.dat'
+    foil4 = path + 'Cu_65Zn_429.dat'
+    foil5 = path + 'Cu_65Zn_529.dat'
+    foil6 = path + 'Cu_65Zn_629.dat'
+    foil7 = path + 'Cu_65Zn_729.dat'
+    foil8 = path + 'Cu_65Zn_829.dat'
+    foil9 = path + 'Cu_65Zn_929.dat'
+    foil10= path + 'Cu_65Zn_1029.dat'
     list = [foil1, foil2, foil3, foil4, foil5, foil6, foil7, foil8, foil9, foil10]
     lambda_ = np.log(2)/(243.93*d)
     return list, lambda_    #mon
 
 def Cu_52Mn(): #non-mon, BUT WAS PRODUCED, needs work ?????????
-    foil1 = path + '52Mn_129.dat'
-    foil2 = path + '52Mn_229.dat'
-    foil3 = path + '52Mn_329.dat'
-    foil4 = path + '52Mn_429.dat'
-    foil5 = path + '52Mn_529.dat'
-    foil6 = path + '52Mn_629.dat'
-    foil7 = path + '52Mn_729.dat'
-    foil8 = path + '52Mn_829.dat'
-    foil9 = path + '52Mn_929.dat'
-    foil10= path + '52Mn_1029.dat'
+    foil1 = path + 'Cu_52Mn_129.dat'
+    foil2 = path + 'Cu_52Mn_229.dat'
+    foil3 = path + 'Cu_52Mn_329.dat'
+    foil4 = path + 'Cu_52Mn_429.dat'
+    foil5 = path + 'Cu_52Mn_529.dat'
+    foil6 = path + 'Cu_52Mn_629.dat'
+    foil7 = path + 'Cu_52Mn_729.dat'
+    foil8 = path + 'Cu_52Mn_829.dat'
+    foil9 = path + 'Cu_52Mn_929.dat'
+    foil10= path + 'Cu_52Mn_1029.dat'
     list = [foil1, foil2, foil3, foil4, foil5, foil6, foil7, foil8, foil9, foil10]
     lambda_parent = np.log(2)/(21.1*m) #52mMn
     lambda_daughter = np.log(2)/(5.591*d) #52Mn
@@ -77,16 +82,16 @@ def Cu_52Mn(): #non-mon, BUT WAS PRODUCED, needs work ?????????
 
 
 def Cu_56Co():   #single decay        #looks weird
-    foil1 = path + '56Co_129.dat'
-    foil2 = path + '56Co_229.dat'
-    foil3 = path + '56Co_329.dat'
-    foil4 = path + '56Co_429.dat'
-    foil5 = path + '56Co_529.dat'
-    foil6 = path + '56Co_629.dat'
-    foil7 = path + '56Co_729.dat'
-    foil8 = path + '56Co_829.dat'
-    foil9 = path + '56Co_929.dat'
-    foil10 = path + '56Co_1029.dat'
+    foil1 = path + 'Cu_56Co_129.dat'
+    foil2 = path + 'Cu_56Co_229.dat'
+    foil3 = path + 'Cu_56Co_329.dat'
+    foil4 = path + 'Cu_56Co_429.dat'
+    foil5 = path + 'Cu_56Co_529.dat'
+    foil6 = path + 'Cu_56Co_629.dat'
+    foil7 = path + 'Cu_56Co_729.dat'
+    foil8 = path + 'Cu_56Co_829.dat'
+    foil9 = path + 'Cu_56Co_929.dat'
+    foil10 = path + 'Cu_56Co_1029.dat'
     list = [foil1, foil2, foil3, foil4, foil5, foil6, foil7, foil8, foil9, foil10]
     #lambda_parent = np.log(2)/(6.075*d)
     lambda_ = np.log(2)/(77.236*d)
@@ -96,16 +101,16 @@ def Cu_56Co():   #single decay        #looks weird
 
 
 def Cu_57Co():   #double decay from 57Ni
-    foil1 = path + '57Co_129.dat'
-    foil2 = path + '57Co_229.dat'
-    foil3 = path + '57Co_329.dat'
-    foil4 = path + '57Co_429.dat'
-    foil5 = path + '57Co_529.dat'
-    foil6 = path + '57Co_629.dat'
-    foil7 = path + '57Co_729.dat'
-    foil8 = path + '57Co_829.dat'
-    foil9 = path + '57Co_929.dat'
-    foil10 = path + '57Co_1029.dat'
+    foil1 = path + 'Cu_57Co_129.dat'
+    foil2 = path + 'Cu_57Co_229.dat'
+    foil3 = path + 'Cu_57Co_329.dat'
+    foil4 = path + 'Cu_57Co_429.dat'
+    foil5 = path + 'Cu_57Co_529.dat'
+    foil6 = path + 'Cu_57Co_629.dat'
+    foil7 = path + 'Cu_57Co_729.dat'
+    foil8 = path + 'Cu_57Co_829.dat'
+    foil9 = path + 'Cu_57Co_929.dat'
+    foil10 = path + 'Cu_57Co_1029.dat'
     list = [foil1, foil2, foil3, foil4, foil5, foil6, foil7, foil8, foil9, foil10]
     lambda_parent = np.log(2)/(35.60*h)
     lambda_daughter = np.log(2)/(271.74*d)
@@ -113,65 +118,66 @@ def Cu_57Co():   #double decay from 57Ni
 
 
 def Cu_57Ni():  #single decay
-    foil1 = path + '57Ni_129.dat'
-    foil2 = path + '57Ni_229.dat'
-    foil3 = path + '57Ni_329.dat'
-    foil4 = path + '57Ni_429.dat'
-    foil5 = path + '57Ni_529.dat'
-    foil6 = path + '57Ni_629.dat'
-    foil7 = path + '57Ni_729.dat'
-    foil8 = path + '57Ni_829.dat'
-    foil9 = path + '57Ni_929.dat'
-    foil10 = path + '57Ni_1029.dat'
+    foil1 = path + 'Cu_57Ni_129.dat'
+    foil2 = path + 'Cu_57Ni_229.dat'
+    foil3 = path + 'Cu_57Ni_329.dat'
+    foil4 = path + 'Cu_57Ni_429.dat'
+    foil5 = path + 'Cu_57Ni_529.dat'
+    foil6 = path + 'Cu_57Ni_629.dat'
+    foil7 = path + 'Cu_57Ni_729.dat'
+    foil8 = path + 'Cu_57Ni_829.dat'
+    foil9 = path + 'Cu_57Ni_929.dat'
+    foil10 = path + 'Cu_57Ni_1029.dat'
     list = [foil1, foil2, foil3, foil4, foil5, foil6, foil7, foil8, foil9, foil10]
     lambda_ = np.log(2)/(35.60*h)
     return list, lambda_
 
 
 def Cu_58Co():   #double decay with unkown parent 58mCo   #weird acting
-    foil1 = path + '58Co_129.dat'
-    foil2 = path + '58Co_229.dat'
-    foil3 = path + '58Co_329.dat'
-    foil4 = path + '58Co_429.dat'
-    foil5 = path + '58Co_529.dat'
-    foil6 = path + '58Co_629.dat'
-    foil7 = path + '58Co_729.dat'
-    foil8 = path + '58Co_829.dat'
-    foil9 = path + '58Co_929.dat'
-    foil10 = path + '58Co_1029.dat'
+    foil1 = path + 'Cu_58Co_129.dat'
+    foil2 = path + 'Cu_58Co_229.dat'
+    foil3 = path + 'Cu_58Co_329.dat'
+    foil4 = path + 'Cu_58Co_429.dat'
+    foil5 = path + 'Cu_58Co_529.dat'
+    foil6 = path + 'Cu_58Co_629.dat'
+    foil7 = path + 'Cu_58Co_729.dat'
+    foil8 = path + 'Cu_58Co_829.dat'
+    foil9 = path + 'Cu_58Co_929.dat'
+    foil10 = path + 'Cu_58Co_1029.dat'
     list = [foil1, foil2, foil3, foil4, foil5, foil6, foil7, foil8, foil9, foil10]
     lambda_parent = np.log(2)/(9.10*h)      #isomer
     lambda_daughter = np.log(2)/(77.236*d)  #ground state
+
     return list, lambda_parent, lambda_daughter
 
 
 def Cu_59Fe():   #single decay     #kind of weird but reasonable when looking in exfor
-    foil1 = path + '59Fe_129.dat'
-    foil2 = path + '59Fe_229.dat'
-    foil3 = path + '59Fe_329.dat'
-    foil4 = path + '59Fe_429.dat'
-    foil5 = path + '59Fe_529.dat'
-    foil6 = path + '59Fe_629.dat'
-    foil7 = path + '59Fe_729.dat'
-    foil8 = path + '59Fe_829.dat'
-    foil9 = path + '59Fe_929.dat'
-    foil10 = path + '59Fe_1029.dat'
+    foil1 = path + 'Cu_59Fe_129.dat'
+    foil2 = path + 'Cu_59Fe_229.dat'
+    foil3 = path + 'Cu_59Fe_329.dat'
+    foil4 = path + 'Cu_59Fe_429.dat'
+    foil5 = path + 'Cu_59Fe_529.dat'
+    foil6 = path + 'Cu_59Fe_629.dat'
+    foil7 = path + 'Cu_59Fe_729.dat'
+    foil8 = path + 'Cu_59Fe_829.dat'
+    foil9 = path + 'Cu_59Fe_929.dat'
+    foil10 = path + 'Cu_59Fe_1029.dat'
     list = [foil1, foil2, foil3, foil4, foil5, foil6, foil7, foil8, foil9, foil10]
     lambda_ = np.log(2)/(44.495*d)
     return list, lambda_
 
 
 def Cu_60Co():  #two step decay via 60mCo, unkown though, since 60mCo is not observed   WEIRD LOOKING
-    foil1 = path + '60Co_129.dat'
-    foil2 = path + '60Co_229.dat'
-    foil3 = path + '60Co_329.dat'
-    foil4 = path + '60Co_429.dat'
-    foil5 = path + '60Co_529.dat'
-    foil6 = path + '60Co_629.dat'
-    foil7 = path + '60Co_729.dat'
-    foil8 = path + '60Co_829.dat'
-    foil9 = path + '60Co_929.dat'
-    foil10 = path + '60Co_1029.dat'
+    foil1 = path + 'Cu_60Co_129.dat'
+    foil2 = path + 'Cu_60Co_229.dat'
+    foil3 = path + 'Cu_60Co_329.dat'
+    foil4 = path + 'Cu_60Co_429.dat'
+    foil5 = path + 'Cu_60Co_529.dat'
+    foil6 = path + 'Cu_60Co_629.dat'
+    foil7 = path + 'Cu_60Co_729.dat'
+    foil8 = path + 'Cu_60Co_829.dat'
+    foil9 = path + 'Cu_60Co_929.dat'
+    foil10 = path + 'Cu_60Co_1029.dat'
     list = [foil1, foil2, foil3, foil4, foil5, foil6, foil7, foil8, foil9, foil10]
     lambda_parent = np.log(2)/(10.467*m)      #isomer
     lambda_daughter = np.log(2)/(1925.28*d)  #ground state
@@ -180,16 +186,16 @@ def Cu_60Co():  #two step decay via 60mCo, unkown though, since 60mCo is not obs
 
 
 def Cu_61Co():   #in theory, 61 Fe feeds in, but half life=5.98 m. Unknown parent since not observed
-    foil1 = path + '61Co_129.dat'
-    foil2 = path + '61Co_229.dat'
-    foil3 = path + '61Co_329.dat'
-    foil4 = path + '61Co_429.dat'
-    foil5 = path + '61Co_529.dat'
-    foil6 = path + '61Co_629.dat'
-    foil7 = path + '61Co_729.dat'
-    foil8 = path + '61Co_829.dat'
-    foil9 = path + '61Co_929.dat'
-    foil10 = path + '61Co_1029.dat'
+    foil1 = path + 'Cu_61Co_129.dat'
+    foil2 = path + 'Cu_61Co_229.dat'
+    foil3 = path + 'Cu_61Co_329.dat'
+    foil4 = path + 'Cu_61Co_429.dat'
+    foil5 = path + 'Cu_61Co_529.dat'
+    foil6 = path + 'Cu_61Co_629.dat'
+    foil7 = path + 'Cu_61Co_729.dat'
+    foil8 = path + 'Cu_61Co_829.dat'
+    foil9 = path + 'Cu_61Co_929.dat'
+    foil10 = path + 'Cu_61Co_1029.dat'
     list = [foil1, foil2, foil3, foil4, foil5, foil6, foil7, foil8, foil9, foil10]
     lambda_parent = np.log(2)/(5.98*m)      #isomer
     lambda_daughter = np.log(2)/(1.649*h)  #ground state
@@ -197,47 +203,47 @@ def Cu_61Co():   #in theory, 61 Fe feeds in, but half life=5.98 m. Unknown paren
 
 
 def Cu_61Cu():   #in theory, decay from 61Zn but half life in order seconds...
-    foil1 = path + '61Cu_129.dat'
-    foil2 = path + '61Cu_229.dat'
-    foil3 = path + '61Cu_329.dat'
-    foil4 = path + '61Cu_429.dat'
-    foil5 = path + '61Cu_529.dat'
-    foil6 = path + '61Cu_629.dat'
-    foil7 = path + '61Cu_729.dat'
-    foil8 = path + '61Cu_829.dat'
-    foil9 = path + '61Cu_929.dat'
-    foil10 = path + '61Cu_1029.dat'
+    foil1 = path + 'Cu_61Cu_129.dat'
+    foil2 = path + 'Cu_61Cu_229.dat'
+    foil3 = path + 'Cu_61Cu_329.dat'
+    foil4 = path + 'Cu_61Cu_429.dat'
+    foil5 = path + 'Cu_61Cu_529.dat'
+    foil6 = path + 'Cu_61Cu_629.dat'
+    foil7 = path + 'Cu_61Cu_729.dat'
+    foil8 = path + 'Cu_61Cu_829.dat'
+    foil9 = path + 'Cu_61Cu_929.dat'
+    foil10 = path + 'Cu_61Cu_1029.dat'
     list = [foil1, foil2, foil3, foil4, foil5, foil6, foil7, foil8, foil9, foil10]
     lambda_ = np.log(2)/(3.339*h)
     return list, lambda_
 
 def Cu_64Cu():   #single decay
-    foil1 = path + '64Cu_129.dat'
-    foil2 = path + '64Cu_229.dat'
-    foil3 = path + '64Cu_329.dat'
-    foil4 = path + '64Cu_429.dat'
-    foil5 = path + '64Cu_529.dat'
-    foil6 = path + '64Cu_629.dat'
-    foil7 = path + '64Cu_729.dat'
-    foil8 = path + '64Cu_829.dat'
-    foil9 = path + '64Cu_929.dat'
-    foil10 = path + '64Cu_1029.dat'
+    foil1 = path + 'Cu_64Cu_129.dat'
+    foil2 = path + 'Cu_64Cu_229.dat'
+    foil3 = path + 'Cu_64Cu_329.dat'
+    foil4 = path + 'Cu_64Cu_429.dat'
+    foil5 = path + 'Cu_64Cu_529.dat'
+    foil6 = path + 'Cu_64Cu_629.dat'
+    foil7 = path + 'Cu_64Cu_729.dat'
+    foil8 = path + 'Cu_64Cu_829.dat'
+    foil9 = path + 'Cu_64Cu_929.dat'
+    foil10 = path + 'Cu_64Cu_1029.dat'
     list = [foil1, foil2, foil3, foil4, foil5, foil6, foil7, foil8, foil9, foil10]
     lambda_ = np.log(2)/(12.701*h)
     return list, lambda_
 
 
 def Cu_65Ni():     #single decay
-    foil1 = path + '65Ni_129.dat'
-    foil2 = path + '65Ni_229.dat'
-    foil3 = path + '65Ni_329.dat'
-    foil4 = path + '65Ni_429.dat'
-    foil5 = path + '65Ni_529.dat'
-    foil6 = path + '65Ni_629.dat'
-    foil7 = path + '65Ni_729.dat'
-    foil8 = path + '65Ni_829.dat'
-    foil9 = path + '65Ni_929.dat'
-    foil10 = path + '65Ni_1029.dat'
+    foil1 = path + 'Cu_65Ni_129.dat'
+    foil2 = path + 'Cu_65Ni_229.dat'
+    foil3 = path + 'Cu_65Ni_329.dat'
+    foil4 = path + 'Cu_65Ni_429.dat'
+    foil5 = path + 'Cu_65Ni_529.dat'
+    foil6 = path + 'Cu_65Ni_629.dat'
+    foil7 = path + 'Cu_65Ni_729.dat'
+    foil8 = path + 'Cu_65Ni_829.dat'
+    foil9 = path + 'Cu_65Ni_929.dat'
+    foil10 = path + 'Cu_65Ni_1029.dat'
     list = [foil1, foil2, foil3, foil4, foil5, foil6, foil7, foil8, foil9, foil10]
     lambda_ = np.log(2)/(2.51719*h)
     return list, lambda_
@@ -246,96 +252,106 @@ def Cu_65Ni():     #single decay
 #Lacking: 60Co
 
 def Ni_56Ni(): #non-mon, single
-    foil1 = path + '56Ni_128.dat'
-    foil2 = path + '56Ni_228.dat'
-    foil3 = path + '56Ni_328.dat'
-    foil4 = path + '56Ni_428.dat'
-    foil5 = path + '56Ni_528.dat'
-    foil6 = path + '56Ni_628.dat'
-    foil7 = path + '56Ni_728.dat'
-    foil8 = path + '56Ni_828.dat'
-    foil9 = path + '56Ni_928.dat'
-    foil10= path + '56Ni_1028.dat'
+    foil1 = path + 'Ni_56Ni_128.dat'
+    foil2 = path + 'Ni_56Ni_228.dat'
+    foil3 = path + 'Ni_56Ni_328.dat'
+    foil4 = path + 'Ni_56Ni_428.dat'
+    foil5 = path + 'Ni_56Ni_528.dat'
+    foil6 = path + 'Ni_56Ni_628.dat'
+    foil7 = path + 'Ni_56Ni_728.dat'
+    foil8 = path + 'Ni_56Ni_828.dat'
+    foil9 = path + 'Ni_56Ni_928.dat'
+    foil10= path + 'Ni_56Ni_1028.dat'
     list = [foil1, foil2, foil3, foil4, foil5, foil6, foil7, foil8, foil9, foil10]
     lambda_ = np.log(2)/(6.075*d)
     return list, lambda_
 
-def Ni_56Co(): #mon, two step, known parent activity 56Ni
+def Ni_56Co(return_two_list=False): #mon, two step, known parent activity 56Ni
     #type = "tskp"
-    foil1 = path + '56Co_128.dat'
-    foil2 = path + '56Co_228.dat'
-    foil3 = path + '56Co_328.dat'
-    foil4 = path + '56Co_428.dat'
-    foil5 = path + '56Co_528.dat'
-    foil6 = path + '56Co_628.dat'
-    foil7 = path + '56Co_728.dat'
-    foil8 = path + '56Co_828.dat'
-    foil9 = path + '56Co_928.dat'
-    foil10= path + '56Co_1028.dat'
+    foil1 = path + 'Ni_56Co_128.dat'
+    foil2 = path + 'Ni_56Co_228.dat'
+    foil3 = path + 'Ni_56Co_328.dat'
+    foil4 = path + 'Ni_56Co_428.dat'
+    foil5 = path + 'Ni_56Co_528.dat'
+    foil6 = path + 'Ni_56Co_628.dat'
+    foil7 = path + 'Ni_56Co_728.dat'
+    foil8 = path + 'Ni_56Co_828.dat'
+    foil9 = path + 'Ni_56Co_928.dat'
+    foil10= path + 'Ni_56Co_1028.dat'
     list = [foil1, foil2, foil3, foil4, foil5, foil6, foil7, foil8, foil9, foil10]
     lambda_daughter = np.log(2)/(77.236*d) #56Co
     lambda_parent = np.log(2)/(6.075*d) #56Ni
-    return list, lambda_parent, lambda_daughter
+
+    if return_two_list:
+        list_parent = Ni_56Ni()[0]
+        list_daughter = list
+        return np.array((list_parent, list_daughter)), lambda_parent, lambda_daughter
+
+
+    return list, lambda_parent, lambda_daughter#[lambda_parent, lambda_daughter]
+    #return list, [lambda_parent, lambda_daughter]#[lambda_parent, lambda_daughter]
 
 def Ni_58Co(): #mon, two step, unkown parent activity 58mCo
     #type = "tsup"
-    foil1 = path + '58Co_128.dat'
-    foil2 = path + '58Co_228.dat'
-    foil3 = path + '58Co_328.dat'
-    foil4 = path + '58Co_428.dat'
-    foil5 = path + '58Co_528.dat'
-    foil6 = path + '58Co_628.dat'
-    foil7 = path + '58Co_728.dat'
-    foil8 = path + '58Co_828.dat'
-    foil9 = path + '58Co_928.dat'
-    foil10= path + '58Co_1028.dat'
+    foil1 = path + 'Ni_58Co_128.dat'
+    foil2 = path + 'Ni_58Co_228.dat'
+    foil3 = path + 'Ni_58Co_328.dat'
+    foil4 = path + 'Ni_58Co_428.dat'
+    foil5 = path + 'Ni_58Co_528.dat'
+    foil6 = path + 'Ni_58Co_628.dat'
+    foil7 = path + 'Ni_58Co_728.dat'
+    foil8 = path + 'Ni_58Co_828.dat'
+    foil9 = path + 'Ni_58Co_928.dat'
+    foil10= path + 'Ni_58Co_1028.dat'
     list = [foil1, foil2, foil3, foil4, foil5, foil6, foil7, foil8, foil9, foil10]
     lambda_isomer = np.log(2)/(9.10*h)
-    lambda_ground_state = np.log(2)/(77.236*d)
+    #lambda_ground_state = np.log(2)/(77.236*d)  #Wrote wrong at first
+    lambda_ground_state = np.log(2)/(70.86*d)
+    #print(lambda_ground_state)
     return list, lambda_isomer, lambda_ground_state
 
 def Ni_61Cu(): #mon, single
-    foil1 = path + '61Cu_128.dat'
-    foil2 = path + '61Cu_228.dat'
-    foil3 = path + '61Cu_328.dat'
-    foil4 = path + '61Cu_428.dat'
-    foil5 = path + '61Cu_528.dat'
-    foil6 = path + '61Cu_628.dat'
-    foil7 = path + '61Cu_728.dat'
-    foil8 = path + '61Cu_828.dat'
-    foil9 = path + '61Cu_928.dat'
-    foil10= path + '61Cu_1028.dat'
+    foil1 = path + 'Ni_61Cu_128.dat'
+    foil2 = path + 'Ni_61Cu_228.dat'
+    foil3 = path + 'Ni_61Cu_328.dat'
+    foil4 = path + 'Ni_61Cu_428.dat'
+    foil5 = path + 'Ni_61Cu_528.dat'
+    foil6 = path + 'Ni_61Cu_628.dat'
+    foil7 = path + 'Ni_61Cu_728.dat'
+    foil8 = path + 'Ni_61Cu_828.dat'
+    foil9 = path + 'Ni_61Cu_928.dat'
+    foil10= path + 'Ni_61Cu_1028.dat'
     list = [foil1, foil2, foil3, foil4, foil5, foil6, foil7, foil8, foil9, foil10]
     lambda_ = np.log(2)/(3.339*h)
     return list, lambda_
 
 def Ni_57Ni(): #single decay
-    foil1 = path + '57Ni_128.dat'
-    foil2 = path + '57Ni_228.dat'
-    foil3 = path + '57Ni_328.dat'
-    foil4 = path + '57Ni_428.dat'
-    foil5 = path + '57Ni_528.dat'
-    foil6 = path + '57Ni_628.dat'
-    foil7 = path + '57Ni_728.dat'
-    foil8 = path + '57Ni_828.dat'
-    foil9 = path + '57Ni_928.dat'
-    foil10 = path + '57Ni_1028.dat'
+    foil1 = path + 'Ni_57Ni_128.dat'
+    foil2 = path + 'Ni_57Ni_228.dat'
+    foil3 = path + 'Ni_57Ni_328.dat'
+    foil4 = path + 'Ni_57Ni_428.dat'
+    foil5 = path + 'Ni_57Ni_528.dat'
+    foil6 = path + 'Ni_57Ni_628.dat'
+    foil7 = path + 'Ni_57Ni_728.dat'
+    foil8 = path + 'Ni_57Ni_828.dat'
+    foil9 = path + 'Ni_57Ni_928.dat'
+    foil10 = path + 'Ni_57Ni_1028.dat'
     list = [foil1, foil2, foil3, foil4, foil5, foil6, foil7, foil8, foil9, foil10]
     lambda_ = np.log(2)/(35.60*h)
     return list, lambda_
 
 
 def Ni_57Co(): #double decay from 57Ni
-    foil1 = path + '57Co_128.dat'
-    foil2 = path + '57Co_228.dat'
-    foil3 = path + '57Co_328.dat'
-    foil4 = path + '57Co_428.dat'
-    foil5 = path + '57Co_528.dat'
-    foil6 = path + '57Co_628.dat'
-    foil7 = path + '57Co_728.dat'
-    foil8 = path + '57Co_828.dat'
-    foil9 = path + '57Co_928.dat'
-    foil10= path + '57Co_1028.dat'
+    foil1 = path + 'Ni_57Co_128.dat'
+    foil2 = path + 'Ni_57Co_228.dat'
+    foil3 = path + 'Ni_57Co_328.dat'
+    foil4 = path + 'Ni_57Co_428.dat'
+    foil5 = path + 'Ni_57Co_528.dat'
+    foil6 = path + 'Ni_57Co_628.dat'
+    foil7 = path + 'Ni_57Co_728.dat'
+    foil8 = path + 'Ni_57Co_828.dat'
+    foil9 = path + 'Ni_57Co_928.dat'
+    foil10= path + 'Ni_57Co_1028.dat'
     list = [foil1, foil2, foil3, foil4, foil5, foil6, foil7, foil8, foil9, foil10]
     lambda_parent = np.log(2)/(35.60*h)
     lambda_daughter = np.log(2)/(271.74*d)
@@ -343,107 +359,107 @@ def Ni_57Co(): #double decay from 57Ni
 
 
 def Ni_55Co(): #single, beta- from 55Ni too short half life..
-    foil1 = path + '55Co_128.dat'
-    foil2 = path + '55Co_228.dat'
-    foil3 = path + '55Co_328.dat'
-    foil4 = path + '55Co_428.dat'
-    foil5 = path + '55Co_528.dat'
-    foil6 = path + '55Co_628.dat'
-    foil7 = path + '55Co_728.dat'
-    foil8 = path + '55Co_828.dat'
-    foil9 = path + '55Co_928.dat'
-    foil10= path + '55Co_1028.dat'
+    foil1 = path + 'Ni_55Co_128.dat'
+    foil2 = path + 'Ni_55Co_228.dat'
+    foil3 = path + 'Ni_55Co_328.dat'
+    foil4 = path + 'Ni_55Co_428.dat'
+    foil5 = path + 'Ni_55Co_528.dat'
+    foil6 = path + 'Ni_55Co_628.dat'
+    foil7 = path + 'Ni_55Co_728.dat'
+    foil8 = path + 'Ni_55Co_828.dat'
+    foil9 = path + 'Ni_55Co_928.dat'
+    foil10= path + 'Ni_55Co_1028.dat'
     list = [foil1, foil2, foil3, foil4, foil5, foil6, foil7, foil8, foil9, foil10]
     lambda_ = np.log(2)/(17.53*h)
     return list, lambda_   #gives weird activities
 
 def Ni_52mMn():  #single decay, 52Fe not produced...
-    foil1 = path + '52mMn_128.dat'
-    foil2 = path + '52mMn_228.dat'
-    foil3 = path + '52mMn_328.dat'
-    foil4 = path + '52mMn_428.dat'
-    foil5 = path + '52mMn_528.dat'
-    foil6 = path + '52mMn_628.dat'
-    foil7 = path + '52mMn_728.dat'
-    foil8 = path + '52mMn_828.dat'
-    foil9 = path + '52mMn_928.dat'
-    foil10 = path + '52mMn_1028.dat'
+    foil1 = path + 'Ni_52mMn_128.dat'
+    foil2 = path + 'Ni_52mMn_228.dat'
+    foil3 = path + 'Ni_52mMn_328.dat'
+    foil4 = path + 'Ni_52mMn_428.dat'
+    foil5 = path + 'Ni_52mMn_528.dat'
+    foil6 = path + 'Ni_52mMn_628.dat'
+    foil7 = path + 'Ni_52mMn_728.dat'
+    foil8 = path + 'Ni_52mMn_828.dat'
+    foil9 = path + 'Ni_52mMn_928.dat'
+    foil10 = path + 'Ni_52mMn_1028.dat'
     list = [foil1, foil2, foil3, foil4, foil5, foil6, foil7, foil8, foil9, foil10]
     lambda_ = np.log(2)/(21.1*m)
     return list, lambda_
 
 def Ni_52Mn(): #double decay known parent 52mMn
-    foil1 = path + '52Mn_128.dat'
-    foil2 = path + '52Mn_228.dat'
-    foil3 = path + '52Mn_328.dat'
-    foil4 = path + '52Mn_428.dat'
-    foil5 = path + '52Mn_528.dat'
-    foil6 = path + '52Mn_628.dat'
-    foil7 = path + '52Mn_728.dat'
-    foil8 = path + '52Mn_828.dat'
-    foil9 = path + '52Mn_928.dat'
-    foil10 = path + '52Mn_1028.dat'
+    foil1 = path + 'Ni_52Mn_128.dat'
+    foil2 = path + 'Ni_52Mn_228.dat'
+    foil3 = path + 'Ni_52Mn_328.dat'
+    foil4 = path + 'Ni_52Mn_428.dat'
+    foil5 = path + 'Ni_52Mn_528.dat'
+    foil6 = path + 'Ni_52Mn_628.dat'
+    foil7 = path + 'Ni_52Mn_728.dat'
+    foil8 = path + 'Ni_52Mn_828.dat'
+    foil9 = path + 'Ni_52Mn_928.dat'
+    foil10 = path + 'Ni_52Mn_1028.dat'
     list = [foil1, foil2, foil3, foil4, foil5, foil6, foil7, foil8, foil9, foil10]
     lambda_parent = np.log(2)/(21.1*m)
     lambda_daughter = np.log(2)/(5.591*d)
     return list, lambda_parent, lambda_daughter
 
 def Ni_54Mn(): #single decay
-    foil1 = path + '54Mn_128.dat'
-    foil2 = path + '54Mn_228.dat'
-    foil3 = path + '54Mn_328.dat'
-    foil4 = path + '54Mn_428.dat'
-    foil5 = path + '54Mn_528.dat'
-    foil6 = path + '54Mn_628.dat'
-    foil7 = path + '54Mn_728.dat'
-    foil8 = path + '54Mn_828.dat'
-    foil9 = path + '54Mn_928.dat'
-    foil10 = path + '54Mn_1028.dat'
+    foil1 = path + 'Ni_54Mn_128.dat'
+    foil2 = path + 'Ni_54Mn_228.dat'
+    foil3 = path + 'Ni_54Mn_328.dat'
+    foil4 = path + 'Ni_54Mn_428.dat'
+    foil5 = path + 'Ni_54Mn_528.dat'
+    foil6 = path + 'Ni_54Mn_628.dat'
+    foil7 = path + 'Ni_54Mn_728.dat'
+    foil8 = path + 'Ni_54Mn_828.dat'
+    foil9 = path + 'Ni_54Mn_928.dat'
+    foil10 = path + 'Ni_54Mn_1028.dat'
     list = [foil1, foil2, foil3, foil4, foil5, foil6, foil7, foil8, foil9, foil10]
     lambda_ = np.log(2)/(312.20*d)
     return list, lambda_
 
 def Ni_59Fe():   #single decay
-    foil1 = path + '59Fe_128.dat'
-    foil2 = path + '59Fe_228.dat'
-    foil3 = path + '59Fe_328.dat'
-    foil4 = path + '59Fe_428.dat'
-    foil5 = path + '59Fe_528.dat'
-    foil6 = path + '59Fe_628.dat'
-    foil7 = path + '59Fe_728.dat'
-    foil8 = path + '59Fe_828.dat'
-    foil9 = path + '59Fe_928.dat'
-    foil10 = path + '59Fe_1028.dat'
+    foil1 = path + 'Ni_59Fe_128.dat'
+    foil2 = path + 'Ni_59Fe_228.dat'
+    foil3 = path + 'Ni_59Fe_328.dat'
+    foil4 = path + 'Ni_59Fe_428.dat'
+    foil5 = path + 'Ni_59Fe_528.dat'
+    foil6 = path + 'Ni_59Fe_628.dat'
+    foil7 = path + 'Ni_59Fe_728.dat'
+    foil8 = path + 'Ni_59Fe_828.dat'
+    foil9 = path + 'Ni_59Fe_928.dat'
+    foil10 = path + 'Ni_59Fe_1028.dat'
     list = [foil1, foil2, foil3, foil4, foil5, foil6, foil7, foil8, foil9, foil10]
     lambda_ = np.log(2)/(44.495*d)
     return list, lambda_
 
 def Ni_60Cu():  #single decay  (probably not 60Zn, thalf=2m)
-    foil1 = path + '60Cu_128.dat'
-    foil2 = path + '60Cu_228.dat'
-    foil3 = path + '60Cu_328.dat'
-    foil4 = path + '60Cu_428.dat'
-    foil5 = path + '60Cu_528.dat'
-    foil6 = path + '60Cu_628.dat'
-    foil7 = path + '60Cu_728.dat'
-    foil8 = path + '60Cu_828.dat'
-    foil9 = path + '60Cu_928.dat'
-    foil10 = path + '60Cu_1028.dat'
+    foil1 = path + 'Ni_60Cu_128.dat'
+    foil2 = path + 'Ni_60Cu_228.dat'
+    foil3 = path + 'Ni_60Cu_328.dat'
+    foil4 = path + 'Ni_60Cu_428.dat'
+    foil5 = path + 'Ni_60Cu_528.dat'
+    foil6 = path + 'Ni_60Cu_628.dat'
+    foil7 = path + 'Ni_60Cu_728.dat'
+    foil8 = path + 'Ni_60Cu_828.dat'
+    foil9 = path + 'Ni_60Cu_928.dat'
+    foil10 = path + 'Ni_60Cu_1028.dat'
     list = [foil1, foil2, foil3, foil4, foil5, foil6, foil7, foil8, foil9, foil10]
     lambda_ = np.log(2)/(23.7*m)
     return list, lambda_
 
 def Ni_60mCo():     # ONE STEP
-    foil1 = path + '60mCo_128.dat'
-    foil2 = path + '60mCo_228.dat'
-    foil3 = path + '60mCo_328.dat'
-    foil4 = path + '60mCo_428.dat'
-    foil5 = path + '60mCo_528.dat'
-    foil6 = path + '60mCo_628.dat'
-    foil7 = path + '60mCo_728.dat'
-    foil8 = path + '60mCo_828.dat'
-    foil9 = path + '60mCo_928.dat'
-    foil10 = path + '60mCo_1028.dat'
+    foil1 = path + 'Ni_60mCo_128.dat'
+    foil2 = path + 'Ni_60mCo_228.dat'
+    foil3 = path + 'Ni_60mCo_328.dat'
+    foil4 = path + 'Ni_60mCo_428.dat'
+    foil5 = path + 'Ni_60mCo_528.dat'
+    foil6 = path + 'Ni_60mCo_628.dat'
+    foil7 = path + 'Ni_60mCo_728.dat'
+    foil8 = path + 'Ni_60mCo_828.dat'
+    foil9 = path + 'Ni_60mCo_928.dat'
+    foil10 = path + 'Ni_60mCo_1028.dat'
     list = [foil1, foil2, foil3, foil4, foil5, foil6, foil7, foil8, foil9, foil10]
     lambda_ = np.log(2)/(10.467*m)
     return list, lambda_
@@ -454,31 +470,31 @@ def Ni_60Co():
     pass
 
 def Ni_64Cu():
-    foil1 = path + '64Cu_128.dat'
-    foil2 = path + '64Cu_228.dat'
-    foil3 = path + '64Cu_328.dat'
-    foil4 = path + '64Cu_428.dat'
-    foil5 = path + '64Cu_528.dat'
-    foil6 = path + '64Cu_628.dat'
-    foil7 = path + '64Cu_728.dat'
-    foil8 = path + '64Cu_828.dat'
-    foil9 = path + '64Cu_928.dat'
-    foil10 = path + '64Cu_1028.dat'
+    foil1 = path + 'Ni_64Cu_128.dat'
+    foil2 = path + 'Ni_64Cu_228.dat'
+    foil3 = path + 'Ni_64Cu_328.dat'
+    foil4 = path + 'Ni_64Cu_428.dat'
+    foil5 = path + 'Ni_64Cu_528.dat'
+    foil6 = path + 'Ni_64Cu_628.dat'
+    foil7 = path + 'Ni_64Cu_728.dat'
+    foil8 = path + 'Ni_64Cu_828.dat'
+    foil9 = path + 'Ni_64Cu_928.dat'
+    foil10 = path + 'Ni_64Cu_1028.dat'
     list = [foil1, foil2, foil3, foil4, foil5, foil6, foil7, foil8, foil9, foil10]
     lambda_ = np.log(2)/(12.701*h)
     return list, lambda_
 
 def Ni_65Ni(): #single decay
-    foil1 = path + '65Ni_128.dat'
-    foil2 = path + '65Ni_228.dat'
-    foil3 = path + '65Ni_328.dat'
-    foil4 = path + '65Ni_428.dat'
-    foil5 = path + '65Ni_528.dat'
-    foil6 = path + '65Ni_628.dat'
-    foil7 = path + '65Ni_728.dat'
-    foil8 = path + '65Ni_828.dat'
-    foil9 = path + '65Ni_928.dat'
-    foil10 = path + '65Ni_1028.dat'
+    foil1 = path + 'Ni_65Ni_128.dat'
+    foil2 = path + 'Ni_65Ni_228.dat'
+    foil3 = path + 'Ni_65Ni_328.dat'
+    foil4 = path + 'Ni_65Ni_428.dat'
+    foil5 = path + 'Ni_65Ni_528.dat'
+    foil6 = path + 'Ni_65Ni_628.dat'
+    foil7 = path + 'Ni_65Ni_728.dat'
+    foil8 = path + 'Ni_65Ni_828.dat'
+    foil9 = path + 'Ni_65Ni_928.dat'
+    foil10 = path + 'Ni_65Ni_1028.dat'
     list = [foil1, foil2, foil3, foil4, foil5, foil6, foil7, foil8, foil9, foil10]
     lambda_ = np.log(2)/(2.5175*h)
     return list, lambda_
@@ -487,9 +503,9 @@ def Ni_65Ni(): #single decay
 #####IRON FOILS########
 
 def Fe_56Co(): #mon, Single
-    foil1 = path + '56Co_126.dat'
-    foil2 = path + '56Co_226.dat'
-    foil3 = path + '56Co_326.dat'
+    foil1 = path + 'Fe_56Co_126.dat'
+    foil2 = path + 'Fe_56Co_226.dat'
+    foil3 = path + 'Fe_56Co_326.dat'
     list = [foil1, foil2, foil3]
     lambda_ = np.log(2)/(77.236*d)
     return list, lambda_
@@ -862,16 +878,16 @@ def Ir_192Ir():  #single decay, too short and long half life of isomers
 
 
 def Ir_193mPt(): #Single decay
-    foil1 = path + '193mPt_177.dat'
-    foil2 = path + '193mPt_277.dat'
-    foil3 = path + '193mPt_377.dat'
-    foil4 = path + '193mPt_477.dat'
-    foil5 = path + '193mPt_577.dat'
-    foil6 = path + '193mPt_677.dat'
-    foil7 = path + '193mPt_777.dat'
-    foil8 = path + '193mPt_877.dat'
-    foil9 = path + '193mPt_977.dat'
-    foil10= path + '193mPt_1077.dat'
+    foil1 = path + 'Ir_193mPt_177.dat'
+    foil2 = path + 'Ir_193mPt_277.dat'
+    foil3 = path + 'Ir_193mPt_377.dat'
+    foil4 = path + 'Ir_193mPt_477.dat'
+    foil5 = path + 'Ir_193mPt_577.dat'
+    foil6 = path + 'Ir_193mPt_677.dat'
+    foil7 = path + 'Ir_193mPt_777.dat'
+    foil8 = path + 'Ir_193mPt_877.dat'
+    foil9 = path + 'Ir_193mPt_977.dat'
+    foil10= path + 'Ir_193mPt_1077.dat'
     list = [foil1, foil2, foil3, foil4, foil5, foil6, foil7, foil8, foil9, foil10]
     lambda_ = np.log(2)/(4.33*d)  #days to seconds
     return list, lambda_    #mon, single"
