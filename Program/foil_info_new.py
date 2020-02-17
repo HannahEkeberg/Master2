@@ -288,7 +288,7 @@ def Ni_56Co(return_two_list=False): #mon, two step, known parent activity 56Ni
 
 
     #return list, lambda_parent, lambda_daughter#[lambda_parent, lambda_daughter]
-    #return list, [lambda_parent, lambda_daughter]#[lambda_parent, lambda_daughter]
+    return list, [lambda_parent, lambda_daughter]#[lambda_parent, lambda_daughter]
 
 def Ni_58Co(): #mon, two step, unkown parent activity 58mCo
     #type = "tsup"

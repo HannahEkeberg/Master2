@@ -310,6 +310,10 @@ def Ni_58Co(): #mon, two step, unkown parent activity 58mCo
     #print(lambda_ground_state)
     return list, lambda_isomer, lambda_ground_state
 
+def Ni_58mCo():
+    lamb_ = np.log(2)/(9.10*h)
+    return 'fake' ,lamb_
+
 def Ni_61Cu(): #mon, single
     foil1 = path + 'Ni_61Cu_128.dat'
     foil2 = path + 'Ni_61Cu_228.dat'

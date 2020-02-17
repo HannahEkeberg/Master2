@@ -303,12 +303,13 @@ def npat_decaychain(name_of_csv_file, parent_str, daughter_str):
 
 
     ### Find the scaled production rate that gives us these counts
-    # dc.fit_R( unc=True)
-    dc.fit_A0( unc=True)
+    dc.fit_R( unc=True)
+    #dc.fit_A0( unc=True)
     ### Only plot the 5 most active isotopes in the decay chain
     dc.plot(N_plot=5)
     print('              ', dc.isotopes)
     print('Activity (Bq):',dc.A0)
+    dc.fit_A0( unc=True)
     print('Uncertainty in Activity (Bq):', dc._unc_A0_fit)
 
     A_parent = dc.A0[0]
@@ -323,6 +324,7 @@ def npat_decaychain(name_of_csv_file, parent_str, daughter_str):
 
 def two_step_up_npat(func, reaction_parent, reaction_daughter, n, parent_str, daughter_str, Save_csv=False):
     list, lambda_parent, lambda_daughter = func
+    #plt.title('Test')
     if len(list)==2:
         A0_parent = np.zeros(n); sigma_A0_parent = np.zeros(n)
         A0_daughter = np.zeros(n); sigma_A0_daughter = np.zeros(n)
@@ -427,7 +429,7 @@ def two_step_up_data(func, reaction_parent, reaction_daughter, n, Save_csv=False
 
 #two_step_kp_data(Ni_56Ni(), Ni_56Co(), "Ni_56Co", 10, Save_csv= True)
 #two_step_up_npat(Ni_58Co(), "Ni_58mCo_npat", "Ni_58Co_npat", 10, '58COm', '58COg', Save_csv=True)
-#two_step_up_npat(Ni_56Co(return_two_list=True), "Ni_56Ni_npat", "Ni_56Co_npat", 10, '56NI', '56CO', Save_csv=True)
+two_step_up_npat(Ni_56Co(return_two_list=True), "Ni_56Ni_npat", "Ni_56Co_npat", 10, '56NI', '56CO', Save_csv=True)
 #two_step_kp_data(Ni_56Ni(), Ni_56Co(), "Ni_56Co", 10, Save_csv= True)
 #single_decay_data(Ni_56Ni(), "Ni_56Ni", 10, Save_csv=True)
 #single_decay_data(Fe_56Co(), "Fe_56Co", 3, Save_csv=True)

@@ -15,8 +15,7 @@ from foil_info import *
 #func = Ni_56Co(); A0_guess=[150, 1500]
 #func = Ni_58Co(); A0_guess=[8000, 1000]
 #func = Ir_193mPt(); A0_guess=1500
-#ACT = Activity(func, A0_guess, foilnumb='all')
-
+#ACT = Activity(func, A0_guess, foilnumb=0)
 #ACT.get_vals()
 #ACT.knownparent_activity(Ni_56Ni())
 #ACT.get_parent_activity(Ni_56Ni())
@@ -42,9 +41,16 @@ def find_index(list, element):
 #index = find_index(names, 'B-2,5%_D-7,5%')
 #index = find_index(names, 'B+10%_D0%')
 index = find_index(names, 'B0%_D-5%')
-RZ = Run_Ziegler(files, names)
+#RZ = Run_Ziegler(files, names)
 BC = BeamCurrent(files[index])
 CS = CrossSections(files[index])
+
+
+#A = BC.calling_parameters_to_weightedaverage_func('Ni', 'Ni_61Cu')
+#print(A[6])
+
+reshape = BC.reshaping_parameters()
+
 
 #CS.exfordata_npat()
 
@@ -63,9 +69,10 @@ CS = CrossSections(files[index])
 #two_step_kp_data(Ni_56Ni(), Ni_56Co(), "Ni_56Co", 10, Save_csv= True)
 
 
-CS.make_CS(Ir_193mPt(), 'Ir', 'Ir_193mPt.csv', 10, 'Ir_193mPt')
+#CS.make_CS(Ir_193mPt(), 'Ir', 'Ir_193mPt.csv', 10, 'Ir_193mPt')
 #CS.make_CS(Cu_57Ni(), 'Cu', 'Cu_57Ni.csv', 10, 'Cu_57Ni')
 #CS.make_CS(Ni_56Ni(), 'Ni', 'Ni_56Ni.csv', 10, 'Ni_56Ni')
+
 #CS.make_CS(Ni_61Cu(), 'Ni', 'Ni_61Cu.csv', 10, 'Ni_61Cu')
 #print("**")
 

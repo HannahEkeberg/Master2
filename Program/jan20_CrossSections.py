@@ -235,7 +235,7 @@ class CrossSections:
             if A0[j]==0:
                 dCS[j]=0
             else:
-                dCS[j] = CS[j]*np.sqrt( (dA0[j]/A0[j])**2 )#+ (dI[j]/I[j])**2 + (sigma_mass_density[j]/mass_density[j])**2 + (dlamb/lamb)**2    )
+                dCS[j] = CS[j]*np.sqrt( (dA0[j]/A0[j])**2 + (dI[j]/I[j])**2 + (sigma_mass_density[j]/mass_density[j])**2 + (dlamb/lamb)**2    )
 
             #path = os.getcwd() + '/CrossSections/'
             #np.savetxt(path + 'CrossSections_CSV/{}_CS'.format(reaction))
@@ -264,6 +264,8 @@ class CrossSections:
         #I_Ni = I
         #I_Cu = I
 
+        Cumulative_flag=False 
+
 
         #sigma_I /= unit_factor
 
@@ -286,17 +288,41 @@ class CrossSections:
             E_mon = np.loadtxt(filename, usecols=[0], skiprows=6)
             Cs_mon = np.loadtxt(filename, usecols=[1], skiprows=6)
         if reaction=='Ni_56Co':
-            CS, dCS = self.cross_section_calc(n, A0, sigma_A0, mass_density, sigma_mass_density, I_Ni, sigma_I, lamb, reaction)
+            CS_56Co, dCS_56Co = self.cross_section_calc(n, A0, sigma_A0, mass_density, sigma_mass_density, I_Ni, sigma_I, lamb, reaction)
             E = self.E_Ni;dE = self.dE_Ni
             filename =  path_to_monitor_data+'nid56cot/nid56cot.txt'
+
+            lamb_, mass_density_, sigma_mass_density_, E_, dE_, A0_, sigma_A0_ = self.get_var(Ni_56Ni(), 'Ni', 'Ni_56Ni.csv', 10, 'Ni_56Ni')
+            CS_56Ni, dCS_56Ni = self.cross_section_calc(n, A0_, sigma_A0_, mass_density, sigma_mass_density, I_Ni, sigma_I, lamb_, 'Ni_56Ni')
+
+            CS = CS_56Co +  CS_56Ni 
+           
+            Cumulative_flag = True
+           
+            dCS = CS*np.sqrt( (dCS_56Co/CS_56Co)**2 + (dCS_56Ni/CS_56Ni)**2) 
+
             E_mon = np.loadtxt(filename, usecols=[0], skiprows=6)
             Cs_mon = np.loadtxt(filename, usecols=[1], skiprows=6)
+            print("     56Ni     ", "    56Co   " )
+            print(np.vstack((CS_56Ni,CS_56Co)).T)
+
+            print()
         if reaction=='Ni_58Co':
-            CS, dCS = self.cross_section_calc(n, A0, sigma_A0, mass_density, sigma_mass_density, I_Ni, sigma_I, lamb, reaction)
+            CS_58Co, dCS_58Co = self.cross_section_calc(n, A0, sigma_A0, mass_density, sigma_mass_density, I_Ni, sigma_I, lamb, reaction)
             E = self.E_Ni;dE = self.dE_Ni
             filename =  path_to_monitor_data+'nid58cot/nid58cot.txt'
+
+            lamb_, mass_density_, sigma_mass_density_, E_, dE_, A0_, sigma_A0_ = self.get_var(Ni_58mCo(), 'Ni', 'Ni_58mCo.csv', 10, 'Ni_58mCo')
+            CS_58mCo, dCS_58mCo = self.cross_section_calc(n, A0_, sigma_A0_, mass_density, sigma_mass_density, I_Ni, sigma_I, lamb_, 'Ni_58mCo')
+
+            Cumulative_flag = True
+
+            CS = CS_58mCo +  CS_58Co
+            dCS = CS*np.sqrt( (dCS_58Co/CS_58Co)**2 + (dCS_58mCo/CS_58mCo)**2) 
             E_mon = np.loadtxt(filename, usecols=[0], skiprows=6)
             Cs_mon = np.loadtxt(filename, usecols=[1], skiprows=6)
+            print("     58Co     ", "    58mCo   " )
+            print(np.vstack((CS_58Co,CS_58mCo)).T)
         if reaction=='Cu_62Zn':
             CS, dCS = self.cross_section_calc(n, A0, sigma_A0, mass_density, sigma_mass_density, I_Cu, sigma_I, lamb, reaction)
             E = self.E_Cu;dE = self.dE_Cu
@@ -326,7 +352,14 @@ class CrossSections:
 
         #self.setting_plotvalues(E_mon, 0, Cs_mon, 0, label='monitor data', )
         print(scaling_parameter)
-        plt.plot(E_mon, Cs_mon, label='monitor data')
+
+        #if reaction == 'Ni_56Co' or reaction=='Ni_58Co':
+
+        if Cumulative_flag:
+            label = 'monitor data (cumulative)'
+        else:
+            label = 'monitor data'
+        plt.plot(E_mon, Cs_mon, label=label)
         self.setting_plotvalues(E, dE, CS, dCS, 'this data')
         self.plot_CrossSections(reaction)
 

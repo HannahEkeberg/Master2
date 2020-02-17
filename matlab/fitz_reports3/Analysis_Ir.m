@@ -170,8 +170,8 @@ rows_Ir_194m2Ir = [36,43,55,61,65,74];
 
 % Select rows to plot
 % varToStr = @(x) inputname(1);
-rows = rows_Cu_64Cu;
-outName = '../csv/Cu_64Cu';
+rows = rows_Cu_65Ni;
+outName = '../csv/Cu_65Ni';
 % rows = 12;
 % Find rows for the desired decay product
 selected_rows = data(rows,:);
