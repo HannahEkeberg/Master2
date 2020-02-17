@@ -14,7 +14,7 @@ from ziegler_sorting import *  #sorting of ziegler list etc
 from ZieglerFiles_new import ziegler_files
 
 
-from weighted_average import * # Andrew's covariance program 
+from weighted_average import * # Andrew's covariance program
 
 #files,names = ziegler_files()
 #print(files)
@@ -218,6 +218,7 @@ class BeamCurrent:
             F = self.F_Fe
             E = self.E_Fe
 
+
             IAEA_Cs, A0, sigma_A0, lambda_, mass_density, sigma_mass_density = self.Fe_foil(react)  #from beam_current_FoilReact
             E_mon, Cs, sigma_Cs, tck, sigma_tck = self.data(IAEA_Cs) #from monitor foils
 
@@ -268,15 +269,17 @@ class BeamCurrent:
 
         uncertainty_integral, reaction_integral = self.E_flux_integral(Cs, sigma_Cs, tck, sigma_tck, E, F)
         uncertainty_integral = np.array((uncertainty_integral))
+        #print("reaction integral: ", reaction_integral)
+        #print("uncertainty integral: ", uncertainty_integral)
 
 
-        ## CUMULATIVE CURRENTS, see Andrew's note for derivation 
-        if react=='Ni_58Co' or react=='Ni_56Co': 
+        ## CUMULATIVE CURRENTS, see Andrew's note for derivation
+        if react=='Ni_58Co' or react=='Ni_56Co':
             BR = 1.0
             sigma_BR = 0.0 # no BR for these reactions.
 
             #I = 1/(mass_density * reaction_integral)  * ( A0_dir*elementary_charge*1e9/(1-np.exp(-lambda_dir*irr_time)) + BR*A0_nondir*elementary_charge*1e9/ (1-np.exp(-lambda_nondir*irr_time)) )
-            I = ( 1/(mass_density * reaction_integral) ) * (A0_dir + BR*A0_nondir*(lambda_dir/lambda_nondir))*elementary_charge*1e9/(1-np.exp(-lambda_dir*irr_time)) 
+            I = ( 1/(mass_density * reaction_integral) ) * (A0_dir + BR*A0_nondir*(lambda_dir/lambda_nondir))*elementary_charge*1e9/(1-np.exp(-lambda_dir*irr_time))
             #print(reaction_integral)
             dI = I * np.sqrt((sigma_A0_dir/A0_dir)**2 + (sigma_A0_nondir/A0_nondir)**2  + (sigma_BR/BR)**2 + (sigma_mass_density/mass_density)**2 + (sigma_irr_time/irr_time)**2 + uncertainty_integral**2)
 
@@ -288,7 +291,7 @@ class BeamCurrent:
                 print("activity non-direct", A0_nondir)
 
         else:
-            I = A0 *elementary_charge*1e9 / (mass_density*(1-np.exp(-lambda_*irr_time))*reaction_integral)
+            I  = A0 *elementary_charge*1e9 / (mass_density*(1-np.exp(-lambda_*irr_time))*reaction_integral)
             dI = I * np.sqrt((sigma_A0/A0)**2 + (sigma_mass_density/mass_density)**2 + (sigma_irr_time/irr_time)**2 + uncertainty_integral**2)
 
             """
@@ -308,6 +311,8 @@ class BeamCurrent:
             print("reaction integral", reaction_integral)
             print("underctainty integral", uncertainty_integral)
             print("activity", A0)
+            print("I", I)
+            print("dI", dI)
 
         I = np.array(I)
 
@@ -345,6 +350,16 @@ class BeamCurrent:
         I_Cu_62Zn, dI_Cu_62Zn = self.calculate_beam_current('Cu', 'Cu_62Zn')    ##causes some problem in dI    RuntimeWarning: invalid value encountered in true_divide (in dI)
         I_Cu_63Zn, dI_Cu_63Zn = self.calculate_beam_current('Cu', 'Cu_63Zn')    ##causes some problem in dI. Caused by I=0
         I_Cu_65Zn, dI_Cu_65Zn = self.calculate_beam_current('Cu', 'Cu_65Zn')
+
+        """
+        print("Ni 61Cu: ", I_Ni_61Cu, dI_Ni_61Cu )
+        print("Ni 56Co: ", I_Ni_56Co, dI_Ni_56Co  )
+        print("Ni 58Co: ", I_Ni_58Co, dI_Ni_58Co  )
+        print("Cu 62Zn: ", I_Cu_62Zn, dI_Cu_62Zn )
+        print("Cu 63Zn: ", I_Cu_63Zn, dI_Cu_63Zn)
+        print("Cu 65Zn: ", I_Cu_65Zn, dI_Cu_65Zn)
+        print("Cu 56Co: ", I_Fe_56Co, dI_Fe_56Co )
+        """
 
         #print(I_Ni_56Co, "56Co")
         #print(I_Ni_58Co, "58Co")
@@ -572,6 +587,13 @@ class BeamCurrent:
         plt.xlim(0,35)
         #ylim(top=350)
         #ylim(bottom=0)
+
+        WABC = 'averaged_currents.csv' ## weighted average beam current filename
+        weighted_average_beam = np.genfromtxt(WABC, delimiter=',', usecols=[1])
+        #weighted_average_beam = weighted_average_beam[::-1]
+        sigma_weighted_average_beam = np.genfromtxt(WABC, delimiter=',', usecols=[2])
+        #sigma_weighted_average_beam = sigma_weighted_average_beam[::-1]
+        plt.errorbar(WE_Ir, weighted_average_beam, color='black', marker='P', linewidth=0.001, xerr=sigma_WE_Ir, yerr=sigma_weighted_average_beam, elinewidth=0.5, capthick=0.5, capsize=3.0,label='weighted average beam current' )
         if SaveFig:
             plt.legend(fontsize='x-small')
             path = os.getcwd()
@@ -581,11 +603,18 @@ class BeamCurrent:
 
     def CurrentPlot_compartment(self, name):
         compartment = [3,7,9]
+        #WABC = 'averaged_currents.csv' ## weighted average beam current filename
+        #weighted_average_beam = np.genfromtxt(WABC, delimiter=',', usecols=[1])
+        #weighted_average_beam = weighted_average_beam[::-1]
+        #sigma_weighted_average_beam = np.genfromtxt(WABC, delimiter=',', usecols=[2])
+        #sigma_weighted_average_beam = sigma_weighted_average_beam[::-1]
+
         colors = ['darkorange', 'forestgreen', 'palevioletred']#, 'darkorange', 'forestgreen', 'orchid', 'dodgerblue', 'lime', 'crimson', 'indianred']
         for i in range(len(compartment)):
             WE_Ni, chi_sq, I_est, sigma_I_est = self.variance_minimization(compartment[i]-1, name)
             labelling = r'compartment {} - $\chi^2=${:.2f}'.format(compartment[i], chi_sq)
             plt.axhline(I_est, color=colors[i], linestyle='--', linewidth=0.7, label=labelling)# label='compartment {}'.format(compartment[i]))
+            #plt.errorbar(WE_Ni, weighted_average_beam, color='black', marker='o', linewidth=0.001, xerr=sigma_weighted_average_beam, yerr=dI_Ni_61Cu, elinewidth=0.5, capthick=0.5, capsize=3.0,label=r'$^{nat}$Ni(d,x)$^{61}$Cu' )
         #plt.legend()
         #plt.show()
         self.CurrentPlot(name)
@@ -602,7 +631,7 @@ class BeamCurrent:
 
         I_Fe_56Co, I_Ni_61Cu, I_Ni_56Co, I_Ni_58Co, I_Cu_62Zn, I_Cu_63Zn, I_Cu_65Zn = self.specified_currents()
         dI_Fe_56Co, dI_Ni_61Cu, dI_Ni_56Co, dI_Ni_58Co, dI_Cu_62Zn, dI_Cu_63Zn, dI_Cu_65Zn = self.specified_currents(uncertainty=True)
-        
+
         #FROM MY SCRIPT
         WE_Fe, WE_Ni, WE_Cu, WE_Ir = self.specified_energies()
 
@@ -751,7 +780,7 @@ class BeamCurrent:
             return I, sigma_I_est     #, dI_list_new  #Correct?????
 
 
-    ### 
+    ###
     def reshaping_parameters(self):
         params_Ni_61Cu = self.calling_parameters_to_weightedaverage_func('Ni', 'Ni_61Cu')
         params_Ni_56Co = self.calling_parameters_to_weightedaverage_func('Ni', 'Ni_56Co')
@@ -760,7 +789,9 @@ class BeamCurrent:
         params_Cu_63Zn = self.calling_parameters_to_weightedaverage_func('Cu', 'Cu_63Zn')
         params_Cu_65Zn = self.calling_parameters_to_weightedaverage_func('Cu', 'Cu_65Zn')
         params_Fe_56Co = self.calling_parameters_to_weightedaverage_func('Fe', 'Fe_56Co')
-
+        #print(params_Fe_56Co[0])
+        #print(params_Ni_61Cu[0])
+        #print(params_Fe_56Co[-1][2])
         #print(len(params_Ni_61Cu[0]))
 
         matrix_A0 = np.zeros((10,7))
@@ -770,24 +801,103 @@ class BeamCurrent:
         matrix_sigma_mass_density = np.zeros((10,7))
         matrix_reaction_integral = np.zeros((10,7))
         matrix_uncertainty_integral = np.zeros((10,7))
-        matrix_irr_time = np.zeros((10,7))
-        matrix_sigma_irr_time = np.zeros((10,7))
+        matrix_irr_time = np.zeros((10,1))
+        matrix_sigma_irr_time = np.zeros((10,1))
 
-        list_of_params = [params_Ni_61Cu,params_Ni_56Co, params_Ni_58Co, params_Cu_62Zn, params_Cu_63Zn, params_Cu_65Zn, params_Fe_56Co]
+        list_of_params = [params_Ni_61Cu, params_Ni_56Co, params_Ni_58Co, params_Cu_62Zn, params_Cu_63Zn, params_Cu_65Zn, params_Fe_56Co]
         list_of_params = np.array((list_of_params))
-        print(list_of_params.shape)
-        print(type(list_of_params))
+        #print(list_of_params[0,2])
+        #print(list_of_params.shape)
+        #print(type(list_of_params))
 
+        n = len(list_of_params)
+        A0 = np.zeros(n)
+        sigma_A0 = np.zeros(n)
+        lambda_ = np.zeros(n)
+        mass_density = np.zeros(n)
+        sigma_mass_density =  np.zeros(n)
+        reaction_integral = np.zeros(n)
+        uncertainty_integral = np.zeros(n)
+        matrix_irr_time = np.transpose(np.ones(10)*3600)
+        #print(irr_time)
+        matrix_sigma_irr_time = np.transpose(np.ones(10)*3)
+
+        shape_cols = (10,)
+        for i in range(len(list_of_params)):
+            A0 = list_of_params[i,0]
+            sigma_A0 = list_of_params[i,1]
+            lambda_ = list_of_params[i,2]
+            mass_density = list_of_params[i,3]
+            sigma_mass_density = list_of_params[i,4]
+            reaction_integral = list_of_params[i,5]
+            uncertainty_integral = list_of_params[i,6]
+            #irr_time = list_of_params[i,7]
+            #sigma_irr_time = list_of_params[i,8]
+
+            try:
+
+                matrix_lambda_[:, i] = lambda_
+                #matrix_irr_time[i] = irr_time
+                #matrix_sigma_irr_time[i] = sigma_irr_time
+                matrix_A0[:,i] = A0
+                matrix_sigma_A0[:,i] = sigma_A0
+                matrix_mass_density[:,i] = mass_density
+
+                matrix_sigma_mass_density[:,i] = sigma_mass_density
+                matrix_reaction_integral[:,i]  = reaction_integral
+                matrix_uncertainty_integral[:,i]  = uncertainty_integral
+            except:
+                #print("Shape problem with Fe_56Co ")
+                A0 = np.pad(A0, (0, 7), 'constant')
+                sigma_A0 = np.pad(sigma_A0, (0, 7), 'constant')
+                mass_density = np.pad(mass_density, (0, 7), 'constant')
+                sigma_mass_density = np.pad(sigma_mass_density, (0, 7), 'constant')
+                reaction_integral = np.pad(reaction_integral, (0, 7), 'constant')
+                uncertainty_integral = np.pad(uncertainty_integral, (0, 7), 'constant')
+                matrix_A0[:,i] = A0
+                matrix_sigma_A0[:,i] = sigma_A0
+                matrix_mass_density[:,i] = mass_density
+                matrix_sigma_mass_density[:,i] = sigma_mass_density
+                matrix_reaction_integral[:,i]  = reaction_integral
+                matrix_uncertainty_integral[:,i]  = uncertainty_integral
+
+
+        #print(matrix_lambda_.shape)
+        #print(matrix_irr_time)
+        #print(matrix_sigma_irr_time)
+        #print(matrix_A0)
+        #print(matrix_sigma_A0)
+        #print(matrix_mass_density)
+        #print(sigma_matrix_mass_density)
+        #print(matrix_reaction_integral)
+        #print(matrix_uncertainty_integral)
+
+
+        return matrix_A0, matrix_sigma_A0, matrix_lambda_, matrix_mass_density, matrix_sigma_mass_density, matrix_reaction_integral, matrix_uncertainty_integral, matrix_irr_time, matrix_sigma_irr_time
+
+        """
+        ### PARAMETERS
+        ### A0, sigma_A0, lambda_, mass_density, sigma_mass_density, reaction_integral, uncertainty_integral, irr_time, sigma_irr_time
         #matrix_A0[] = params_Ni_61Cu[0]
+        n  = len(list_of_params)
+        col_A0 = np.zeros(n); col_dA0
+        shape_cols = (10,)
+        for i in range(n):
+            col_A0 = list_of_params[i,0]
+            col_dA0 = list_of_params[i,1]
 
-        for i in range(len(list_of_params))
-            
-            # matrix_A0[:,list_of_params[i].T] 
-        
-        # print(matrix_A0) 
-        #print(list_of_params[0])
 
-        
+
+            #if len(col_A0)<10:
+            #    col_A0 = np.pad(col_A0, (0, 7), 'constant')
+            #matrix_A0[:, i]=col_A0.T
+
+        """
+        #print(matrix_A0)
+        #print(matrix_lambda_)
+
+
+
 
     def calling_parameters_to_weightedaverage_func(self, foil, react):
         irr_time = 3600; sigma_irr_time = 3 #seconds
@@ -805,7 +915,7 @@ class BeamCurrent:
                 A0 = (A0_dir + A0_nondir*(lambda_dir/lambda_nondir))  # From the function calculate_beam_current, see book for further description, but we managed to find a different way to express A0 withot any changes. We hope
                 sigma_A0 = np.sqrt( (sigma_A0_dir/A0_dir)**2  + (sigma_A0_nondir/A0_nondir)**2 + (lambda_dir*0.001/lambda_dir)**2 + (lambda_nondir*0.001/lambda_nondir)**2 )
                 lambda_=lambda_dir
-            else:   
+            else:
                 IAEA_Cs, A0, sigma_A0, lambda_, mass_density, sigma_mass_density = self.Ni_foil(react)  #from beam_current_FoilReact
             E_mon, Cs, sigma_Cs, tck, sigma_tck = self.data(IAEA_Cs) #from monitor foils
             uncertainty_integral, reaction_integral =  self.E_flux_integral(Cs, sigma_Cs, tck, sigma_tck, E, F, return_interp_CS=False)
@@ -816,13 +926,6 @@ class BeamCurrent:
             E_mon, Cs, sigma_Cs, tck, sigma_tck = self.data(IAEA_Cs) #from monitor foils
             uncertainty_integral, reaction_integral =  self.E_flux_integral(Cs, sigma_Cs, tck, sigma_tck, E, F, return_interp_CS=False)
 
-        return A0, sigma_A0, lambda_, mass_density, sigma_mass_density, reaction_integral, uncertainty_integral, irr_time, sigma_irr_time 
+        return A0, sigma_A0, lambda_, mass_density, sigma_mass_density, reaction_integral, uncertainty_integral, irr_time, sigma_irr_time
 
         #E_Fe, E_Ni, E_Cu, E_Ir = self.WABE(foil)
-
-
-
-
-
-
-

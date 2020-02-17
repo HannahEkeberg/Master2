@@ -145,10 +145,14 @@ class CrossSections:
     def make_CS(self, react_func, foil, filename, n ,reaction):
         lamb, mass_density, sigma_mass_density, E, dE, A0, dA0 = self.get_var(react_func, foil, filename, n, reaction)
         #lamb, mass_density, sigma_mass_density, E, dE, A0, sigma_A0 = self.get_var(react_func, foil, filename, n, reaction)
-        I, dI = self.current_class.current_for_CS()   #nA
-        I_Fe, I_Ni, I_Cu, sigma_I = self.current_class.current_for_CS(mon_test=True)
 
-        print("I", I)
+        
+
+
+        #I, dI = self.current_class.current_for_CS()   #nA
+        #I_Fe, I_Ni, I_Cu, sigma_I = self.current_class.current_for_CS(mon_test=True)
+
+        #print("I", I)
         #print("I_Ni", I_Ni)
 
         #I = I_Ni; dI=sigma_I
@@ -264,7 +268,7 @@ class CrossSections:
         #I_Ni = I
         #I_Cu = I
 
-        Cumulative_flag=False 
+        Cumulative_flag=False
 
 
         #sigma_I /= unit_factor
@@ -295,11 +299,11 @@ class CrossSections:
             lamb_, mass_density_, sigma_mass_density_, E_, dE_, A0_, sigma_A0_ = self.get_var(Ni_56Ni(), 'Ni', 'Ni_56Ni.csv', 10, 'Ni_56Ni')
             CS_56Ni, dCS_56Ni = self.cross_section_calc(n, A0_, sigma_A0_, mass_density, sigma_mass_density, I_Ni, sigma_I, lamb_, 'Ni_56Ni')
 
-            CS = CS_56Co +  CS_56Ni 
-           
+            CS = CS_56Co +  CS_56Ni
+
             Cumulative_flag = True
-           
-            dCS = CS*np.sqrt( (dCS_56Co/CS_56Co)**2 + (dCS_56Ni/CS_56Ni)**2) 
+
+            dCS = CS*np.sqrt( (dCS_56Co/CS_56Co)**2 + (dCS_56Ni/CS_56Ni)**2)
 
             E_mon = np.loadtxt(filename, usecols=[0], skiprows=6)
             Cs_mon = np.loadtxt(filename, usecols=[1], skiprows=6)
@@ -318,7 +322,7 @@ class CrossSections:
             Cumulative_flag = True
 
             CS = CS_58mCo +  CS_58Co
-            dCS = CS*np.sqrt( (dCS_58Co/CS_58Co)**2 + (dCS_58mCo/CS_58mCo)**2) 
+            dCS = CS*np.sqrt( (dCS_58Co/CS_58Co)**2 + (dCS_58mCo/CS_58mCo)**2)
             E_mon = np.loadtxt(filename, usecols=[0], skiprows=6)
             Cs_mon = np.loadtxt(filename, usecols=[1], skiprows=6)
             print("     58Co     ", "    58mCo   " )

@@ -46,12 +46,32 @@ BC = BeamCurrent(files[index])
 CS = CrossSections(files[index])
 
 
+
+BC.CurrentPlot(names[index], SaveFig=True)
+
+#BC.calculate_beam_current('Fe', 'Fe_56Co', print_terms=True)
+#BC.calculate_beam_current('Fe', 'Fe_56Co', print_terms=True)
+#BC.specified_currents()
+from weighted_average import *
+
+
+
 #A = BC.calling_parameters_to_weightedaverage_func('Ni', 'Ni_61Cu')
 #print(A[6])
 
-reshape = BC.reshaping_parameters()
 
 
+
+A0, sigma_A0, lambda_, mass_density, sigma_mass_density, reaction_integral, uncertainty_integral, irr_time, sigma_irr_time = BC.reshaping_parameters()
+#print(mass_density)
+#print(lambda_)
+#print(irr_time)
+#print(sigma_irr_time)
+weighted_average_BC, sigma_weighted_average_BC = Average_BeamCurrent(A0, sigma_A0, mass_density, sigma_mass_density,  lambda_, reaction_integral, uncertainty_integral, irr_time, sigma_irr_time)
+
+
+
+#print(weighted_average_BC)
 #CS.exfordata_npat()
 
 #BC = BeamCurrent(files[index])
