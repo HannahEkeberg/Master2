@@ -1,4 +1,7 @@
 from npat import Ziegler, Isotope
+import timeit
+import os.path
+
 
 if __name__=='__main__':
 
@@ -50,6 +53,9 @@ if __name__=='__main__':
 	'B_+1,75', 'B_+2', 'B_+2,25', 'B_+2,5', 'B_+2,75', 'B_+3', 'B_+3,25', 'B_+3,5', 'B_+3,75', 'B_+4','B_+4,25', 'B_+4,5', 'B_+4,75', 'B_+5']
 	#np.flip(scaling_parameter_beam)
 	#np.flip(names_beam)
+
+	counter = 1
+	max_runs = len(scaling_parameter) * len(scaling_parameter_beam)
 
 	#SS_316 stainless steel
 	for i in range(len(scaling_parameter)):
@@ -122,27 +128,51 @@ if __name__=='__main__':
 			## beam is dict, specifying the isotope and incident energy
 			## of the incoming beam.  dE0 (1-sigma width) and N (number of particles)
 			## can optionally be included
-			zg = Ziegler(stack=stack)
-			#beam_istp='2H', E0=33.0, dE0=0.5, N=1E6, max_steps=100, 'dp'=scaling_parameter[i])
-			zg.meta = {'istp':'2H', 'E0':33.0*scaling_parameter_beam[j], 'dE0':0.5, 'N':1E6, 'max_steps':100,'dp':scaling_parameter[i] }
-			## name from stack is used for plotting - either incl_no_names=True must
-			## be set, or name must be specified
-			## if zg.plot() is called, all foils in stack are plotted that have a name.
-			## optionally the first argument to plot is a list of samples that will be
-			## regex matched to the names in the stack
 
-			#zg.plot(['Ir'])#,'Ni','Ti'])
+			# See if run is already complete
+			# print(save_filename)
+			# print(type(save_filename))
+			test_path = save_filename[:-4]+'_stack.csv'
+			if os.path.isfile(test_path):
+			    print ("Run ",test_path, " has already been completed!")
+			else:
+			    # print ("File ",test_path," does not exist")
+			    tic=timeit.default_timer()
 
-			## summarize either prints out the mean and 1-sigma energies of each
-			## foil in the stack (with a name), or saves this info to a .csv using
-			## the saveas argument.
-			#zg.summarize(['Ir'])
+			    zg = Ziegler(stack=stack)
+			    #beam_istp='2H', E0=33.0, dE0=0.5, N=1E6, max_steps=100, 'dp'=scaling_parameter[i])
+			    zg.meta = {'istp':'2H', 'E0':33.0*scaling_parameter_beam[j], 'dE0':0.5, 'N':1E6, 'max_steps':100,'dp':scaling_parameter[i]}
 
-			#zg.saveas('E_foils_test3.csv')
+			    # toc=timeit.default_timer()
+
+			    # print(str(toc - tic), 'seconds elapsed for current run.\n')
+			    ## name from stack is used for plotting - either incl_no_names=True must
+			    ## be set, or name must be specified
+			    ## if zg.plot() is called, all foils in stack are plotted that have a name.
+			    ## optionally the first argument to plot is a list of samples that will be
+			    ## regex matched to the names in the stack
+
+			    #zg.plot(['Ir'])#,'Ni','Ti'])
+
+			    ## summarize either prints out the mean and 1-sigma energies of each
+			    ## foil in the stack (with a name), or saves this info to a .csv using
+			    ## the saveas argument.
+			    #zg.summarize(['Ir'])
+
+			    #zg.saveas('E_foils_test3.csv')
 
 
-			#zg.saveas('E_foils_Fe_{}.csv'.format(names[i]))
-			zg.saveas(save_filename)
+			    #zg.saveas('E_foils_Fe_{}.csv'.format(names[i]))
+			    zg.saveas(save_filename)
+
+			    toc=timeit.default_timer()
+
+			    print(str(toc - tic), 'seconds elapsed for current run.\n')
+			    print('Run ',save_filename,'(',counter,' of ',max_runs,') is finished!\n')
+			    print('Estimated time remaining: ', str((max_runs-counter)*(toc - tic)/60) , ' minutes')
+
+
+			counter +=1
 
 	## The results of the stack calculation can be found in the zg.stack
 	## variable, which is a list of Sample objects which store the energy,
