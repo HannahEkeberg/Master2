@@ -2,11 +2,11 @@ clear all; clc;
 
 
 % make some gamma ray energies for plotiing
-xp= 30:2000;
+xp= 30:2500;
 
 % Select efficiency calibration matrix
-effcal_new = '../../Calibration/eff_HPGE2_30.mat'   %npat generated
-effcal_old = '../../Program/efficiency_csv/eff_HPGE2_30.mat' %own 
+effcal_new = '../../Calibration/eff_HPGE2_45.mat'   %npat generated
+effcal_old = '../../Program/efficiency_csv/eff_room131_50_old.mat' %own 
 
 [efficiency_new, unc_efficiency_new, ~, ~] = efficiency_calibration(xp, effcal_new);
 [efficiency_old, unc_efficiency_old, ~, ~] = efficiency_calibration(xp, effcal_old);
