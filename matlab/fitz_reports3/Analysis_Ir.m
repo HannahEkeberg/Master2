@@ -21,8 +21,8 @@ load ir_glines.mat
 %u_fn  = textscan(fopen('u_fnames.txt'),'%s');
 ir_fn = textscan(fopen('ir_fnames.txt'),'%s');
 cu_fn = textscan(fopen('cu_fnames.txt'),'%s');
-%ni_fn = textscan(fopen('ni_fnames.txt'),'%s');
-ni_fn = textscan(fopen('ni_fnames-kopi.txt'),'%s');
+ni_fn = textscan(fopen('ni_fnames.txt'),'%s');
+% ni_fn = textscan(fopen('ni_fnames-kopi.txt'),'%s');
 fe_fn = textscan(fopen('fe_fnames.txt'),'%s');
 %mon_fn = textscan(fopen('mon_fnames.txt'),'%s');
 %only_mon_fn = textscan(fopen('only_mon_fnames.txt'),'%s');
@@ -207,6 +207,20 @@ for energy = 128:100:1028   % Just Nickel
     end
     
     % Pull the data from the GammaCounts objects
+    
+%     % check for Co56 background contamination on IDMs(+HPGE) in Cave 4C
+%     if isequal(rows, rows_Ni_56Co)
+%         % we are looking at 56CO
+%         for gamma_index=1:length(gammas)
+%             obj = gammas(1,gamma_index);
+%             if (strcmpi(obj.EfficiencyCovarianceData, 'eff_HPGE1_10.mat') || strcmpi(obj.EfficiencyCovarianceData, 'eff_HPGE1_30.mat')) 
+%                 background_count_rate = 2.8338e-02;
+%                 % get the 1238 keV count rate
+%                 contaminated_count_rate = obj.NumberOfCounts
+%                 % get 
+%             end
+%         end
+%     end
     activities     = [gammas.Activity];
     delta_ts       = [gammas.TimeSinceEoB];
     unc_activities = [gammas.UncertaintyActivity];
