@@ -14,7 +14,7 @@ if not os.path.exists(dir_files):
 
 
 files = []
-with open(path + 'ziegler_names.txt', 'r') as fh:
+with open(path + 'fnames.txt', 'r') as fh:
     for line in fh.readlines():
         files.append(line[:-1])
         fh.close()
@@ -56,7 +56,7 @@ for f in files:
 
         for i in range(len(E)-2):
 
-            print(ind_maxF)
+            #print(ind_maxF)
             if ind_maxF==0:
                 ind_maxF=20
 
