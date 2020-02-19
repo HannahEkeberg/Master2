@@ -21,7 +21,8 @@ load ir_glines.mat
 %u_fn  = textscan(fopen('u_fnames.txt'),'%s');
 ir_fn = textscan(fopen('ir_fnames.txt'),'%s');
 cu_fn = textscan(fopen('cu_fnames.txt'),'%s');
-ni_fn = textscan(fopen('ni_fnames.txt'),'%s');
+%ni_fn = textscan(fopen('ni_fnames.txt'),'%s');
+ni_fn = textscan(fopen('ni_fnames-kopi.txt'),'%s');
 fe_fn = textscan(fopen('fe_fnames.txt'),'%s');
 %mon_fn = textscan(fopen('mon_fnames.txt'),'%s');
 %only_mon_fn = textscan(fopen('only_mon_fnames.txt'),'%s');
@@ -92,22 +93,23 @@ data = output;
 %rows_61Cu = [1 6 10 14 15 16 25 ];
 
 % % 33MeV Nickel foils:
-rows_Ni_52mMn = [70]; 
-rows_Ni_52Mn = [27,42,60,64,71]; 
-rows_Ni_54Mn = [35];
-rows_Ni_55Co = [3,13,15,18,30,34,41,46,57,63,67,69,84,98,105];  
-rows_Ni_56Co = [29,45,55,59,66,82,90,91,92,99,101];  %check
-rows_Ni_56Ni = [7,8,16,28,32,74]; 
-rows_Ni_57Co = [4,6,26]; 
-rows_Ni_57Ni = [26,12,25,40,49,58,68,80,81,86,87,95,104]; 
+rows_Ni_52mMn = [70];   %check
+rows_Ni_52Mn = [27,42,60,64,71];  %check
+rows_Ni_54Mn = [35]; %check
+rows_Ni_55Co = [3,13,15,18,30,34,41,46,57,63,67,69,84,98,105];   %check
+% rows_Ni_56Co = [29,45,55,59,66,82,90,91,92,99,101];  %check
+rows_Ni_56Co = [29,45,55,59,82,90];  %check
+rows_Ni_56Ni = [7,8,16,28,32,74];  %check
+rows_Ni_57Co = [4,6,26]; %check
+rows_Ni_57Ni = [26,12,25,40,49,58,68,80,81,86,87,95,104]; %check
 rows_Ni_58Co = [31,38,77];   %check
-rows_Ni_59Fe = [61];
-rows_Ni_60Cu = [14,17,23,36,43,44,48,52,62,83,85,88,89,93,97,100,102,103];
-rows_Ni_60mCo = [1]; 
+rows_Ni_59Fe = [61];%check
+rows_Ni_60Cu = [14,17,23,36,43,44,48,52,62,83,85,88,89,93,97,100,102,103]; %check
+rows_Ni_60mCo = [1]; %check
 % rows_Ni_61Cu = [2,9,11,19,20,22,24,33,37,39,47,50,51,54,56,72,76,79,94]; %check
 rows_Ni_61Cu = [9,11,19,20,22,24,33,37,39,47,51,54,56,72]; %check
-rows_Ni_64Cu = [65];
-rows_Ni_65Ni = [10,21,53,73,75,78];
+rows_Ni_64Cu = [65]; %check
+rows_Ni_65Ni = [10,21,53,73,75,78]; %check
 
 
 
@@ -115,65 +117,65 @@ rows_Ni_65Ni = [10,21,53,73,75,78];
 % % 33MeV Copper foils:
 rows_Cu_52Mn = [20,23,34,39]; %check
 rows_Cu_56Co = [22,25,31,42,44,47];  %check
-rows_Cu_57Co = [3,15];
-rows_Cu_57Ni = [36];
-rows_Cu_58Co = [21]; 
-rows_Cu_59Fe = [10, 26, 32]; 
-rows_Cu_60Co = [29,33];
-rows_Cu_61Co = [2];
-rows_Cu_61Cu = [2,8,18,30]; 
+rows_Cu_57Co = [3,15]; %check
+rows_Cu_57Ni = [36]; %check
+rows_Cu_58Co = [21];  %check
+rows_Cu_59Fe = [10, 26, 32]; %check
+rows_Cu_60Co = [29,33];%check
+rows_Cu_61Co = [2]; % check
+rows_Cu_61Cu = [2,8,18,30]; %check
 rows_Cu_62Zn = [1,4,6,7,9,11,12,14,16,17]; %check
 % rows_Cu_63Zn = [5,13,19,24,28,37,38,41,43,45,46]; %check 
 rows_Cu_63Zn = [13,19,24]; %check 
-rows_Cu_64Cu = [35]; 
+rows_Cu_64Cu = [35]; %check
 rows_Cu_65Ni = [40]; %check
 rows_Cu_65Zn = [27]; %check
 
 
 % % 33MeV Iron foils:
-rows_Fe_48V = [24,26,37]; 
-rows_Fe_51Cr = [5];
-rows_Fe_51Mn = [12];
-rows_Fe_52mMn = [44];
-rows_Fe_52Mn = [6,11,19,23,35,39,45]; 
-rows_Fe_53Fe = [7]; 
-rows_Fe_54Mn = [17]; 
-rows_Fe_55Co = [1,8,14,22,38,42,43,55,16,50,54];
+rows_Fe_48V = [24,26,37];  %check
+rows_Fe_51Cr = [5]; %check
+rows_Fe_51Mn = [12]; %check
+rows_Fe_52mMn = [44]; %check
+rows_Fe_52Mn = [6,11,19,23,35,39,45]; %check
+rows_Fe_53Fe = [7]; %check
+rows_Fe_54Mn = [17]; %check
+rows_Fe_55Co = [1,8,14,22,38,42,43,55,16,50,54]; %check
 rows_Fe_56Co = [4,9,10,13,18,20,21,25,27,28,30,31,32,33,34,40,41,46,47,48,49,51,52,53]; %check
-rows_Fe_57Co = [2,3];
-rows_Fe_58Co = [15]; 
-rows_Fe_59Fe = [29,36];
+rows_Fe_57Co = [2,3];%check
+rows_Fe_58Co = [15]; %check
+rows_Fe_59Fe = [29,36]; %check
 %rows_55Co = [];
 
 
 % % 33MeV Iridium foils:
-rows_Ir_183Ta = [23,38]; 
-rows_Ir_186Re = [8,12]; 
-rows_Ir_186Ta = [20,58];
-rows_Ir_187W = [54,68,73,9]; 
-rows_Ir_188Ir = [78,89,92,93,94];
-rows_Ir_188mRe = [1,5];
-rows_Ir_188Pt = [17,42,48,53];
-rows_Ir_188Re = [77,82];
-rows_Ir_189Ir = [3,21];
-rows_Ir_189Pt = [2,6,22,31,35,60,75];
-rows_Ir_189Re = [13,14,16,62];
-rows_Ir_189W = [24,47,80]; 
-rows_Ir_190Ir = [27,29,41,44,49,76,84]; 
-rows_Ir_190mRe = [7,72];
-rows_Ir_190Re = [50,79,88,90];
-rows_Ir_191Pt = [4,15,25,37,39,45,51,59,70];
-rows_Ir_192Ir = [11,18,19,26,30,33,34,40,46,52,56,57,63,66,67,81,85];
-rows_Ir_193mPt = [10]; 
-rows_Ir_194Ir = [28,32,64,69,71,83,86,87,91];
-rows_Ir_194m2Ir = [36,43,55,61,65,74];
+rows_Ir_183Ta = [23,38]; %check
+rows_Ir_186Re = [8,12]; %check
+rows_Ir_186Ta = [20,58]; %check
+rows_Ir_187W = [54,68,73,9]; %check
+rows_Ir_188Ir = [78,89,92,93,94]; %check
+rows_Ir_188mRe = [1,5]; %check
+rows_Ir_188Pt = [17,42,48,53]; %check
+rows_Ir_188Re = [77,82]; %check
+rows_Ir_189Ir = [3,21]; %check
+rows_Ir_189Pt = [2,6,22,31,35,60,75]; %check
+rows_Ir_189Re = [13,14,16,62]; %check
+rows_Ir_189W = [24,47,80]; %check
+rows_Ir_190Ir = [27,29,41,44,49,76,84]; %check
+rows_Ir_190mRe = [7,72]; %check
+rows_Ir_190Re = [50,79,88,90]; %check
+rows_Ir_191Pt = [4,15,25,37,39,45,51,59,70]; %check
+rows_Ir_192Ir = [11,18,19,26,30,33,34,40,46,52,56,57,63,66,67,81,85]; %check
+rows_Ir_193mPt = [10]; %check
+rows_Ir_194Ir = [28,32,64,69,71,83,86,87,91];%check
+rows_Ir_194m2Ir = [36,43,55,61,65,74]; %check
 
 
 
 % Select rows to plot
 % varToStr = @(x) inputname(1);
-rows = rows_Ni_61Cu;
-outName = '../csv/Ni_61Cu';
+rows = rows_Ni_56Co;
+outName = '../csv/Ni_56Co';
 % rows = 12;
 % Find rows for the desired decay product
 selected_rows = data(rows,:);
@@ -185,11 +187,11 @@ selected_rows = data(rows,:);
 % 
 % loop over all energies for a foil type
 for energy = 128:100:1028   % Just Nickel
-% for energy = 129:100:1029   % Just Copper
+%for energy = 129:100:1029   % Just Copper
 %for energy = 126:100:326   % Just Iron
 %for energy = 177:100:1077   % Just Iridium
 % 
-% for energy = 428   % debug mode
+%for energy = 728   % debug mode
     if energy==0
         % Return all rows for plotting
         gammas = selected_rows;

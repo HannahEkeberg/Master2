@@ -268,7 +268,8 @@ def npat_decaychain(name_of_csv_file, parent_str, daughter_str):
         #print(list_of_counts)
 
         ### Calculate decay over timespan of all counts
-        dc.append(DecayChain(parent_str, 'h', time=max(list_of_counts_daughter[:,1])))
+        #dc.append(DecayChain(parent_str, 'h', time=max(list_of_counts_daughter[:,1])))
+        dc.append(DecayChain(parent_str, 'h', time=700.0))
         # dc.plot()
 
         ### Measured counts: [start_time (d), stop_time (d), decays, unc_decays]
@@ -309,11 +310,12 @@ def npat_decaychain(name_of_csv_file, parent_str, daughter_str):
     dc.plot(N_plot=5)
     print('              ', dc.isotopes)
     print('Activity (Bq):',dc.A0)
-    dc.fit_A0( unc=True)
-    print('Uncertainty in Activity (Bq):', dc._unc_A0_fit)
+    
 
     A_parent = dc.A0[0]
     A_daughter = dc.A0[1]
+    dc.fit_A0( unc=True)
+    print('Uncertainty in Activity (Bq):', dc._unc_A0_fit)
     dA_parent  = dc._unc_A0_fit[0]
     dA_daughter = dc._unc_A0_fit[1]
 
@@ -338,6 +340,8 @@ def two_step_up_npat(func, reaction_parent, reaction_daughter, n, parent_str, da
             A0_daughter[i] = A0_estimated_daughter
             sigma_A0_daughter[i] = sigma_A0_estimated_daughter
             #sigma_A0_daughter = sigma_A0_estimated_daughter[0]
+            print('Parent: ', A0_parent)
+            print('Daughter: ', A0_daughter)
             if Save_csv == True:
                 save_results_to = os.getcwd()+'/activity_csv/'
                 #print(type(reaction_daughter))
@@ -355,6 +359,8 @@ def two_step_up_npat(func, reaction_parent, reaction_daughter, n, parent_str, da
             A0_daughter[i] = A0_estimated_daughter
             sigma_A0_daughter[i] = sigma_A0_estimated_daughter
             #sigma_A0_daughter = sigma_A0_estimated_daughter[0]
+            print('Parent: ', A0_parent)
+            print('Daughter: ', A0_daughter)
             if Save_csv == True:
                 save_results_to = os.getcwd()+'/activity_csv/'
                 #print(type(reaction_daughter))
@@ -399,7 +405,7 @@ def two_step_kp_data(func_parent, func_daughter, reaction, n, Save_csv=False):
             np.savetxt("{}.csv".format(save_results_to +  reaction), np.array((A0, sigma_A0)), delimiter=",")
         #print("A0: {}, sigmaA0: {}".format(A0_estimated_daughter, sigma_A0_estimated_daughter))
         #print("*****************************************")
-    #print(A0)
+    print(A0)
 def two_step_up_data(func, reaction_parent, reaction_daughter, n, Save_csv=False):
     list, lambda_parent, lambda_daughter = func
     A0_parent = np.zeros(n); sigma_A0_parent = np.zeros(n)
@@ -418,6 +424,7 @@ def two_step_up_data(func, reaction_parent, reaction_daughter, n, Save_csv=False
             print(save_results_to+reaction_parent)
             np.savetxt("{}.csv".format(save_results_to + reaction_parent), np.array((A0_parent, sigma_A0_parent)), delimiter=",")
             np.savetxt("{}.csv".format(save_results_to + reaction_daughter), np.array((A0_daughter, sigma_A0_daughter)), delimiter=",")
+    
             #np.savetxt("{}.csv".format(reaction_parent), np.array((A0_parent, sigma_A0_parent)), delimiter=",")
             #np.savetxt("{}.csv".format(reaction_daughter), np.array((A0_daughter, sigma_A0_daughter)), delimiter=",")
         #print("Isomer -  A0: {}, sigma A0: {}".format(A0_estimated_parent, sigma_A0_estimated_parent))
@@ -430,11 +437,11 @@ def two_step_up_data(func, reaction_parent, reaction_daughter, n, Save_csv=False
 #single_decay_data(Cu_62Zn(), "Cu_62Zn", 10, Save_csv=True)
 #single_decay_data(Cu_63Zn(), "Cu_63Zn", 10, Save_csv=True)
 #single_decay_data(Cu_65Zn(), "Cu_65Zn", 10, Save_csv=True)
-single_decay_data(Ni_61Cu(), "Ni_61Cu", 10, Save_csv=True)
+#single_decay_data(Ni_61Cu(), "Ni_61Cu", 10, Save_csv=True)
 
 #two_step_kp_data(Ni_56Ni(), Ni_56Co(), "Ni_56Co", 10, Save_csv= True)
 #two_step_up_npat(Ni_58Co(), "Ni_58mCo_npat", "Ni_58Co_npat", 10, '58COm', '58COg', Save_csv=True)
-#two_step_up_npat(Ni_56Co(return_two_list=True), "Ni_56Ni_npat", "Ni_56Co_npat", 10, '56NI', '56CO', Save_csv=True)
+two_step_up_npat(Ni_56Co(return_two_list=True), "Ni_56Ni_npat", "Ni_56Co_npat", 10, '56NI', '56CO', Save_csv=True)
 #two_step_kp_data(Ni_56Ni(), Ni_56Co(), "Ni_56Co", 10, Save_csv= True)
 #single_decay_data(Ni_56Ni(), "Ni_56Ni", 10, Save_csv=True)
 #single_decay_data(Fe_56Co(), "Fe_56Co", 3, Save_csv=True)

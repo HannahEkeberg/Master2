@@ -6,7 +6,7 @@ import sys
 from scipy.stats import norm
 from scipy.optimize import curve_fit, minimize_scalar
 
-print(sys.version)
+#print(sys.version)
 
 from beam_current_FoilReact import *    #Program where info regarding foil reaction.
 from ziegler_sorting import *  #sorting of ziegler list etc
@@ -18,7 +18,7 @@ from weighted_average import * # Andrew's covariance program
 
 #files,names = ziegler_files()
 #print(files)
-
+import os
 
 
 """
@@ -54,7 +54,9 @@ if not os.path.exists(comp_dir):
 
 class BeamCurrent:
     def __init__(self, ziegler_file):
-        self.file = ziegler_file
+        path_to_ziegler_files = os.getcwd() + '/cleaned_zieglerfiles/'
+        #print(ziegler_file)
+        self.file = path_to_ziegler_files + ziegler_file
         self.sort = sort_ziegler    # from ziegler_sorting.py
         self.Fe_foil = Fe_foil      # from beam_current_FoilReact
         self.Ni_foil = Ni_foil      # from beam_current_FoilReact

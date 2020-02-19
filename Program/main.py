@@ -1,6 +1,6 @@
 from jan20_CrossSections import CrossSections
 #from ZieglerFiles_new import ziegler_files
-from feb20_zieglerfiles import ziegler   #newest with all cleaned files
+#from feb20_zieglerfiles import ziegler   #newest with all cleaned files
 #from single_decay_A0 import *
 from des19_BeamCurrent import *
 
@@ -34,11 +34,28 @@ from foil_info import *
 
 #files,names = ziegler_files()
 
-files, names = ziegler()
-print(names)
-
+f_list_FilesNames = 'ziegler_FilesNames.csv'
+files = np.genfromtxt(f_list_FilesNames, dtype="str", delimiter='|', usecols=[0])
+names = np.genfromtxt(f_list_FilesNames, dtype="str", delimiter='|', usecols=[1])
+files = list(files)
+names = list(names)
+#files, names = ziegler()
+#print(names[8])
+#print(type(files))
+#
 def find_index(list, element):
     return list.index(element)
+
+#files = files[:10]
+#names = names[:10]
+#print(names[3])
+
+
+
+#index = find_index(names, 'B_-2,5_D_+4') not super good: 
+index = find_index(names, 'B_+1_D_-2')
+
+
 
 #### positive B and positive D compensate each other- same for neg neg
 
@@ -48,11 +65,22 @@ def find_index(list, element):
 #index = find_index(names, 'B_0_D_0')
 #print(index)
 #RZ = Run_Ziegler(files, names)
-#BC = BeamCurrent(files[index])
-#CS = CrossSections(files[index])
+#RZ.plot_ChiSq(9, chi_tol=2)
+#print(files[index])
 
+BC = BeamCurrent(files[index])
+BC.CurrentPlot(names[index], SaveFig=True)
+CS = CrossSections(files[index])
 
-
+"""
+CS.mon_CS_test(Fe_56Co(), 'Fe', 'Fe_56Co.csv', 3, 'Fe_56Co', names[index])
+CS.mon_CS_test(Ni_61Cu(), 'Ni', 'Ni_61Cu.csv', 10, 'Ni_61Cu', names[index])
+CS.mon_CS_test(Ni_56Co(), 'Ni', 'Ni_56Co.csv', 10, 'Ni_56Co', names[index])
+CS.mon_CS_test(Ni_58Co(), 'Ni', 'Ni_58Co.csv', 10, 'Ni_58Co', names[index])
+CS.mon_CS_test(Cu_62Zn(), 'Cu', 'Cu_62Zn.csv', 10, 'Cu_62Zn', names[index])
+CS.mon_CS_test(Cu_63Zn(), 'Cu', 'Cu_63Zn.csv', 10, 'Cu_63Zn', names[index])
+CS.mon_CS_test(Cu_65Zn(), 'Cu', 'Cu_65Zn.csv', 10, 'Cu_65Zn', names[index])
+"""
 #BC.CurrentPlot(names[index], SaveFig=True)
 
 
@@ -108,18 +136,6 @@ def find_index(list, element):
 
 
 #get_vals(Cu_64Cu(), 'Cu', 'Cu_64Cu.csv', 10, 'Cu_64Cu')
-
-
-#CS.mon_CS_test(Fe_56Co(), 'Fe', 'Fe_56Co.csv', 3, 'Fe_56Co', names[index])
-#CS.mon_CS_test(Ni_61Cu(), 'Ni', 'Ni_61Cu.csv', 10, 'Ni_61Cu', names[index])
-#CS.mon_CS_test(Ni_56Co(), 'Ni', 'Ni_56Co.csv', 10, 'Ni_56Co', names[index])
-#CS.mon_CS_test(Ni_58Co(), 'Ni', 'Ni_58Co.csv', 10, 'Ni_58Co', names[index])
-#CS.mon_CS_test(Cu_62Zn(), 'Cu', 'Cu_62Zn.csv', 10, 'Cu_62Zn', names[index])
-#CS.mon_CS_test(Cu_63Zn(), 'Cu', 'Cu_63Zn.csv', 10, 'Cu_63Zn', names[index])
-#CS.mon_CS_test(Cu_65Zn(), 'Cu', 'Cu_65Zn.csv', 10, 'Cu_65Zn', names[index])
-
-
-
 
 #I = BC.current_for_CS()
 #print(I)
@@ -256,15 +272,5 @@ def get_vals(react_func, target, csv_file, n, reaction):
     print("I:",  I)
 
 
-#get_vals(Cu_64Cu(), 'Cu', 'Cu_64Cu.csv', 10, 'Cu_64Cu')
-#get_vals(Cu_65Ni(), 'Ni', 'Cu_65Ni.csv', 10, 'Cu_65Ni')
-#get_vals(Ir_193mPt(), 'Ir', 'Ir_193mPt.csv', 10, 'Ir_193mPt')
-
-
-#BC = run_BeamCurrent(files, names)
-#BC.run_varmin(files, names, 3, makePlot=True)
-#BC.run_beam_current()
-#BC.flux_distribution('Ni')
-#BC.flux_distribution('Cu')
-#BC.flux_distribution('Fe')
-#BC.flux_distribution('Ir')
+if __name__ == "__main__":
+    print(__name__)

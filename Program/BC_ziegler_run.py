@@ -1,8 +1,33 @@
 
 from des19_BeamCurrent import BeamCurrent
+import numpy as np
 
 
 import matplotlib.pyplot as plt
+
+
+"""
+Testing variance minimization for all ziegler files. 
+
+run_beam_current: 
+makes plots of the beam current with and without the compartment estimated current. 
+
+
+run_beam_current_in_compartment:
+Estimates the chi^2, and gives a plot of the chosen compartmen with estimated energy. 
+
+flux_distribution:
+gives the flux distribution for each foil. 
+
+plot_ChiSq:
+Plots the chi^2 for the chosen compartment. And provides a csv file with the chi^2 values with the files with chi^2 within the tolerance.
+Tolerance is how large values to include from the min value. 
+
+run_varmin:
+Not in use anymore?? 
+
+
+"""
 
 class Run_Ziegler:
 
@@ -18,22 +43,6 @@ class Run_Ziegler:
         #for ind in self.list_of_bad_indices:
             #self.files.remove(self.files[ind])
             #self.names.remove(self.names[ind])
-
-
-
-
-    #def run_beam_current(self):
-    #    if type(self.names) == str:
-            #print(names, files)
-    #        myclass = BeamCurrent(self.files)
-            #myclass = BeamCurrent(self.file)
-    #        myclass.CurrentPlot(self.names)
-    #    else:
-    #        n = len(self.names)
-    #        for i in range(n):
-    #            myclass = BeamCurrent(self.files[i])
-    #            myclass.CurrentPlot_compartment(self.names[i])
-    #            #myclass.CurrentPlot(self.names[i])
 
     def run_beam_current(self):
         #if type(self.names) == str:
@@ -124,15 +133,25 @@ class Run_Ziegler:
         print(index)
         zf = self.names[index]
 
+        list_of_chi   = []
+        list_of_names = []
         for i in chi_sq_list:
             if i < min(chi_sq_list)+chi_tol:
                 index = chi_sq_list.index(i)
                 plt.axvline(E_Ni_list[index], linestyle='--', linewidth=0.2, label=self.names[index]+r' -$\chi^2=${:.2f} '.format(chi_sq_list[index]))
+                list_of_chi.append(chi_sq_list[index])
+                list_of_names.append(self.names[index])
+
+        csv_save = np.vstack((list_of_names, list_of_chi)).T
+        #print(type(csv_save))
+        
+        np.savetxt('min_chi_comp{}.csv'.format(compartment), csv_save, delimiter='|', header='Filename, Chi^2', fmt="%s"  )#, %.6f, %.6f")
+
         #plt.axvline(E_Ni_list[index], color=colors[0], label=zf+r' -$\chi^2=${:.2f} '.format(chi_sq_list[index])
         plt.plot(E_Ni_list, chi_sq_list,'.')
         plt.title('Variance minimization of compartment {}'.format(compartment))
         plt.ylabel(r'$\chi^2$')
-        plt.legend()
+        plt.legend(fontsize='xx-small', loc='best')
         plt.xlabel('Deuteron energy entering stack compartment number {} (MeV)'.format(compartment))
         plt.savefig('BeamCurrent/Chi_minimization/chi_squared_comp_{}'.format(compartment), dpi=300)
 
@@ -218,3 +237,8 @@ class Run_Ziegler:
                 plt.legend()
                 plt.savefig('BeamCurrent/Chi_minimization/chi_squared_comp_{}'.format(compartment+1), dpi=300)
                 plt.show()
+
+
+if __name__=='__main__':
+    print("Run from BC_zieger_run.py")
+

@@ -9,7 +9,7 @@ m=60; h=m*60; d=h*24; y=d*356  #converters to seconds
 
 
 #path = 'UsershannahDocumentsUIOMasteroppgavenDataData_analysiscsv'
-path = '/Users/hannahekeberg/Documents/Master_git/matlab/csv/'
+#path = '/Users/hannahekeberg/Documents/Master_git/matlab/csv/'
 path = os.getcwd() + '/../matlab/csv/'
 
 ####Cupper foils########
