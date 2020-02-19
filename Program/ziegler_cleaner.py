@@ -84,3 +84,10 @@ for f in files:
 
     ### Writing out new ziegler csv files with the same name to a new folder
     np.savetxt('cleaned_zieglerfiles/{}'.format(f), csv_save_array, delimiter=',', header='name, energy, flux', fmt="%s"  )#, %.6f, %.6f")
+
+
+
+import time
+start_time = time.time()
+main()
+print("--- %s seconds ---" % (time.time() - start_time))

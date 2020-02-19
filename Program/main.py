@@ -1,5 +1,6 @@
 from jan20_CrossSections import CrossSections
-from ZieglerFiles_new import ziegler_files
+#from ZieglerFiles_new import ziegler_files
+from feb20_zieglerfiles import ziegler   #newest with all cleaned files
 #from single_decay_A0 import *
 from des19_BeamCurrent import *
 
@@ -31,7 +32,10 @@ from foil_info import *
 #BC= BeamCurrent(files[50])
 
 
-files,names = ziegler_files()
+#files,names = ziegler_files()
+
+files, names = ziegler()
+print(names)
 
 def find_index(list, element):
     return list.index(element)
@@ -40,19 +44,23 @@ def find_index(list, element):
 
 #index = find_index(names, 'B-2,5%_D-7,5%')
 #index = find_index(names, 'B+10%_D0%')
-index = find_index(names, 'B0%_D-5%')
+#index = find_index(names, 'B0%_D-5%')
+#index = find_index(names, 'B_0_D_0')
+#print(index)
 #RZ = Run_Ziegler(files, names)
-BC = BeamCurrent(files[index])
-CS = CrossSections(files[index])
+#BC = BeamCurrent(files[index])
+#CS = CrossSections(files[index])
 
 
 
-BC.CurrentPlot(names[index], SaveFig=True)
+#BC.CurrentPlot(names[index], SaveFig=True)
+
+
 
 #BC.calculate_beam_current('Fe', 'Fe_56Co', print_terms=True)
 #BC.calculate_beam_current('Fe', 'Fe_56Co', print_terms=True)
 #BC.specified_currents()
-from weighted_average import *
+#from weighted_average import *
 
 
 
@@ -62,12 +70,12 @@ from weighted_average import *
 
 
 
-A0, sigma_A0, lambda_, mass_density, sigma_mass_density, reaction_integral, uncertainty_integral, irr_time, sigma_irr_time = BC.reshaping_parameters()
+#A0, sigma_A0, lambda_, mass_density, sigma_mass_density, reaction_integral, uncertainty_integral, irr_time, sigma_irr_time = BC.reshaping_parameters()
 #print(mass_density)
 #print(lambda_)
 #print(irr_time)
 #print(sigma_irr_time)
-weighted_average_BC, sigma_weighted_average_BC = Average_BeamCurrent(A0, sigma_A0, mass_density, sigma_mass_density,  lambda_, reaction_integral, uncertainty_integral, irr_time, sigma_irr_time)
+#weighted_average_BC, sigma_weighted_average_BC = Average_BeamCurrent(A0, sigma_A0, mass_density, sigma_mass_density,  lambda_, reaction_integral, uncertainty_integral, irr_time, sigma_irr_time)
 
 
 
