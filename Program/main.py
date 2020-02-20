@@ -50,12 +50,32 @@ def find_index(list, element):
 #names = names[:10]
 #print(names[3])
 
-selected_names = ['B_+1_D_+2', 'B_+10_D_+2,5', 'B_-2,25_D_-0,75', 'B_-2,25_D_-1,75', 'B_+10_D_+3', 'B_+2_D_+4,25', 'B_+1,75_D_+3,75',
-'B_+2_D_+4', 'B_-2,25_D_-1,25', 'B_+1,5_D_+3,25', 'B_+1,25_D_+2,75', 'B_+1,75_D_+3,5', 'B_+2,5_D_+7,5', 'B_+1,5_D_+3', 'B_+0,5_D_+1,25']
+"""
+#COMPARTMENT 9 BEST CHI^2
+selected_names = ['B_+1_D_+2', 'B_+10_D_+2,5', #'B_-2,25_D_-0,75', 'B_-2,25_D_-1,75', 
+'B_+10_D_+3', 'B_+2_D_+4,25', 'B_+1,75_D_+3,75',
+'B_+2_D_+4', #'B_-2,25_D_-1,25', 
+'B_+1,5_D_+3,25', 'B_+1,25_D_+2,75', 'B_+1,75_D_+3,5', 'B_+2,5_D_+7,5', 'B_+1,5_D_+3', 'B_+0,5_D_+1,25']
+
+# GOOD CANDIDATES: B_+1,5_D_+3,5
+
+
+#COMPARTMENT 6 BEST CHI^2
+selected_names = ['B_+2,25_D_+4,75','B_+2_D_+4','B_+2,25_D_+4,5','B_+1,75_D_+3,25','B_+2_D_+3,75','B_+1,75_D_+3,5',
+'B_+2,5_D_+7,5','B_+2,25_D_+5','B_+2_D_+4,25','B_+1,5_D_+2,75','B_+1,5_D_+2,5','B_+1,25_D_+2','B_+1_D_+1,25']
+
+
+#COMPARTMENT 3 BEST CHI^2
+selected_names = [#'B_-2,5_D_+4','B_+0,25_D_-5',  'B_+0,5_D_-4','B_+0,25_D_-4,75','B_+0,5_D_-3,75','B_+0,5_D_-4,25', 
+#'B_+0,75_D_-3', 'B_+0,75_D_-2,75','B_+1_D_-1,75','B_+0,75_D_-3,25',
+'B_+10_D_-2']
+
+selected_names = ['B_0_D_0']
+"""
 
 #index = find_index(names, 'B_-2,5_D_+4') #not super good: 
 #index = find_index(names, 'B_+1_D_-2')
-#index = find_index(names, 'B_0_D_-5')
+index = find_index(names, 'B_+2_D_+4,25')
 
 
 
@@ -86,12 +106,12 @@ selected_names = ['B_+1_D_+2', 'B_+10_D_+2,5', 'B_-2,25_D_-0,75', 'B_-2,25_D_-1,
 #print(sigma_irr_time)
 #weighted_average_BC, sigma_weighted_average_BC = Average_BeamCurrent(A0, sigma_A0, mass_density, sigma_mass_density,  lambda_, reaction_integral, uncertainty_integral, irr_time, sigma_irr_time)
 
-
-
-csv_filename = './' + selected_names[0] +'.csv'
+"""
+numb = 0
+csv_filename = './' + selected_names[numb] +'.csv'
 print(selected_names)
 #print(files[index])
-index = find_index(names, selected_names[0])
+index = find_index(names, selected_names[numb])
 BC = BeamCurrent(files[index])
 #assigning variables for weighted_average.py
 A0, sigma_A0, lambda_, mass_density, sigma_mass_density, reaction_integral, uncertainty_integral, irr_time, sigma_irr_time = BC.reshaping_parameters()
@@ -99,7 +119,7 @@ weighted_average_BC, sigma_weighted_average_BC = Average_BeamCurrent(A0, sigma_A
 #BC.
 #selected_names = './' + selected_names[0] +'.csv'
 
-#BC.CurrentPlot_compartment(names[index], WABC=csv_filename)
+BC.CurrentPlot_compartment(names[index], WABC=csv_filename)
 
 #BC.CurrentPlot(names[index], SaveFig=True)
 
@@ -116,7 +136,7 @@ CS.mon_CS_test(Cu_63Zn(), 'Cu', 'Cu_63Zn.csv', 10, 'Cu_63Zn', names[index], csv_
 CS.mon_CS_test(Cu_65Zn(), 'Cu', 'Cu_65Zn.csv', 10, 'Cu_65Zn', names[index], csv_filename)
 
 #BC.CurrentPlot(names[index], SaveFig=True)
-
+"""
 
 
 #BC.calculate_beam_current('Fe', 'Fe_56Co', print_terms=True)
@@ -145,18 +165,20 @@ CS.mon_CS_test(Cu_65Zn(), 'Cu', 'Cu_65Zn.csv', 10, 'Cu_65Zn', names[index], csv_
 #two_step_up_data(Ni_58Co(),"Ni_58mCo", "Ni_58Co", 10, Save_csv= True)
 #two_step_kp_data(Ni_56Ni(), Ni_56Co(), "Ni_56Co", 10, Save_csv= True)
 
-
-#CS.make_CS(Ir_193mPt(), 'Ir', 'Ir_193mPt.csv', 10, 'Ir_193mPt')
+csv_filename = './' + names[index] +'.csv'
+CS = CrossSections(files[index])
+#CS.make_CS(Ir_193mPt(), 'Ir', 'Ir_193mPt.csv', 10, 'Ir_193mPt',csv_filename )
 #CS.make_CS(Cu_57Ni(), 'Cu', 'Cu_57Ni.csv', 10, 'Cu_57Ni')
 #CS.make_CS(Ni_56Ni(), 'Ni', 'Ni_56Ni.csv', 10, 'Ni_56Ni')
 
-#CS.make_CS(Ni_61Cu(), 'Ni', 'Ni_61Cu.csv', 10, 'Ni_61Cu')
+#CS.make_CS(Ni_61Cu(), 'Ni', 'Ni_61Cu.csv', 10, 'Ni_61Cu', csv_filename)
+#CS.mon_CS_test(Ni_61Cu(), 'Ni', 'Ni_61Cu.csv', 10, 'Ni_61Cu', names[index], csv_filename)
 #print("**")
 
-#CS.make_CS(Cu_64Cu(), 'Cu', 'Cu_64Cu.csv', 10, 'Cu_64Cu')
+CS.make_CS(Cu_64Cu(), 'Cu', 'Cu_64Cu.csv', 10, 'Cu_64Cu', csv_filename)
 
 
-#get_vals(Cu_64Cu(), 'Cu', 'Cu_64Cu.csv', 10, 'Cu_64Cu')
+#get_vals(Cu_64Cu(), 'Cu', 'Cu_64Cu.csv', 10, 'Cu_64Cu', csv_filename)
 
 #I = BC.current_for_CS()
 #print(I)

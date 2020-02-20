@@ -1,0 +1,14 @@
+#
+# General
+#
+projectile d
+element Fe
+mass 0
+energy 1 40 1
+Ebeam 40
+#
+# Output
+#
+outpreequilibrium   y
+outspectra          y
+#production          y

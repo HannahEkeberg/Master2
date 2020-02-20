@@ -49,13 +49,13 @@ unc_fe_rhodrs = [0.110,0.034,0.114];
 clc;
 
 % Choose files for analysis
-fitzpeaks_reports = ni_fn;
-key_energies = ni_key_energies;
-glines = ni_glines;
+fitzpeaks_reports = ir_fn;
+key_energies = ir_key_energies;
+glines = ir_glines;
 EoB_Time = '26-Feb-2019 00:32:00'
-rhodrs = ni_rhodrs;
-mu_attenuation = load('ni_xcom.txt');
-unc_rhodrs = unc_ni_rhodrs;
+rhodrs = ir_rhodrs;
+mu_attenuation = load('ir_xcom.txt');
+unc_rhodrs = unc_ir_rhodrs;
 
 
 % Test new fitzpeaks_parser wrapper function
@@ -179,8 +179,8 @@ rows_Ir_194m2Ir = [36,43,55,61,65,74]; %check
 
 % Select rows to plot
 % varToStr = @(x) inputname(1);
-rows = rows_Ni_56Co;
-outName = '../csv/Ni_56Co';
+rows = rows_Ir_193mPt;
+outName = '../csv/Ir_193mPt';
 % rows = 12;
 % Find rows for the desired decay product
 selected_rows = data(rows,:);
@@ -191,10 +191,10 @@ selected_rows = data(rows,:);
 % energy = 0; % Show all foils in one plot (not for analysis!)
 % 
 % loop over all energies for a foil type
-for energy = 128:100:1028   % Just Nickel
+%for energy = 128:100:1028   % Just Nickel
 %for energy = 129:100:1029   % Just Copper
 %for energy = 126:100:326   % Just Iron
-%for energy = 177:100:1077   % Just Iridium
+for energy = 177:100:1077   % Just Iridium
 % 
 % for energy = 528   % debug mode
     if energy==0

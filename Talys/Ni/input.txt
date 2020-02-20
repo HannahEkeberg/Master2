@@ -1,0 +1,14 @@
+#
+# General
+#
+projectile d
+element Ni
+mass 0
+energy 1 50 1
+Ebeam 50
+#
+# Output
+#
+outpreequilibrium   y
+outspectra          y
+#production          y

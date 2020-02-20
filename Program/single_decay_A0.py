@@ -442,7 +442,7 @@ def two_step_up_data(func, reaction_parent, reaction_daughter, n, Save_csv=False
 #two_step_kp_data(Ni_56Ni(), Ni_56Co(), "Ni_56Co", 10, Save_csv= True)
 #two_step_up_npat(Ni_58Co(), "Ni_58mCo_npat", "Ni_58Co_npat", 10, '58COm', '58COg', Save_csv=True)
 #two_step_up_npat(Ni_56Co(return_two_list=True), "Ni_56Ni_npat", "Ni_56Co_npat", 10, '56NI', '56CO', Save_csv=True)
-two_step_kp_data(Ni_56Ni(), Ni_56Co(), "Ni_56Co", 10, Save_csv= True)
+#two_step_kp_data(Ni_56Ni(), Ni_56Co(), "Ni_56Co", 10, Save_csv= True)
 #single_decay_data(Ni_56Ni(), "Ni_56Ni", 10, Save_csv=True)
 #single_decay_data(Fe_56Co(), "Fe_56Co", 3, Save_csv=True)
 
@@ -556,7 +556,7 @@ two_step_kp_data(Ni_56Ni(), Ni_56Co(), "Ni_56Co", 10, Save_csv= True)
 
 #single_decay_data(Ir_191Pt(), "Ir_191Pt", 10, Save_csv=True)    #two gamma lines, does not agree
 #single_decay_data(Ir_192Ir(), "Ir_192Ir", 10, Save_csv=True)    #must go through false peaks
-#single_decay_data(Ir_193mPt(), "Ir_193mPt", 10, Save_csv=True)    #EXCELLENT
+single_decay_data(Ir_193mPt(), "Ir_193mPt", 10, Save_csv=True)    #EXCELLENT
 #single_decay_data(Ir_194m2Ir(), "Ir_194m2Ir", 10, Save_csv=True)    #ok, must go through false peaks
 
 #two_step_kp_data(Ir_194m2Ir(), Ir_194Ir(), "Ir_194Ir", 10, Save_csv= True)   #Ok, must go through false peaks
