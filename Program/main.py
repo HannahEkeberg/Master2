@@ -50,50 +50,31 @@ def find_index(list, element):
 #names = names[:10]
 #print(names[3])
 
+selected_names = ['B_+1_D_+2', 'B_+10_D_+2,5', 'B_-2,25_D_-0,75', 'B_-2,25_D_-1,75', 'B_+10_D_+3', 'B_+2_D_+4,25', 'B_+1,75_D_+3,75',
+'B_+2_D_+4', 'B_-2,25_D_-1,25', 'B_+1,5_D_+3,25', 'B_+1,25_D_+2,75', 'B_+1,75_D_+3,5', 'B_+2,5_D_+7,5', 'B_+1,5_D_+3', 'B_+0,5_D_+1,25']
 
-
-#index = find_index(names, 'B_-2,5_D_+4') not super good: 
-index = find_index(names, 'B_+1_D_-2')
+#index = find_index(names, 'B_-2,5_D_+4') #not super good: 
+#index = find_index(names, 'B_+1_D_-2')
+#index = find_index(names, 'B_0_D_-5')
 
 
 
 #### positive B and positive D compensate each other- same for neg neg
 
-#index = find_index(names, 'B-2,5%_D-7,5%')
-#index = find_index(names, 'B+10%_D0%')
-#index = find_index(names, 'B0%_D-5%')
+#index = find_index(names, 'B_-2,5_D_-7,5')
+#index = find_index(names, 'B_+10_D_0')
+#index = find_index(names, 'B_0_D_-5')
 #index = find_index(names, 'B_0_D_0')
 #print(index)
 #RZ = Run_Ziegler(files, names)
+#RZ.run_beam_current()
+#RZ.plot_ChiSq(3, chi_tol=2)
+#RZ.plot_ChiSq(7, chi_tol=2)
 #RZ.plot_ChiSq(9, chi_tol=2)
-#print(files[index])
+#RZ.plot_ChiSq(6, chi_tol=1)
 
-BC = BeamCurrent(files[index])
-BC.CurrentPlot(names[index], SaveFig=True)
-CS = CrossSections(files[index])
+#path_to_Chisq = os.getcwd() + '/BeamCurrent/chisq_dir_new/'
 
-"""
-CS.mon_CS_test(Fe_56Co(), 'Fe', 'Fe_56Co.csv', 3, 'Fe_56Co', names[index])
-CS.mon_CS_test(Ni_61Cu(), 'Ni', 'Ni_61Cu.csv', 10, 'Ni_61Cu', names[index])
-CS.mon_CS_test(Ni_56Co(), 'Ni', 'Ni_56Co.csv', 10, 'Ni_56Co', names[index])
-CS.mon_CS_test(Ni_58Co(), 'Ni', 'Ni_58Co.csv', 10, 'Ni_58Co', names[index])
-CS.mon_CS_test(Cu_62Zn(), 'Cu', 'Cu_62Zn.csv', 10, 'Cu_62Zn', names[index])
-CS.mon_CS_test(Cu_63Zn(), 'Cu', 'Cu_63Zn.csv', 10, 'Cu_63Zn', names[index])
-CS.mon_CS_test(Cu_65Zn(), 'Cu', 'Cu_65Zn.csv', 10, 'Cu_65Zn', names[index])
-"""
-#BC.CurrentPlot(names[index], SaveFig=True)
-
-
-
-#BC.calculate_beam_current('Fe', 'Fe_56Co', print_terms=True)
-#BC.calculate_beam_current('Fe', 'Fe_56Co', print_terms=True)
-#BC.specified_currents()
-#from weighted_average import *
-
-
-
-#A = BC.calling_parameters_to_weightedaverage_func('Ni', 'Ni_61Cu')
-#print(A[6])
 
 
 
@@ -104,6 +85,46 @@ CS.mon_CS_test(Cu_65Zn(), 'Cu', 'Cu_65Zn.csv', 10, 'Cu_65Zn', names[index])
 #print(irr_time)
 #print(sigma_irr_time)
 #weighted_average_BC, sigma_weighted_average_BC = Average_BeamCurrent(A0, sigma_A0, mass_density, sigma_mass_density,  lambda_, reaction_integral, uncertainty_integral, irr_time, sigma_irr_time)
+
+
+
+csv_filename = './' + selected_names[0] +'.csv'
+print(selected_names)
+#print(files[index])
+index = find_index(names, selected_names[0])
+BC = BeamCurrent(files[index])
+#assigning variables for weighted_average.py
+A0, sigma_A0, lambda_, mass_density, sigma_mass_density, reaction_integral, uncertainty_integral, irr_time, sigma_irr_time = BC.reshaping_parameters()
+weighted_average_BC, sigma_weighted_average_BC = Average_BeamCurrent(A0, sigma_A0, mass_density, sigma_mass_density,  lambda_, reaction_integral, uncertainty_integral, irr_time, sigma_irr_time, csv_filename=csv_filename)
+#BC.
+#selected_names = './' + selected_names[0] +'.csv'
+
+#BC.CurrentPlot_compartment(names[index], WABC=csv_filename)
+
+#BC.CurrentPlot(names[index], SaveFig=True)
+
+
+CS = CrossSections(files[index])
+
+
+CS.mon_CS_test(Fe_56Co(), 'Fe', 'Fe_56Co.csv', 3, 'Fe_56Co', names[index], csv_filename)
+CS.mon_CS_test(Ni_61Cu(), 'Ni', 'Ni_61Cu.csv', 10, 'Ni_61Cu', names[index], csv_filename)
+CS.mon_CS_test(Ni_56Co(), 'Ni', 'Ni_56Co.csv', 10, 'Ni_56Co', names[index], csv_filename)
+CS.mon_CS_test(Ni_58Co(), 'Ni', 'Ni_58Co.csv', 10, 'Ni_58Co', names[index], csv_filename)
+CS.mon_CS_test(Cu_62Zn(), 'Cu', 'Cu_62Zn.csv', 10, 'Cu_62Zn', names[index], csv_filename)
+CS.mon_CS_test(Cu_63Zn(), 'Cu', 'Cu_63Zn.csv', 10, 'Cu_63Zn', names[index], csv_filename)
+CS.mon_CS_test(Cu_65Zn(), 'Cu', 'Cu_65Zn.csv', 10, 'Cu_65Zn', names[index], csv_filename)
+
+#BC.CurrentPlot(names[index], SaveFig=True)
+
+
+
+#BC.calculate_beam_current('Fe', 'Fe_56Co', print_terms=True)
+#BC.calculate_beam_current('Fe', 'Fe_56Co', print_terms=True)
+#BC.specified_currents()
+#from weighted_average import *
+
+
 
 
 

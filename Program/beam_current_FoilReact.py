@@ -75,10 +75,10 @@ def Ni_foil(react):
         return IAEA_Cs, A0, sigma_A0, lambda_, mass_density, sigma_mass_density
 
     elif react == 'Ni_56Co':
-        #A_file = path_A0 + 'Ni_56Co.csv'
-        #A_56Ni_file = path_A0 + 'Ni_56Ni.csv'
-        A_file = path_A0 + 'Ni_56Co_npat.csv'
-        A_56Ni_file = path_A0 + 'Ni_56Ni_npat.csv'
+        A_file = path_A0 + 'Ni_56Co.csv'
+        A_56Ni_file = path_A0 + 'Ni_56Ni.csv'
+        #A_file = path_A0 + 'Ni_56Co_npat.csv'
+        #A_56Ni_file = path_A0 + 'Ni_56Ni_npat.csv'
 
         A0_56Co, sigma_A0_56Co = getA0(A_file, n)
         A0_56Ni, sigma_A0_56Ni = getA0(A_56Ni_file, n)

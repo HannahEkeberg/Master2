@@ -5,6 +5,8 @@ import numpy as np
 
 import matplotlib.pyplot as plt
 
+import os
+
 
 """
 Testing variance minimization for all ziegler files. 
@@ -28,6 +30,17 @@ Not in use anymore??
 
 
 """
+
+#root_dir = 'BeamCurrent'
+#current_dir = 'BeamCurrent/current_all'
+#chi_dir = 'BeamCurrent/chi_minimization'
+#flux_dir = 'BeamCurrent/beam_fluxes'
+#comp_dir = 'BeamCurrent/compartment_compare'
+chisq_dir_new = 'BeamCurrent/chisq_dir_new'
+
+if not os.path.exists(chisq_dir_new):
+    os.mkdir(chisq_dir_new)
+
 
 class Run_Ziegler:
 
@@ -138,14 +151,16 @@ class Run_Ziegler:
         for i in chi_sq_list:
             if i < min(chi_sq_list)+chi_tol:
                 index = chi_sq_list.index(i)
-                plt.axvline(E_Ni_list[index], linestyle='--', linewidth=0.2, label=self.names[index]+r' -$\chi^2=${:.2f} '.format(chi_sq_list[index]))
+                #plt.axvline(E_Ni_list[index], linestyle='--', linewidth=0.2, label=self.names[index]+r' -$\chi^2=${:.2f} '.format(chi_sq_list[index]))
                 list_of_chi.append(chi_sq_list[index])
                 list_of_names.append(self.names[index])
 
+
+        
         csv_save = np.vstack((list_of_names, list_of_chi)).T
         #print(type(csv_save))
         
-        np.savetxt('min_chi_comp{}.csv'.format(compartment), csv_save, delimiter='|', header='Filename, Chi^2', fmt="%s"  )#, %.6f, %.6f")
+        np.savetxt('BeamCurrent/chisq_dir_new/min_chi_comp{}.csv'.format(compartment), csv_save, delimiter='|', header='Filename, Chi^2', fmt="%s"  )#, %.6f, %.6f")
 
         #plt.axvline(E_Ni_list[index], color=colors[0], label=zf+r' -$\chi^2=${:.2f} '.format(chi_sq_list[index])
         plt.plot(E_Ni_list, chi_sq_list,'.')
@@ -153,7 +168,7 @@ class Run_Ziegler:
         plt.ylabel(r'$\chi^2$')
         plt.legend(fontsize='xx-small', loc='best')
         plt.xlabel('Deuteron energy entering stack compartment number {} (MeV)'.format(compartment))
-        plt.savefig('BeamCurrent/Chi_minimization/chi_squared_comp_{}'.format(compartment), dpi=300)
+        plt.savefig('BeamCurrent/chisq_dir_new/chi_squared_comp_{}'.format(compartment), dpi=300)
 
         plt.show()
 

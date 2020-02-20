@@ -251,16 +251,28 @@ class CrossSections:
 
 
 
-    def mon_CS_test(self, react_func, foil, filename, n, reaction,scaling_parameter):
+    def mon_CS_test(self, react_func, foil, filename, n, reaction,scaling_parameter, BC_csv_filename):
         #print("*")
         I_Fe, I_Ni, I_Cu, sigma_I = self.current_class.current_for_CS(mon_test=True)
-        #print(sigma_I)
+
+        weighted_average_beam = np.genfromtxt(BC_csv_filename, delimiter=',', usecols=[1])
+        #weighted_average_beam = weighted_average_beam[::-1]
+        sigma_weighted_average_beam = np.genfromtxt(BC_csv_filename, delimiter=',', usecols=[2])
+
+        I_Fe = weighted_average_beam[:3]; sigma_I_Fe=sigma_weighted_average_beam[:3]
+
+        I_Ni = weighted_average_beam; sigma_I=sigma_weighted_average_beam
+        I_Cu = weighted_average_beam; sigma_I=sigma_weighted_average_beam
+
+        #print(sigma_I) 
         #unit_factor = 3600*1e-27/elementary_charge
         #unit_factor=1
         #I_Fe = np.true_divide(I_Fe, unit_factor)   #?????
         #I_Ni = np.true_divide(I_Ni, unit_factor)   #?????
         #I_Cu = np.true_divide(I_Cu, unit_factor)   #?????
-        I, sigma_I = self.current_class.current_for_CS()
+        
+
+        #I, sigma_I = self.current_class.current_for_CS()
 
         #print("I", I)
         #print("I_Ni", I_Ni)
@@ -278,7 +290,7 @@ class CrossSections:
 
 
         if reaction=='Fe_56Co':
-            CS, dCS = self.cross_section_calc(n, A0, sigma_A0, mass_density, sigma_mass_density, I_Fe, sigma_I, lamb, reaction)
+            CS, dCS = self.cross_section_calc(n, A0, sigma_A0, mass_density, sigma_mass_density, I_Fe, sigma_I_Fe, lamb, reaction)
             E = self.E_Fe; dE = self.dE_Fe
             filename =  path_to_monitor_data+'fed56cot/fed56cot.txt'
             E_mon = np.loadtxt(filename, usecols=[0], skiprows=6)

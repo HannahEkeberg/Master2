@@ -20,7 +20,7 @@ monitor_reactions_per_foil = np.array([3, 3, 1])
 
 ### Read in numbers of decays from csv file
 
-def Average_BeamCurrent(A0, sigma_A0, mass_density, sigma_mass_density, lambda_, reaction_integral, uncertainty_integral, irr_time, sigma_irr_time):
+def Average_BeamCurrent(A0, sigma_A0, mass_density, sigma_mass_density, lambda_, reaction_integral, uncertainty_integral, irr_time, sigma_irr_time, csv_filename='averaged_currents.csv'):
 
 
     def decomment(csvfile):
@@ -329,7 +329,7 @@ def Average_BeamCurrent(A0, sigma_A0, mass_density, sigma_mass_density, lambda_,
     outfile = np.stack((np.transpose(output_foil_index),np.transpose(output_mu),np.transpose(output_unc_mu),np.transpose(output_percent_unc)), axis=-1)
     #import os
     #path = os.getcwd()
-    np.savetxt("./averaged_currents.csv", outfile, delimiter=",", header="Foil Index, Average Current (nA), Uncertainty in Average Current (nA), % Uncertainty")
+    np.savetxt("./{}".format(csv_filename), outfile, delimiter=",", header="Foil Index, Average Current (nA), Uncertainty in Average Current (nA), % Uncertainty")
 
 
 
@@ -339,6 +339,7 @@ def Average_BeamCurrent(A0, sigma_A0, mass_density, sigma_mass_density, lambda_,
     output_foil_index2 = np.array(output_foil_index) - 0.2
 
 	# plt.clf()
+    """
     plt.gca()
     plt.errorbar(output_foil_index, output_mu, yerr=output_unc_mu, capsize=10.0, markersize=4.0,  marker='s', ls=' ', color='black', capthick=1.5, linewidth=3.0)
 	# plt.errorbar(output_foil_index2, matlab_avg_currents, yerr=matlab_unc_avg_currents, capsize=10.0, capthick=2.0, markersize=8.0,  marker='.', ls=' ',  linewidth=2.0)
@@ -347,6 +348,7 @@ def Average_BeamCurrent(A0, sigma_A0, mass_density, sigma_mass_density, lambda_,
     plt.legend(['Average Currents', 'Individual Currents'],loc='lower left')
 	# plt.legend(['Actual Currents', 'Approximate Currents', 'Individual Currents'],loc='lower left')
     plt.show()
+    """
 
     #output_mu = output_mu.reverse()
 

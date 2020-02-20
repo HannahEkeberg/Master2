@@ -98,7 +98,12 @@ rows_Ni_52Mn = [27,42,60,64,71];  %check
 rows_Ni_54Mn = [35]; %check
 rows_Ni_55Co = [3,13,15,18,30,34,41,46,57,63,67,69,84,98,105];   %check
 % rows_Ni_56Co = [29,45,55,59,66,82,90,91,92,99,101];  %check
-rows_Ni_56Co = [29,45,55,59,82,90];  %check
+rows_Ni_56Co = [29,45,55,90,91,92, 106];  %check
+% rows_Ni_56Co = [29,45,55,59,82,90];  %check
+% rows_Ni_56Co = [29,45,55,90, 106];  %check
+% rows_Ni_56Co = [29,55, 106,59];  %check
+% rows_Ni_56Co = [106];
+rows_Ni_56Mn = [ 106,107,108];  %check
 rows_Ni_56Ni = [7,8,16,28,32,74];  %check
 rows_Ni_57Co = [4,6,26]; %check
 rows_Ni_57Ni = [26,12,25,40,49,58,68,80,81,86,87,95,104]; %check
@@ -191,7 +196,7 @@ for energy = 128:100:1028   % Just Nickel
 %for energy = 126:100:326   % Just Iron
 %for energy = 177:100:1077   % Just Iridium
 % 
-%for energy = 728   % debug mode
+% for energy = 528   % debug mode
     if energy==0
         % Return all rows for plotting
         gammas = selected_rows;
@@ -208,19 +213,25 @@ for energy = 128:100:1028   % Just Nickel
     
     % Pull the data from the GammaCounts objects
     
-%     % check for Co56 background contamination on IDMs(+HPGE) in Cave 4C
-%     if isequal(rows, rows_Ni_56Co)
-%         % we are looking at 56CO
-%         for gamma_index=1:length(gammas)
-%             obj = gammas(1,gamma_index);
-%             if (strcmpi(obj.EfficiencyCovarianceData, 'eff_HPGE1_10.mat') || strcmpi(obj.EfficiencyCovarianceData, 'eff_HPGE1_30.mat')) 
+    % check for Co56 background contamination on IDMs(+HPGE) in Cave 4C
+    if isequal(rows, rows_Ni_56Co)
+        unwanted_indices = zeros(1,length(gammas));
+        % we are looking at 56CO
+        for gamma_index=1:length(gammas)
+            obj = gammas(1,gamma_index);
+            if obj.TimeSinceEoB < 25.0
+                if (obj.EGamma == key_energies(rows_Ni_56Mn(1))) || (obj.EGamma == key_energies(rows_Ni_56Mn(2))) || (obj.EGamma == key_energies(rows_Ni_56Mn(3)))
+                    unwanted_indices(gamma_index) = 1;
 %                 background_count_rate = 2.8338e-02;
 %                 % get the 1238 keV count rate
 %                 contaminated_count_rate = obj.NumberOfCounts
 %                 % get 
-%             end
-%         end
-%     end
+                end
+            end
+        end
+%         gammas = gammas(1,wanted_indices);
+    gammas = gammas(1,unwanted_indices==0);
+    end
     activities     = [gammas.Activity];
     delta_ts       = [gammas.TimeSinceEoB];
     unc_activities = [gammas.UncertaintyActivity];

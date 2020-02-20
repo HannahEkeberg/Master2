@@ -544,7 +544,7 @@ class BeamCurrent:
             plt.plot(E, I_pred, label='test')
             plt.show()
 
-    def CurrentPlot(self, name, SaveFig=False):
+    def CurrentPlot(self, name,SaveFig=False):
         I_Fe_56Co, I_Ni_61Cu, I_Ni_56Co, I_Ni_58Co, I_Cu_62Zn, I_Cu_63Zn, I_Cu_65Zn = self.specified_currents()
         dI_Fe_56Co, dI_Ni_61Cu, dI_Ni_56Co, dI_Ni_58Co, dI_Cu_62Zn, dI_Cu_63Zn, dI_Cu_65Zn = self.specified_currents(uncertainty=True)
         WE_Fe, WE_Ni, WE_Cu, WE_Ir = self.specified_energies()
@@ -590,12 +590,12 @@ class BeamCurrent:
         #ylim(top=350)
         #ylim(bottom=0)
 
-        WABC = 'averaged_currents.csv' ## weighted average beam current filename
-        weighted_average_beam = np.genfromtxt(WABC, delimiter=',', usecols=[1])
+        #WABC = 'averaged_currents.csv' ## weighted average beam current filename
+        #weighted_average_beam = np.genfromtxt(WABC, delimiter=',', usecols=[1])
         #weighted_average_beam = weighted_average_beam[::-1]
-        sigma_weighted_average_beam = np.genfromtxt(WABC, delimiter=',', usecols=[2])
+        #sigma_weighted_average_beam = np.genfromtxt(WABC, delimiter=',', usecols=[2])
         #sigma_weighted_average_beam = sigma_weighted_average_beam[::-1]
-        plt.errorbar(WE_Ir, weighted_average_beam, color='black', marker='P', linewidth=0.001, xerr=sigma_WE_Ir, yerr=sigma_weighted_average_beam, elinewidth=0.5, capthick=0.5, capsize=3.0,label='weighted average beam current' )
+        #plt.errorbar(WE_Ir, weighted_average_beam, color='black', marker='P', linewidth=0.001, xerr=sigma_WE_Ir, yerr=sigma_weighted_average_beam, elinewidth=0.5, capthick=0.5, capsize=3.0,label='weighted average beam current' )
         if SaveFig:
             plt.legend(fontsize='x-small')
             path = os.getcwd()
@@ -603,8 +603,9 @@ class BeamCurrent:
             #plt.savefig(path+'/BeamCurrent/' + name +'.png', dpi=300)
             plt.show()
 
-    def CurrentPlot_compartment(self, name):
+    def CurrentPlot_compartment(self, name, WABC = 'averaged_currents.csv'):
         compartment = [3,7,9]
+        WE_Ir, sigma_WE_Ir = self.WABE('Ir')
         #WABC = 'averaged_currents.csv' ## weighted average beam current filename
         #weighted_average_beam = np.genfromtxt(WABC, delimiter=',', usecols=[1])
         #weighted_average_beam = weighted_average_beam[::-1]
@@ -622,6 +623,12 @@ class BeamCurrent:
         self.CurrentPlot(name)
         #self.variance_minimization(compartment, name, MakePlot=True)
         #plt.legend()
+        #WABC = 'averaged_currents.csv' ## weighted average beam current filename
+        weighted_average_beam = np.genfromtxt(WABC, delimiter=',', usecols=[1])
+        #weighted_average_beam = weighted_average_beam[::-1]
+        sigma_weighted_average_beam = np.genfromtxt(WABC, delimiter=',', usecols=[2])
+        #sigma_weighted_average_beam = sigma_weighted_average_beam[::-1]
+        plt.errorbar(WE_Ir, weighted_average_beam, color='black', marker='P', linewidth=0.001, xerr=sigma_WE_Ir, yerr=sigma_weighted_average_beam, elinewidth=0.5, capthick=0.5, capsize=3.0,label='weighted average beam current' )
         plt.legend(fontsize='x-small')
         plt.savefig('BeamCurrent/compartment_compare/comp_compared_{}.png'.format(name), dpi=300)
         plt.show()
