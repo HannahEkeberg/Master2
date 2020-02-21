@@ -392,7 +392,7 @@ def Ni_52mMn():  #single decay, 52Fe not produced...
     lambda_ = np.log(2)/(21.1*m)
     return list, lambda_
 
-def Ni_52Mn(): #double decay known parent 52mMn
+def Ni_52Mn(return_two_list=False): #double decay known parent 52mMn
     foil1 = path + 'Ni_52Mn_128.dat'
     foil2 = path + 'Ni_52Mn_228.dat'
     foil3 = path + 'Ni_52Mn_328.dat'
@@ -406,7 +406,16 @@ def Ni_52Mn(): #double decay known parent 52mMn
     list = [foil1, foil2, foil3, foil4, foil5, foil6, foil7, foil8, foil9, foil10]
     lambda_parent = np.log(2)/(21.1*m)
     lambda_daughter = np.log(2)/(5.591*d)
-    return list, lambda_parent, lambda_daughter
+
+    if return_two_list:
+        list_parent = Ni_56Ni()[0]
+        list_daughter = list
+        return np.array((list_parent, list_daughter)), lambda_parent, lambda_daughter
+
+
+    #return list, lambda_parent, lambda_daughter#[lambda_parent, lambda_daughter]
+    #return list, lambda_parent, lambda_daughter
+    return list, lambda_daughter
 
 def Ni_54Mn(): #single decay
     foil1 = path + 'Ni_54Mn_128.dat'

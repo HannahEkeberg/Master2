@@ -14,6 +14,9 @@ from des19_BeamCurrent import *
 #from npat import Reaction, Library
 
 
+from simulated_CrossSectionData import *
+
+
 from scipy.constants import N_A, elementary_charge
 
 #files,names = ziegler_files()
@@ -144,7 +147,7 @@ class CrossSections:
     """
 
 
-    def make_CS(self, react_func, foil, filename, n ,reaction, BC_csv_filename):
+    def make_CS(self, react_func, foil, filename, n ,reaction, BC_csv_filename, Z, A):
         lamb, mass_density, sigma_mass_density, E, dE, A0, dA0 = self.get_var(react_func, foil, filename, n, reaction)
         #lamb, mass_density, sigma_mass_density, E, dE, A0, sigma_A0 = self.get_var(react_func, foil, filename, n, reaction)
 
@@ -171,6 +174,9 @@ class CrossSections:
         #print("I_Ni after", I_Ni)
         #I = self.I; dI = self.sigma_I_est
         CS, dCS= self.cross_section_calc(n, A0, dA0, mass_density, sigma_mass_density, I, dI, lamb, reaction)
+
+        E_talys, CS_talys = self.modelling('Talys', foil, Z, A)
+
         #CS, dCS = self.cross_section_calc(n, A0, sigma_A0, mass_density, sigma_mass_density, I_Fe, sigma_I, lamb, reaction)
 
         #print("Cs", CS )
@@ -213,6 +219,7 @@ class CrossSections:
 
         #self.setting_plotvalues(tab_E, tab_dE, tab_CS, tab_dCS, label='exfor')
         self.setting_plotvalues(E, dE, CS, dCS, label='this work using I')
+        plt.plot(E_talys, CS_talys, label='TALYS')
         #CS, dCS = self.cross_section_calc(n, A0, dA0, mass_density, sigma_mass_density, I_Ir, sigma_I, lamb, reaction)
         #self.setting_plotvalues(E, dE, CS, dCS, label='this work using I')
 
@@ -221,7 +228,19 @@ class CrossSections:
 
         self.plot_CrossSections(reaction)
 
+
+
         return E, dE, CS, dCS
+
+
+    def modelling(self, model, foil, Z, A):
+        if model=='Talys':
+            SimCS = SimCrossSectionData('Ir_194Pt')
+            Z = '0'+Z; A = '0'+A
+            E, CS = SimCS.TALYS(foil, Z, A)
+        else:
+            print("provide model")
+        return E, CS
 
 
     def cross_section_calc(self, n, A0, dA0, mass_density, sigma_mass_density, I, dI, lamb, reaction):
@@ -430,6 +449,7 @@ class CrossSections:
         plt.title('Cross section for reaction {}'.format(reaction))
         path_to_cs_figs = os.getcwd() + '/CrossSections/CrossSections_curves/'
         #plt.savefig(path_to_cs_figs + reaction +'{}.png'.format(scaling_parameter), dpi=300)
+        plt.savefig(path_to_cs_figs + reaction+'.png', dpi=300)
         plt.legend()
         plt.show()
 

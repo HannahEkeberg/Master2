@@ -497,13 +497,19 @@ def two_step_up_data(func, reaction_parent, reaction_daughter, n, Save_csv=False
 
 
 #single_decay_data(Ni_52mMn(), "Ni_52mMn", 10, Save_csv=True)      #WEIRD
+#two_step_up_npat(Ni_52Mn(return_two_list=True), "Ni_52mMn_npat", "Ni_52Mn_npat", 10, '52MNm', '52MN', Save_csv=True)
 
 
+#single_decay_data(Ni_52Mn(), "Ni_52Mn", 10, Save_csv=True)   #since could not distinguish isomer + gs, do single decay and report cumulative yield. 
+#two_step_up_npat(Ni_52Mn(return_two_list=False), "Ni_52Mn_npat", 10, '52MNm', '52MN', Save_csv=True)
 #two_step_kp_data(Ni_52mMn(), Ni_52Mn(), "Ni_52Mn", 10, Save_csv= True)    #NOT WORKING
 
-#single_decay_data(Ni_54Mn(), "Ni_54Mn", 10, Save_csv=True)      #EXCELLENT
 
-# single_decay_data(Ni_59Fe(), "Ni_59Fe", 10, Save_csv=True)      #only produced in foil1
+
+#single_decay_data(Ni_52Mn(), "Ni_52Mn", 10, Save_csv=True)   #since could not distinguish isomer + gs, do single decay and report cumulative yield. 
+#single_decay_data(Ni_54Mn(), "Ni_54Mn", 10, Save_csv=True)      #done
+
+single_decay_data(Ni_59Fe(), "Ni_59Fe", 10, Save_csv=True)      #only produced in foil1
 
 #single_decay_data(Ni_60Cu(), "Ni_60Cu", 10, Save_csv=True)      #EXCELLENT
 
@@ -556,7 +562,7 @@ def two_step_up_data(func, reaction_parent, reaction_daughter, n, Save_csv=False
 
 #single_decay_data(Ir_191Pt(), "Ir_191Pt", 10, Save_csv=True)    #two gamma lines, does not agree
 #single_decay_data(Ir_192Ir(), "Ir_192Ir", 10, Save_csv=True)    #must go through false peaks
-single_decay_data(Ir_193mPt(), "Ir_193mPt", 10, Save_csv=True)    #EXCELLENT
+#single_decay_data(Ir_193mPt(), "Ir_193mPt", 10, Save_csv=True)    #EXCELLENT
 #single_decay_data(Ir_194m2Ir(), "Ir_194m2Ir", 10, Save_csv=True)    #ok, must go through false peaks
 
 #two_step_kp_data(Ir_194m2Ir(), Ir_194Ir(), "Ir_194Ir", 10, Save_csv= True)   #Ok, must go through false peaks

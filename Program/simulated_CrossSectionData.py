@@ -4,7 +4,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 
 
-from jan20_CrossSections import CrossSections 
+#from jan20_CrossSections import CrossSections 
 from foil_info import * 
 
 path = os.getcwd() 
@@ -70,14 +70,29 @@ class SimCrossSectionData:
 
 		print("E: ",E_new)
 		print("CS: ", CS_new)
+
+
 		
 		plt.plot(E_new, CS_new, label='ALICE')
 		plt.legend()
 		plt.show()
 		return E_new, CS_new
 
-	def TALYS(self):
-		pass 
+	def TALYS(self,foil, Z, A ):
+		# Z = 0XX, A=0XX
+
+		filename = self.path + '/../Talys/' +foil+ '/rp'+Z+A+'.tot'
+		E  = np.genfromtxt(filename, delimiter=' ', usecols=[0],skip_header=5)
+		CS = np.genfromtxt(filename, delimiter=' ', usecols=[1],skip_header=5)
+
+
+		return E, CS
+		#plt.plot(E,CS)
+		#plt.show()
+
+
+
+		
 
 	def Tendl(self):
 		pass 
@@ -92,7 +107,9 @@ class SimCrossSectionData:
 
 
 
-SimCS = SimCrossSectionData('Ir_194Pt')
-SimCS.ALICE('Ni', '58', '27')
+#SimCS = SimCrossSectionData('Ir_194Pt')
+#SimCS.ALICE('Ni', '54', '25')
+#SimCS.TALYS('Ni', '027', '056')
+#SimCS.ALICE('Ni', '64', '29')
 #SimCS.data(Cu_64Cu(), 'Cu', 'Cu_64Cu.csv', 10, 'Cu_64Cu', 'B_+2_D_+4,25.csv')
 
