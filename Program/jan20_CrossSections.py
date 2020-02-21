@@ -5,6 +5,8 @@ from scipy.constants import N_A, elementary_charge
 import pandas as pd
 import os
 
+#from simulated_CrossSectionData im
+
 from foil_info import *
 from beam_current_FoilReact import *
 from ZieglerFiles_new import ziegler_files
@@ -149,7 +151,7 @@ class CrossSections:
         
 
 
-        I, dI = self.current_class.current_for_CS()   #nA
+        #I, dI = self.current_class.current_for_CS()   #nA
         #I_Fe, I_Ni, I_Cu, sigma_I = self.current_class.current_for_CS(mon_test=True)
 
         #print("I", I)
@@ -203,10 +205,10 @@ class CrossSections:
 
 
         #tab_Cu_64Cu
-        tab_E  = [7.38, 10.43, 13.89, 16.35,18.75,20.71,25.51,26.78,30.11 ]
-        tab_dE = [0.32, 0.60, 0.37, 0.52,0.34, 0.43,0.65,0.62,0.59 ]
-        tab_dCS = [26.7, 20.8, 15.8,13.2, 11.4, 13.9,18.3,18.6,21.1 ]
-        tab_CS = [225.8, 174.0, 133.3, 110.1,97.4,99.0, 123.9, 137.3,158.1]
+        #tab_E  = [7.38, 10.43, 13.89, 16.35,18.75,20.71,25.51,26.78,30.11 ]
+        #tab_dE = [0.32, 0.60, 0.37, 0.52,0.34, 0.43,0.65,0.62,0.59 ]
+        #tab_dCS = [26.7, 20.8, 15.8,13.2, 11.4, 13.9,18.3,18.6,21.1 ]
+        #tab_CS = [225.8, 174.0, 133.3, 110.1,97.4,99.0, 123.9, 137.3,158.1]
 
 
         #self.setting_plotvalues(tab_E, tab_dE, tab_CS, tab_dCS, label='exfor')
@@ -216,7 +218,10 @@ class CrossSections:
 
         #self.mon_CS_test(react_func, foil, filename, n, reaction, 'uu')
 
+
         self.plot_CrossSections(reaction)
+
+        return E, dE, CS, dCS
 
 
     def cross_section_calc(self, n, A0, dA0, mass_density, sigma_mass_density, I, dI, lamb, reaction):

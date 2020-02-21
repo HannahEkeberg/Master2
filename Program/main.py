@@ -76,6 +76,7 @@ selected_names = ['B_0_D_0']
 #index = find_index(names, 'B_-2,5_D_+4') #not super good: 
 #index = find_index(names, 'B_+1_D_-2')
 index = find_index(names, 'B_+2_D_+4,25')
+print(files[index])
 
 
 
