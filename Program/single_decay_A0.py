@@ -509,15 +509,18 @@ def two_step_up_data(func, reaction_parent, reaction_daughter, n, Save_csv=False
 #single_decay_data(Ni_52Mn(), "Ni_52Mn", 10, Save_csv=True)   #since could not distinguish isomer + gs, do single decay and report cumulative yield. 
 #single_decay_data(Ni_54Mn(), "Ni_54Mn", 10, Save_csv=True)      #done
 
-single_decay_data(Ni_59Fe(), "Ni_59Fe", 10, Save_csv=True)      #only produced in foil1
+#single_decay_data(Ni_59Fe(), "Ni_59Fe", 10, Save_csv=True)      #only in foil number 1, 3, 5
 
 #single_decay_data(Ni_60Cu(), "Ni_60Cu", 10, Save_csv=True)      #EXCELLENT
 
-#single_decay_data(Ni_60mCo(), "Ni_60mCo", 10, Save_csv=True)      #not produced?
+#single_decay_data(Ni_60Cu(), "Ni_60Cu", 10, Save_csv=True)      #EXCELLENT
+
+#single_decay_data(Ni_60mCo(), "Ni_60mCo", 10, Save_csv=True)     NOT PRODUCED 
 
 #single_decay_data(Ni_64Cu(), "Ni_64Cu", 10, Save_csv=True)     #not produced?
+#single_decay_data(Ni_60Co(), "Ni_60Co", 10, Save_csv=True)     #Report cumulative cross section with isomer + gs
 
-#single_decay_data(Ni_64Cu(), "Ni_65Ni", 10, Save_csv=True)     #not produced?
+single_decay_data(Ni_65Ni(), "Ni_65Ni", 10, Save_csv=True)     #not produced?
 
 ###Fe
 

@@ -6,7 +6,9 @@ import os
 m=60; h=m*60; d=h*24; y=d*356  #converters to seconds
 
 
+#lambda_ = np.log(2)/(1925.28*d)
 
+#print(1925.28*d)
 
 #path = 'UsershannahDocumentsUIOMasteroppgavenDataData_analysiscsv'
 #path = '/Users/hannahekeberg/Documents/Master_git/matlab/csv/'
@@ -462,6 +464,8 @@ def Ni_60Cu():  #single decay  (probably not 60Zn, thalf=2m)
     lambda_ = np.log(2)/(23.7*m)
     return list, lambda_
 
+
+"""
 def Ni_60mCo():     # ONE STEP
     foil1 = path + 'Ni_60mCo_128.dat'
     foil2 = path + 'Ni_60mCo_228.dat'
@@ -476,11 +480,26 @@ def Ni_60mCo():     # ONE STEP
     list = [foil1, foil2, foil3, foil4, foil5, foil6, foil7, foil8, foil9, foil10]
     lambda_ = np.log(2)/(10.467*m)
     return list, lambda_
+"""
+
+def Ni_60Co():    #Single decay, report cumulative cross section along with 60mCo 
+    
+    foil1 = path + 'Ni_60Co_128.dat'
+    foil2 = path + 'Ni_60Co_228.dat'
+    foil3 = path + 'Ni_60Co_328.dat'
+    foil4 = path + 'Ni_60Co_428.dat'
+    foil5 = path + 'Ni_60Co_528.dat'
+    foil6 = path + 'Ni_60Co_628.dat'
+    foil7 = path + 'Ni_60Co_728.dat'
+    foil8 = path + 'Ni_60Co_828.dat'
+    foil9 = path + 'Ni_60Co_928.dat'
+    foil10 = path + 'Ni_60Co_1028.dat'
+    list = [foil1, foil2, foil3, foil4, foil5, foil6, foil7, foil8, foil9, foil10]
+    lambda_ = np.log(2)/(1925.28*d)
+    #print(lambda_)
 
 
-def Ni_60Co():
-    ##LACK, because no uniqe lines. Double decay from 60mCo
-    pass
+    return list, lambda_
 
 def Ni_64Cu():
     foil1 = path + 'Ni_64Cu_128.dat'

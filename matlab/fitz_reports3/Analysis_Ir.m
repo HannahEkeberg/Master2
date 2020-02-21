@@ -97,7 +97,7 @@ rows_Ni_52mMn = [70];   %check, check
 % rows_Ni_52Mn = [27,42,60,64,71];  %check
 rows_Ni_52Mn = [27,42,60,71];  %check
 rows_Ni_54Mn = [35]; %check
-rows_Ni_55Co = [3,13,15,18,30,34,41,46,57,63,67,69,84,98,105];   %check
+rows_Ni_55Co = [3,13,15,18,30,34,41,46,57,63,67,69,84,97,104];   %check
 % rows_Ni_56Co = [29,45,55,59,66,82,90,91,92,99,101];  %check
 rows_Ni_56Co = [29,45,55,90,91,92, 106];  %check
 % rows_Ni_56Co = [29,45,55,59,82,90];  %check
@@ -107,15 +107,20 @@ rows_Ni_56Co = [29,45,55,90,91,92, 106];  %check
 rows_Ni_56Mn = [ 106,107,108];  %check
 rows_Ni_56Ni = [7,8,16,28,32,74];  %check
 rows_Ni_57Co = [4,6,26]; %check
-rows_Ni_57Ni = [26,12,25,40,49,58,68,80,81,86,87,95,104]; %check
+rows_Ni_57Ni = [26,12,25,40,49,58,68,80,81,86,87,95,103]; %check
 rows_Ni_58Co = [31,38,77];   %check
 rows_Ni_59Fe = [61];%check
-rows_Ni_60Cu = [14,17,23,36,43,44,48,52,62,83,85,88,89,93,97,100,102,103]; %check
-rows_Ni_60mCo = [1]; %check
+% rows_Ni_60Cu = [14,17,23,36,43,44,48,52,62,83,85,88,89,93,96,99,101,102]; %check
+rows_Ni_60Cu = [14,17,23,43,48,52,62,83,85,89,93,96,99,101,102]; %check
+%rows_Ni_60Co = [1]; %check
+rows_Ni_60Co = [109, 110]; %check
+
+
 % rows_Ni_61Cu = [2,9,11,19,20,22,24,33,37,39,47,50,51,54,56,72,76,79,94]; %check
 rows_Ni_61Cu = [9,11,19,20,22,24,33,37,39,47,51,54,56,72]; %check
 rows_Ni_64Cu = [65]; %check
-rows_Ni_65Ni = [10,21,53,73,75,78]; %check
+%rows_Ni_65Ni = [10,21,53,73,75,78]; %check
+rows_Ni_65Ni = [10,73,75,78]; %check
 
 
 
@@ -180,8 +185,8 @@ rows_Ir_194m2Ir = [36,43,55,61,65,74]; %check
 
 % Select rows to plot
 % varToStr = @(x) inputname(1);
-rows = rows_Ni_59Fe;
-outName = '../csv/Ni_59Fe';
+rows = rows_Ni_65Ni;
+outName = '../csv/Ni_65Ni';
 % rows = 12;
 % Find rows for the desired decay product
 selected_rows = data(rows,:);
@@ -197,7 +202,7 @@ for energy = 128:100:1028   % Just Nickel
 %for energy = 126:100:326   % Just Iron
 % for energy = 177:100:1077   % Just Iridium
 % 
-% for energy = 628   % debug mode
+% for energy = 328   % debug mode
     if energy==0
         % Return all rows for plotting
         gammas = selected_rows;
@@ -244,9 +249,11 @@ for energy = 128:100:1028   % Just Nickel
     
     errorbar(delta_ts,activities',unc_activities','.')
     
-    
-    outfile =  [delta_ts; activities; unc_activities; decays; unc_decays; live_times]';    %Writing to the csv. '=tranpose
-    
+    if  length(gammas) > 0
+        outfile =  [delta_ts; activities; unc_activities; decays; unc_decays; live_times]';    %Writing to the csv. '=tranpose
+    else
+        outfile =  [0; 0; 1; 0; 0; 1]';    %Writing to the csv. '=tranpose
+    end
     
     %     Dump to csv for python / gnuplot
     %     Turn this line on to write files out!
