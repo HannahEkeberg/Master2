@@ -95,20 +95,20 @@ print(files[index])
 #RZ.plot_ChiSq(6, chi_tol=1)
 
 #path_to_Chisq = os.getcwd() + '/BeamCurrent/chisq_dir_new/'
-
 """
-csv_filename = './' + files[index] +'.csv'
+csv_filename = './' + files[index] 
+print("**", csv_filename)
 
 BC = BeamCurrent(files[index])
 #assigning variables for weighted_average.py
 A0, sigma_A0, lambda_, mass_density, sigma_mass_density, reaction_integral, uncertainty_integral, irr_time, sigma_irr_time = BC.reshaping_parameters()
 
 weighted_average_BC, sigma_weighted_average_BC = Average_BeamCurrent(A0, sigma_A0, mass_density, sigma_mass_density,  lambda_, reaction_integral, uncertainty_integral, irr_time, sigma_irr_time, csv_filename=csv_filename)
-#print(weighted_average_BC)
+print(weighted_average_BC)
 BC.CurrentPlot_compartment(names[index], WABC=csv_filename)
-
-CS = CrossSections(files[index])
-
+#CS = CrossSections(files[index])
+"""
+"""
 
 CS.mon_CS_test(Fe_56Co(), 'Fe', 'Fe_56Co.csv', 3, 'Fe_56Co', names[index], csv_filename)
 CS.mon_CS_test(Ni_61Cu(), 'Ni', 'Ni_61Cu.csv', 10, 'Ni_61Cu', names[index], csv_filename)
@@ -145,19 +145,21 @@ CS.mon_CS_test(Cu_65Zn(), 'Cu', 'Cu_65Zn.csv', 10, 'Cu_65Zn', names[index], csv_
 #two_step_up_npat(Ni_58Co(), "Ni_58mCo_npat", "Ni_58Co_npat", 10, '58COm', '58COg', Save_csv=True)
 #two_step_up_data(Ni_58Co(),"Ni_58mCo", "Ni_58Co", 10, Save_csv= True)
 #two_step_kp_data(Ni_56Ni(), Ni_56Co(), "Ni_56Co", 10, Save_csv= True)
+csv_filename = './' + files[index] 
+#csv_filename = './' + names[index] + '.csv'
+#print("***", csv_filename)
+#csv_filename = os.getcwd() + '/../ziegler_B_+2_D_+4,25_fluxes.csv'
+#print("***", csv_filename)
+CS = CrossSections(files[index]) 
 
-csv_filename = './' + names[index] +'.csv'
-CS = CrossSections(files[index])
+### FOR the first block, remember to change from mb to b on data. 
 
-
-#CS.make_CS(Cu_64Cu(), 'Cu', 'Cu_64Cu.csv', 10, 'Cu_64Cu', csv_filename, '29', '64')
-#CS.make_CS(Cu_65Ni(), 'Cu', 'Cu_65Ni.csv', 10, 'Cu_65Ni', csv_filename, '28', '65')
 #CS.make_CS(Ni_52Mn(), 'Ni', 'Ni_52Mn.csv', 10, 'Ni_52Mn', csv_filename, '25', '52')
 #CS.make_CS(Ni_54Mn(), 'Ni', 'Ni_54Mn.csv', 10, 'Ni_54Mn', csv_filename, '25', '54')
 #CS.make_CS(Ni_59Fe(), 'Ni', 'Ni_59Fe.csv', 10, 'Ni_59Fe', csv_filename, '26', '59')
-#CS.make_CS(Ni_60Cu(), 'Ni', 'Ni_60Cu.csv', 10, 'Ni_60Cu', csv_filename, '29', '60')
-#CS.make_CS(Ni_64Cu(), 'Ni', 'Ni_64Cu.csv', 10, 'Ni_64Cu', csv_filename, '29', '64')
-#CS.make_CS(Ni_60Co(), 'Ni', 'Ni_60Co.csv', 10, 'Ni_60Co', csv_filename, '27', '60')
+CS.make_CS(Ni_60Cu(), 'Ni', 'Ni_60Cu.csv', 10, 'Ni_60Cu', csv_filename, '29', '60')
+CS.make_CS(Ni_64Cu(), 'Ni', 'Ni_64Cu.csv', 10, 'Ni_64Cu', csv_filename, '29', '64')
+CS.make_CS(Ni_60Co(), 'Ni', 'Ni_60Co.csv', 10, 'Ni_60Co', csv_filename, '27', '60')
 #CS.make_CS(Ni_65Ni(), 'Ni', 'Ni_65Ni.csv', 10, 'Ni_65Ni', csv_filename, '28', '65')
 #CS.make_CS(Ni_56Co(), 'Ni', 'Ni_56Co.csv', 10, 'Ni_56Co', csv_filename, '27', '56')
 #CS.make_CS(Ni_56Ni(), 'Ni', 'Ni_56Ni.csv', 10, 'Ni_56Ni', csv_filename, '28', '56')
@@ -165,20 +167,30 @@ CS = CrossSections(files[index])
 #CS.make_CS(Ni_56Mn(), 'Ni', 'Ni_56Mn.csv', 10, 'Ni_56Mn', csv_filename, '25', '56')
 #CS.make_CS(Ni_57Ni(), 'Ni', 'Ni_57Ni.csv', 10, 'Ni_57Ni', csv_filename, '28', '57')
 
+#CS.make_CS(Cu_64Cu(), 'Cu', 'Cu_64Cu.csv', 10, 'Cu_64Cu', csv_filename, '29', '64')
+#CS.make_CS(Cu_65Ni(), 'Cu', 'Cu_65Ni.csv', 10, 'Cu_65Ni', csv_filename, '28', '65')
 #CS.make_CS(Cu_52Mn(), 'Cu', 'Cu_52Mn.csv', 10, 'Cu_52Mn', csv_filename, '25', '52')   #Most likely false. Not in talys or exfor. 
-#CS.make_CS(Cu_56Co(), 'Cu', 'Cu_56Co.csv', 10, 'Cu_56Co', csv_filename, '27', '56')   #Most likely false. In talys but no match, not in exfor. 
+#CS.make_CS(Cu_56Co(), 'Cu', 'Cu_56Co.csv', 10, 'Cu_56Co', csv_filename, '27', '56')    #Most likely false. In talys but no match, not in exfor. 
 #CS.make_CS(Cu_57Ni(), 'Cu', 'Cu_57Ni.csv', 10, 'Cu_57Ni', csv_filename, '28', '57')    #Most likely false too, Qval is too low at these energies. 
 #CS.make_CS(Cu_57Co(), 'Cu', 'Cu_57Co.csv', 10, 'Cu_57Co', csv_filename, '27', '57')    #Most likely false too, Qval is too low at these energies. 
 #CS.make_CS(Cu_59Fe(), 'Cu', 'Cu_59Fe.csv', 10, 'Cu_59Fe', csv_filename, '26', '59')
 #CS.make_CS(Cu_60Co(), 'Cu', 'Cu_60Co.csv', 10, 'Cu_60Co', csv_filename, '27', '60')   
 #CS.make_CS(Cu_61Co(), 'Cu', 'Cu_61Co.csv', 10, 'Cu_61Co', csv_filename, '27', '61')  
 #CS.make_CS(Cu_61Cu(), 'Cu', 'Cu_61Cu.csv', 10, 'Cu_61Cu', csv_filename, '29', '61')       #Not a good measurement? 
-CS.make_CS(Cu_64Cu(), 'Cu', 'Cu_64Cu.csv', 10, 'Cu_64Cu', csv_filename, '29', '64')
+#CS.make_CS(Cu_64Cu(), 'Cu', 'Cu_64Cu.csv', 10, 'Cu_64Cu', csv_filename, '29', '64')
+#CS.make_CS(Cu_65Ni(), 'Cu', 'Cu_65Ni.csv', 10, 'Cu_65Ni', csv_filename, '28', '65')     # Plot looks very weird. 
 
 
 
-
-
+#CS.make_CS(Fe_48V(), 'Fe', 'Fe_48V.csv', 3, 'Fe_48V', csv_filename, '23', '48')   
+#CS.make_CS(Fe_51Cr(), 'Fe', 'Fe_51Cr.csv', 3, 'Fe_51Cr', csv_filename, '24', '51')   
+#CS.make_CS(Fe_52Mn(), 'Fe', 'Fe_52Mn.csv', 3, 'Fe_52Mn', csv_filename, '25', '52')   
+#CS.make_CS(Fe_53Fe(), 'Fe', 'Fe_53Fe.csv', 3, 'Fe_53Fe', csv_filename, '26', '53')   
+#CS.make_CS(Fe_54Mn(), 'Fe', 'Fe_54Mn.csv', 3, 'Fe_54Mn', csv_filename, '25', '54')   
+#CS.make_CS(Fe_55Co(), 'Fe', 'Fe_55Co.csv', 3, 'Fe_55Co', csv_filename, '27', '55')   
+#CS.make_CS(Fe_57Co(), 'Fe', 'Fe_57Co.csv', 3, 'Fe_57Co', csv_filename, '27', '57')   
+#CS.make_CS(Fe_58Co(), 'Fe', 'Fe_58Co.csv', 3, 'Fe_58Co', csv_filename, '27', '58')   
+#CS.make_CS(Fe_59Fe(), 'Fe', 'Fe_59Fe.csv', 3, 'Fe_59Fe', csv_filename, '26', '59')   
 
 
 

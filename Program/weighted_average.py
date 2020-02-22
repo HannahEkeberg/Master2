@@ -329,6 +329,7 @@ def Average_BeamCurrent(A0, sigma_A0, mass_density, sigma_mass_density, lambda_,
     outfile = np.stack((np.transpose(output_foil_index),np.transpose(output_mu),np.transpose(output_unc_mu),np.transpose(output_percent_unc)), axis=-1)
     #import os
     #path = os.getcwd()
+    print("Does it save? ")
     np.savetxt("./{}".format(csv_filename), outfile, delimiter=",", header="Foil Index, Average Current (nA), Uncertainty in Average Current (nA), % Uncertainty")
 
 

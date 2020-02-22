@@ -589,27 +589,27 @@ def Fe_56Co(): #mon, Single
     return list, lambda_
 
 def Fe_48V():  #single decay, 48Cr not produced
-    foil1 = path + '48V_126.dat'
-    foil2 = path + '48V_226.dat'
-    foil3 = path + '48V_326.dat'
+    foil1 = path + 'Fe_48V_126.dat'
+    foil2 = path + 'Fe_48V_226.dat'
+    foil3 = path + 'Fe_48V_326.dat'
 
     list = [foil1, foil2, foil3]
     lambda_ = np.log(2)/(15.9735*h)
     return list, lambda_
 
 def Fe_51Mn():   #single decay
-    foil1 = path + '51Mn_126.dat'
-    foil2 = path + '51Mn_226.dat'
-    foil3 = path + '51Mn_326.dat'
+    foil1 = path + 'Fe_51Mn_126.dat'
+    foil2 = path + 'Fe_51Mn_226.dat'
+    foil3 = path + 'Fe_51Mn_326.dat'
 
     list = [foil1, foil2, foil3]
     lambda_ = np.log(2)/(46.2*m)
     return list, lambda_
 
 def Fe_51Cr():  #double decay from 51Mn
-    foil1 = path + '51Cr_126.dat'
-    foil2 = path + '51Cr_226.dat'
-    foil3 = path + '51Cr_326.dat'
+    foil1 = path + 'Fe_51Cr_126.dat'
+    foil2 = path + 'Fe_51Cr_226.dat'
+    foil3 = path + 'Fe_51Cr_326.dat'
 
     list = [foil1, foil2, foil3]
     #lambda_parent = np.log(2)/(46.2*m)
@@ -617,9 +617,9 @@ def Fe_51Cr():  #double decay from 51Mn
     return list, lambda_#parent, lambda_daughter
 
 def Fe_52mMn():  #not produced?
-    foil1 = path + '52mMn_126.dat'
-    foil2 = path + '52mMn_226.dat'
-    foil3 = path + '52mMn_326.dat'
+    foil1 = path + 'Fe_52mMn_126.dat'
+    foil2 = path + 'Fe_52mMn_226.dat'
+    foil3 = path + 'Fe_52mMn_326.dat'
 
     list = [foil1, foil2, foil3]
     lambda_ = np.log(2)/(21.1*m)
@@ -627,9 +627,9 @@ def Fe_52mMn():  #not produced?
 
 
 def Fe_52Mn():  #single update:
-    foil1 = path + '52Mn_126.dat'
-    foil2 = path + '52Mn_226.dat'
-    foil3 = path + '52Mn_326.dat'
+    foil1 = path + 'Fe_52Mn_126.dat'
+    foil2 = path + 'Fe_52Mn_226.dat'
+    foil3 = path + 'Fe_52Mn_326.dat'
 
     list = [foil1, foil2, foil3]
     #lambda_parent = np.log(2)/(21.1*m)
@@ -638,18 +638,18 @@ def Fe_52Mn():  #single update:
 
 
 def Fe_53Fe():   #Single decay - two step from isomer but half life is 2 m, so exluded
-    foil1 = path + '53Fe_126.dat'
-    foil2 = path + '53Fe_226.dat'
-    foil3 = path + '53Fe_326.dat'
+    foil1 = path + 'Fe_53Fe_126.dat'
+    foil2 = path + 'Fe_53Fe_226.dat'
+    foil3 = path + 'Fe_53Fe_326.dat'
 
     list = [foil1, foil2, foil3]
     lambda_ = np.log(2)/(8.51*m)
     return list, lambda_
 
 def Fe_54Mn():   #single decay
-    foil1 = path + '54Mn_126.dat'
-    foil2 = path + '54Mn_226.dat'
-    foil3 = path + '54Mn_326.dat'
+    foil1 = path + 'Fe_54Mn_126.dat'
+    foil2 = path + 'Fe_54Mn_226.dat'
+    foil3 = path + 'Fe_54Mn_326.dat'
 
     list = [foil1, foil2, foil3]
     lambda_ = np.log(2)/(312.20*d)
@@ -657,18 +657,18 @@ def Fe_54Mn():   #single decay
 
 
 def Fe_55Co():  #single decay
-    foil1 = path + '55Co_126.dat'
-    foil2 = path + '55Co_226.dat'
-    foil3 = path + '55Co_326.dat'
+    foil1 = path + 'Fe_55Co_126.dat'
+    foil2 = path + 'Fe_55Co_226.dat'
+    foil3 = path + 'Fe_55Co_326.dat'
 
     list = [foil1, foil2, foil3]
     lambda_ = np.log(2)/(17.53*h)
     return list, lambda_
 
 def Fe_57Co():  #single decay
-    foil1 = path + '57Co_126.dat'
-    foil2 = path + '57Co_226.dat'
-    foil3 = path + '57Co_326.dat'
+    foil1 = path + 'Fe_57Co_126.dat'
+    foil2 = path + 'Fe_57Co_226.dat'
+    foil3 = path + 'Fe_57Co_326.dat'
 
     list = [foil1, foil2, foil3]
     lambda_ = np.log(2)/(271.74*d)
@@ -676,9 +676,9 @@ def Fe_57Co():  #single decay
 
 
 def Fe_58Co():   #single decay
-    foil1 = path + '58Co_126.dat'
-    foil2 = path + '58Co_226.dat'
-    foil3 = path + '58Co_326.dat'
+    foil1 = path + 'Fe_58Co_126.dat'
+    foil2 = path + 'Fe_58Co_226.dat'
+    foil3 = path + 'Fe_58Co_326.dat'
 
     list = [foil1, foil2, foil3]
     lambda_ = np.log(2)/(70.86*d)
@@ -686,9 +686,9 @@ def Fe_58Co():   #single decay
 
 
 def Fe_59Fe(): #single decay
-    foil1 = path + '59Fe_126.dat'
-    foil2 = path + '59Fe_226.dat'
-    foil3 = path + '59Fe_326.dat'
+    foil1 = path + 'Fe_59Fe_126.dat'
+    foil2 = path + 'Fe_59Fe_226.dat'
+    foil3 = path + 'Fe_59Fe_326.dat'
 
     list = [foil1, foil2, foil3]
     lambda_ = np.log(2)/(44.495*d)

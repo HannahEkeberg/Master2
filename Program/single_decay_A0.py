@@ -33,6 +33,11 @@ def A0_single_decay(filename_activity_time, lambda_, makePlot=False):
     #ID = filename_activity_time[-8:-4]
     #Nucleus = filename_activity_time[-12:-8]
     name = filename_activity_time[-13:-4]
+
+    print(filename_activity_time)
+   # with open(filename_activity_time) as f:
+        #  print(f.readlines())
+    #print("****", name)
     #print('foil{}_{}'.format(ID, Nucleus))
     time = np.genfromtxt(filename_activity_time, delimiter=',', usecols=[0]) #hours since e.o.b
     A = np.genfromtxt(filename_activity_time, delimiter=',', usecols=[1])
@@ -373,8 +378,11 @@ def two_step_up_npat(func, reaction_parent, reaction_daughter, n, parent_str, da
 def single_decay_data(func, reaction, n, Save_csv=False):  #function, string
     list, lambda_ = func
     A0 = np.zeros(n); sigma_A0 = np.zeros(n)
+    #print(len(list))
 
     for i,e in enumerate(list):
+        #print(i,e)
+        #print(i)
         A0_estimated, sigma_A0_estimated = A0_single_decay(e, lambda_, makePlot=True)
         A0[i] = A0_estimated; sigma_A0[i] = sigma_A0_estimated
         #print("foil ", i, ": ", A0_estimated)
@@ -507,7 +515,7 @@ np.savetxt("{}.csv".format(save_results_to +  'Ni_56Co'), np.array((A0, sigma_A0
 
 #single_decay_data(Cu_61Cu(), "Cu_61Cu", 10, Save_csv=True)      #some weird values
 
-single_decay_data(Cu_64Cu(), "Cu_64Cu", 10, Save_csv=True)      #EXCELLENT
+#single_decay_data(Cu_64Cu(), "Cu_64Cu", 10, Save_csv=True)      #EXCELLENT
 
 #single_decay_data(Cu_65Ni(), "Cu_65Ni", 10, Save_csv=True)      #EXCELLENT
 
@@ -570,7 +578,7 @@ single_decay_data(Cu_64Cu(), "Cu_64Cu", 10, Save_csv=True)      #EXCELLENT
 #single_decay_data(Fe_57Co(), "Fe_57Co", 3, Save_csv=True)     #EXCELLENT
 #single_decay_data(Fe_58Co(), "Fe_58Co", 3, Save_csv=True)     #EXCELLENT
 
-#single_decay_data(Fe_59Fe(), "Fe_59Fe", 3, Save_csv=True)     #EXCELLENT
+single_decay_data(Fe_59Fe(), "Fe_59Fe", 3, Save_csv=True)     #EXCELLENT
 
 
 

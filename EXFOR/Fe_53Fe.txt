@@ -1,0 +1,17 @@
+#ZVView-data-copy:  22-Feb-2020 17:23:56
+#=======================================
+#
+#name:   26-FE-54(D,T)26-FE-53,,SIG
+#X.axis: Incident Energy
+#Y.axis: Cross Section
+#wdata:  4
+#ldata:  4
+#data...
+#            X         +-dX            Y         +-dY  # Comments...
+#          MeV          MeV        barns        barns  # Year,Author(s)           ## EXFOR-ID
+          11.2          0.3      0.00017         6e-5  # 2003,M.R.Zaman+          ## D4137003  #dY:35.3%  
+          12.1          0.3      0.00028         9e-5  # 2003,M.R.Zaman+          ## D4137003  #dY:32.1%  
+          13.1          0.3      0.00036         9e-5  # 2003,M.R.Zaman+          ## D4137003  #dY:25.0%  
+          13.8          0.3      0.00049      0.00014  # 2003,M.R.Zaman+          ## D4137003  #dY:28.6%  
+//
+#-------------------------------------------------------------------------------

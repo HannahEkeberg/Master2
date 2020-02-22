@@ -49,13 +49,13 @@ unc_fe_rhodrs = [0.110,0.034,0.114];
 clc;
 
 % Choose files for analysis
-fitzpeaks_reports = cu_fn;
-key_energies = cu_key_energies;
-glines = cu_glines;
+fitzpeaks_reports = fe_fn;
+key_energies = fe_key_energies;
+glines = fe_glines;
 EoB_Time = '26-Feb-2019 00:32:00'
-rhodrs = cu_rhodrs;
-mu_attenuation = load('cu_xcom.txt');
-unc_rhodrs = unc_cu_rhodrs;
+rhodrs = fe_rhodrs;
+mu_attenuation = load('fe_xcom.txt');
+unc_rhodrs = unc_fe_rhodrs;
 
 
 % Test new fitzpeaks_parser wrapper function
@@ -188,8 +188,8 @@ rows_Ir_194m2Ir = [36,43,55,61,65,74]; %check
 
 % Select rows to plot
 % varToStr = @(x) inputname(1);
-rows = rows_Cu_64Cu;
-outName = '../csv/Cu_64Cu';
+rows = rows_Fe_51Mn;
+outName = '../csv/Fe_51Mn';
 % rows = 12;
 % Find rows for the desired decay product
 selected_rows = data(rows,:);
@@ -202,10 +202,10 @@ selected_rows = data(rows,:);
 % loop over all energies for a foil type
 % for energy = 128:100:1028   % Just Nickel
 % for energy = 129:100:1029   % Just Copper
-%for energy = 126:100:326   % Just Iron
+for energy = 126:100:326   % Just Iron
 % for energy = 177:100:1077   % Just Iridium
 % 
-for energy = 129   % debug mode
+for energy = 126   % debug mode
     if energy==0
         % Return all rows for plotting
         gammas = selected_rows;
@@ -260,5 +260,5 @@ for energy = 129   % debug mode
     
     %     Dump to csv for python / gnuplot
     %     Turn this line on to write files out!
-%      csvwrite([outName '_' num2str(energy) '.dat'],outfile);  %Saving the csv file 
+     csvwrite([outName '_' num2str(energy) '.dat'],outfile);  %Saving the csv file 
 end

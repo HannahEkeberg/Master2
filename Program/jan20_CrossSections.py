@@ -273,23 +273,25 @@ class CrossSections:
     def cross_section_calc(self, n, A0, dA0, mass_density, sigma_mass_density, I, dI, lamb, reaction):
         CS = np.zeros(n)
         dCS = np.zeros(n)
-        dI = np.ones(n)*dI
+        #dI = np.ones(n)*dI
         dlamb = lamb*0.001 #typical percent uncertainty
         #E =
+        """
+        print("A0: ", A0)
+        print("dA0: ", dA0)
+        print("% A0: ", 100*dA0/A0)
+        print("I: ", I)
+        print("dI: ", dI)
+        print("% I: ", 100*dI/I)
+        print("mass_density: ", mass_density)
+        print("sigma_mass_density: ", sigma_mass_density)
+        print("% mass_density: ", 100*sigma_mass_density/mass_density)
+        print("lamb: ", lamb)
+        print("dlamb: ", dlamb)
+        print("% lamb: ", 100*dlamb/lamb)
+        print("self.irr_time: ", self.irr_time)
+        """
 
-        # print("A0: ", A0)
-        # print("dA0: ", dA0)
-        # print("% A0: ", 100*dA0/A0)
-        # print("I: ", I)
-        # print("dI: ", dI)
-        # print("% I: ", 100*dI/I)
-        # print("mass_density: ", mass_density)
-        # print("sigma_mass_density: ", sigma_mass_density)
-        # print("% mass_density: ", 100*sigma_mass_density/mass_density)
-        # print("lamb: ", lamb)
-        # print("dlamb: ", dlamb)
-        # print("% lamb: ", 100*dlamb/lamb)
-        # print("self.irr_time: ", self.irr_time)
 
         for j in range(n):
 
