@@ -174,8 +174,11 @@ class CrossSections:
         #print("I_Ni after", I_Ni)
         #I = self.I; dI = self.sigma_I_est
         CS, dCS= self.cross_section_calc(n, A0, dA0, mass_density, sigma_mass_density, I, dI, lamb, reaction)
-
-        E_talys, CS_talys = self.modelling('Talys', foil, Z, A)
+        #models = SimCrossSectionData(reaction)
+        #E_talys, CS_talys = models.TALYS(foil, )
+        E_talys, CS_talys = self.modelling('Talys', foil, Z, A, reaction)
+        E_EXFOR, dE_EXFOR, CS_EXFOR, dCS_EXFOR, author = self.modelling('Exfor', foil, Z, A, reaction)
+        #print(E_EXFOR, "testing exfor")
 
         #CS, dCS = self.cross_section_calc(n, A0, sigma_A0, mass_density, sigma_mass_density, I_Fe, sigma_I, lamb, reaction)
 
@@ -218,7 +221,12 @@ class CrossSections:
 
 
         #self.setting_plotvalues(tab_E, tab_dE, tab_CS, tab_dCS, label='exfor')
-        self.setting_plotvalues(E, dE, CS, dCS, label='this work using I')
+        #self.setting_plotvalues(E, dE, CS, dCS, label='this work')
+        plt.errorbar(E, CS, marker='P', linewidth=0.0001, xerr=dE, yerr=dCS, elinewidth=1.0, capthick=1.0, capsize=3.0, label='this data')
+
+        #self.setting_plotvalues(E, dE, CS, dCS, label='this work')
+        if E_EXFOR != 0:
+            self.setting_plotvalues(E_EXFOR, dE_EXFOR, CS_EXFOR, dCS_EXFOR, author[0])
         plt.plot(E_talys, CS_talys, label='TALYS')
         #CS, dCS = self.cross_section_calc(n, A0, dA0, mass_density, sigma_mass_density, I_Ir, sigma_I, lamb, reaction)
         #self.setting_plotvalues(E, dE, CS, dCS, label='this work using I')
@@ -230,17 +238,36 @@ class CrossSections:
 
 
 
+        #plt.errorbar(E, CS, marker='cross', linewidth=0.001, xerr=dE, yerr=dCS, elinewidth=0.5, capthick=0.5, capsize=3.0, label=label )
+
+        #self.setting_plotvalues(E, dE, CS, dCS, label='this work')
+
+
         return E, dE, CS, dCS
 
 
-    def modelling(self, model, foil, Z, A):
-        if model=='Talys':
-            SimCS = SimCrossSectionData('Ir_194Pt')
+    def modelling(self, model, foil, Z, A, reaction):
+        SimCS = SimCrossSectionData(reaction)
+        if model== 'Talys':
+            #SimCS = SimCrossSectionData('Ir_194Pt')
             Z = '0'+Z; A = '0'+A
             E, CS = SimCS.TALYS(foil, Z, A)
+            return E, CS
+        elif model == 'Exfor':
+             E_EXFOR, dE_EXFOR, CS_EXFOR, dCS_EXFOR, author_EXFOR =  SimCS.EXFOR(reaction)
+             return E_EXFOR, dE_EXFOR, CS_EXFOR, dCS_EXFOR, author_EXFOR
+             #PLOT IN HERE WITH CORRECT AUTHOR.
+        elif model == 'Alice': 
+            pass
+        elif model == 'Tendl':
+            pass 
+        elif model == 'Empire':
+            pass 
+        elif model == 'Coh':
+            pass
         else:
             print("provide model")
-        return E, CS
+        #return E, CS
 
 
     def cross_section_calc(self, n, A0, dA0, mass_density, sigma_mass_density, I, dI, lamb, reaction):
@@ -435,7 +462,7 @@ class CrossSections:
         #dE = np.flip(dE)#dE.reverse()
         #plt.plot(E,CS, '.', label=label)
         #plt.errorbar(E, CS, color='green', linewidth=0.001, xerr=dE,  yerr=dCS, elinewidth=0.5, ecolor='k', capthick=0.5 )
-        plt.errorbar(E, CS, marker='.', linewidth=0.001, xerr=dE, yerr=dCS, elinewidth=0.5, capthick=0.5, capsize=3.0, label=label )
+        plt.errorbar(E, CS, marker='.', markersize=1, linewidth=0.0001, xerr=dE, yerr=dCS, elinewidth=0.25, capthick=0.25, capsize=3.0, label=label )
         #plt.show()
 
 
@@ -449,8 +476,8 @@ class CrossSections:
         plt.title('Cross section for reaction {}'.format(reaction))
         path_to_cs_figs = os.getcwd() + '/CrossSections/CrossSections_curves/'
         #plt.savefig(path_to_cs_figs + reaction +'{}.png'.format(scaling_parameter), dpi=300)
-        plt.savefig(path_to_cs_figs + reaction+'.png', dpi=300)
         plt.legend()
+        plt.savefig(path_to_cs_figs + reaction+'.png', dpi=300)
         plt.show()
 
 

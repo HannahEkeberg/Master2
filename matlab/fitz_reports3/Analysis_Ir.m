@@ -49,13 +49,13 @@ unc_fe_rhodrs = [0.110,0.034,0.114];
 clc;
 
 % Choose files for analysis
-fitzpeaks_reports = ni_fn;
-key_energies = ni_key_energies;
-glines = ni_glines;
+fitzpeaks_reports = cu_fn;
+key_energies = cu_key_energies;
+glines = cu_glines;
 EoB_Time = '26-Feb-2019 00:32:00'
-rhodrs = ni_rhodrs;
-mu_attenuation = load('ni_xcom.txt');
-unc_rhodrs = unc_ni_rhodrs;
+rhodrs = cu_rhodrs;
+mu_attenuation = load('cu_xcom.txt');
+unc_rhodrs = unc_cu_rhodrs;
 
 
 % Test new fitzpeaks_parser wrapper function
@@ -105,7 +105,8 @@ rows_Ni_56Co = [29,45,55,90,91,92, 106];  %check
 % rows_Ni_56Co = [29,55, 106,59];  %check
 % rows_Ni_56Co = [106];
 rows_Ni_56Mn = [ 106,107,108];  %check
-rows_Ni_56Ni = [7,8,16,28,32,74];  %check
+%rows_Ni_56Ni = [7,8,16,28,32,74];  %check
+rows_Ni_56Ni = [7,16,28,32,74];  %check
 rows_Ni_57Co = [4,6,26]; %check
 rows_Ni_57Ni = [26,12,25,40,49,58,68,80,81,86,87,95,103]; %check
 rows_Ni_58Co = [31,38,77];   %check
@@ -131,10 +132,12 @@ rows_Cu_56Co = [22,25,31,42,44,47];  %check
 rows_Cu_57Co = [3,15]; %check
 rows_Cu_57Ni = [36]; %check
 rows_Cu_58Co = [21];  %check
-rows_Cu_59Fe = [10, 26, 32]; %check
+%rows_Cu_59Fe = [10, 26, 32]; %check
+rows_Cu_59Fe = [26, 32]; %check
 rows_Cu_60Co = [29,33];%check
 rows_Cu_61Co = [2]; % check
-rows_Cu_61Cu = [2,8,18,30]; %check
+% rows_Cu_61Cu = [2,8,18,30]; %check
+rows_Cu_61Cu = [8,18,30]; %check
 rows_Cu_62Zn = [1,4,6,7,9,11,12,14,16,17]; %check
 % rows_Cu_63Zn = [5,13,19,24,28,37,38,41,43,45,46]; %check 
 rows_Cu_63Zn = [13,19,24]; %check 
@@ -185,8 +188,8 @@ rows_Ir_194m2Ir = [36,43,55,61,65,74]; %check
 
 % Select rows to plot
 % varToStr = @(x) inputname(1);
-rows = rows_Ni_65Ni;
-outName = '../csv/Ni_65Ni';
+rows = rows_Cu_64Cu;
+outName = '../csv/Cu_64Cu';
 % rows = 12;
 % Find rows for the desired decay product
 selected_rows = data(rows,:);
@@ -197,12 +200,12 @@ selected_rows = data(rows,:);
 % energy = 0; % Show all foils in one plot (not for analysis!)
 % 
 % loop over all energies for a foil type
-for energy = 128:100:1028   % Just Nickel
-%for energy = 129:100:1029   % Just Copper
+% for energy = 128:100:1028   % Just Nickel
+% for energy = 129:100:1029   % Just Copper
 %for energy = 126:100:326   % Just Iron
 % for energy = 177:100:1077   % Just Iridium
 % 
-% for energy = 328   % debug mode
+for energy = 129   % debug mode
     if energy==0
         % Return all rows for plotting
         gammas = selected_rows;
@@ -257,5 +260,5 @@ for energy = 128:100:1028   % Just Nickel
     
     %     Dump to csv for python / gnuplot
     %     Turn this line on to write files out!
-     csvwrite([outName '_' num2str(energy) '.dat'],outfile);  %Saving the csv file 
+%      csvwrite([outName '_' num2str(energy) '.dat'],outfile);  %Saving the csv file 
 end

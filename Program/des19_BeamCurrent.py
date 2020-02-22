@@ -283,7 +283,25 @@ class BeamCurrent:
             #I = 1/(mass_density * reaction_integral)  * ( A0_dir*elementary_charge*1e9/(1-np.exp(-lambda_dir*irr_time)) + BR*A0_nondir*elementary_charge*1e9/ (1-np.exp(-lambda_nondir*irr_time)) )
             I = ( 1/(mass_density * reaction_integral) ) * (A0_dir + BR*A0_nondir*(lambda_dir/lambda_nondir))*elementary_charge*1e9/(1-np.exp(-lambda_dir*irr_time))
             #print(reaction_integral)
-            dI = I * np.sqrt((sigma_A0_dir/A0_dir)**2 + (sigma_A0_nondir/A0_nondir)**2  + (sigma_BR/BR)**2 + (sigma_mass_density/mass_density)**2 + (sigma_irr_time/irr_time)**2 + uncertainty_integral**2)
+            #dI = np.zeros(len(I))
+            dI = np.zeros(len(I))
+            #print(dI)
+            for i in range(len(A0_nondir)):
+                #print("**", i)
+
+                if A0_nondir[i]==0:    
+                    #print(A0_nondir[i])
+                    #print("yes")
+                    dI[i] = I[i] * np.sqrt((sigma_A0_dir[i]/A0_dir[i])**2 + (sigma_BR/BR)**2 + (sigma_mass_density[i]/mass_density[i])**2 + (sigma_irr_time/irr_time)**2 + uncertainty_integral[i]**2)   
+                    #print("nondir = 0: ", dI[i])
+                    #print(dI)
+                else:
+                    #print(A0_nondir[i])
+                    dI[i] = I[i] * np.sqrt((sigma_A0_dir[i]/A0_dir[i])**2 + (sigma_A0_nondir[i]/A0_nondir[i])**2  + (sigma_BR/BR)**2 + (sigma_mass_density[i]/mass_density[i])**2 + (sigma_irr_time/irr_time)**2 + uncertainty_integral[i]**2)
+                    #print("nondir != 0: ", dI[i])
+
+            #dI = I * np.sqrt((sigma_A0_dir/A0_dir)**2 + (sigma_A0_nondir/A0_nondir)**2  + (sigma_BR/BR)**2 + (sigma_mass_density/mass_density)**2 + (sigma_irr_time/irr_time)**2 + uncertainty_integral**2)
+            #print(dI)
 
             if print_terms:
                 print("mass density", mass_density)
@@ -291,6 +309,8 @@ class BeamCurrent:
                 print("underctainty integral", uncertainty_integral)
                 print("activity direct", A0_dir)
                 print("activity non-direct", A0_nondir)
+                print("Beam Current: ", I)
+                print("Beam Current uncertainty: ", dI)
 
         else:
             I  = A0 *elementary_charge*1e9 / (mass_density*(1-np.exp(-lambda_*irr_time))*reaction_integral)
@@ -308,13 +328,13 @@ class BeamCurrent:
             """
 
 
-        if print_terms:
-            print("mass density", mass_density)
-            print("reaction integral", reaction_integral)
-            print("underctainty integral", uncertainty_integral)
-            print("activity", A0)
-            print("I", I)
-            print("dI", dI)
+            if print_terms:
+                print("mass density", mass_density)
+                print("reaction integral", reaction_integral)
+                print("underctainty integral", uncertainty_integral)
+                print("activity", A0)
+                print("I", I)
+                print("dI", dI)
 
         I = np.array(I)
 
@@ -870,7 +890,19 @@ class BeamCurrent:
                 matrix_reaction_integral[:,i]  = reaction_integral
                 matrix_uncertainty_integral[:,i]  = uncertainty_integral
 
+            
+        ### NEED TO REMOVE inf from sigma_A0 (which was caused by changing A0 for 56Ni to 0 in foil 4-10.
+        ### Gave inf problems in zero division.  )
+        rows = matrix_A0.shape[0]
+        cols = matrix_A0.shape[1]
+        for i in range(rows):
+            for j in range(cols):
+                if np.isinf(matrix_sigma_A0[i,j]):
+                 matrix_sigma_A0[i,j]=0
+        #print(matrix_sigma_A0)
+                #print(matrix_sigma_A0[i,j])
 
+        #print(matrix_sigma_A0)
         #print(matrix_lambda_.shape)
         #print(matrix_irr_time)
         #print(matrix_sigma_irr_time)

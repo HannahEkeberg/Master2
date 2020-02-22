@@ -80,7 +80,7 @@ def Cu_52Mn(): #non-mon, BUT WAS PRODUCED, needs work ?????????
     list = [foil1, foil2, foil3, foil4, foil5, foil6, foil7, foil8, foil9, foil10]
     lambda_parent = np.log(2)/(21.1*m) #52mMn
     lambda_daughter = np.log(2)/(5.591*d) #52Mn
-    return list, lambda_parent, lambda_daughter
+    return list, lambda_daughter# lambda_parent, lambda_daughter
 
 
 def Cu_56Co():   #single decay        #looks weird
@@ -116,7 +116,7 @@ def Cu_57Co():   #double decay from 57Ni
     list = [foil1, foil2, foil3, foil4, foil5, foil6, foil7, foil8, foil9, foil10]
     lambda_parent = np.log(2)/(35.60*h)
     lambda_daughter = np.log(2)/(271.74*d)
-    return list, lambda_parent, lambda_daughter
+    return list, lambda_daughter#lambda_parent, lambda_daughter
 
 
 def Cu_57Ni():  #single decay
@@ -183,7 +183,7 @@ def Cu_60Co():  #two step decay via 60mCo, unkown though, since 60mCo is not obs
     list = [foil1, foil2, foil3, foil4, foil5, foil6, foil7, foil8, foil9, foil10]
     lambda_parent = np.log(2)/(10.467*m)      #isomer
     lambda_daughter = np.log(2)/(1925.28*d)  #ground state
-    return list, lambda_parent, lambda_daughter
+    return list, lambda_daughter  #lambda_parent, lambda_daughter
 
 
 
@@ -201,7 +201,7 @@ def Cu_61Co():   #in theory, 61 Fe feeds in, but half life=5.98 m. Unknown paren
     list = [foil1, foil2, foil3, foil4, foil5, foil6, foil7, foil8, foil9, foil10]
     lambda_parent = np.log(2)/(5.98*m)      #isomer
     lambda_daughter = np.log(2)/(1.649*h)  #ground state
-    return list, lambda_parent, lambda_daughter
+    return list, lambda_daughter#lambda_parent, lambda_daughter
 
 
 def Cu_61Cu():   #in theory, decay from 61Zn but half life in order seconds...
@@ -268,7 +268,7 @@ def Ni_56Ni(): #non-mon, single
     lambda_ = np.log(2)/(6.075*d)
     return list, lambda_
 
-def Ni_56Co(return_two_list=False): #mon, two step, known parent activity 56Ni
+def Ni_56Co_old(return_two_list=False): #mon, two step, known parent activity 56Ni
     #type = "tskp"
     foil1 = path + 'Ni_56Co_128.dat'
     foil2 = path + 'Ni_56Co_228.dat'
@@ -290,8 +290,38 @@ def Ni_56Co(return_two_list=False): #mon, two step, known parent activity 56Ni
         return np.array((list_parent, list_daughter)), lambda_parent, lambda_daughter
 
 
-    return list, lambda_parent, lambda_daughter#[lambda_parent, lambda_daughter]
+    #return list, lambda_parent, lambda_daughter#[lambda_parent, lambda_daughter]
+    return list,lambda_daughter#[lambda_parent, lambda_daughter]
     #return list, [lambda_parent, lambda_daughter]#[lambda_parent, lambda_daughter]
+
+def Ni_56Co(two_step=False):  #only use foil 1-3 for two step decay with 56Ni.   
+    #pass   #need another functions that does single decay on foil 4-10. 
+    if two_step==True:
+        foil1 = path + 'Ni_56Co_128.dat'
+        foil2 = path + 'Ni_56Co_228.dat'
+        foil3 = path + 'Ni_56Co_328.dat'
+
+        list = [foil1, foil2, foil3]
+        lambda_daughter =  np.log(2)/(77.236*d) #56Co
+        lambda_parent = Ni_56Ni()[-1]
+        return list, lambda_parent, lambda_daughter
+    if two_step==False:
+        foil4 = path + 'Ni_56Co_428.dat'
+        foil5 = path + 'Ni_56Co_528.dat'
+        foil6 = path + 'Ni_56Co_628.dat'
+        foil7 = path + 'Ni_56Co_728.dat'
+        foil8 = path + 'Ni_56Co_828.dat'
+        foil9 = path + 'Ni_56Co_928.dat'
+        foil10 = path + 'Ni_56Co_1028.dat'
+        list = [foil4, foil5, foil6, foil7, foil8, foil9, foil10]
+        lambda_daughter =  np.log(2)/(77.236*d) #56Co
+        lambda_parent = Ni_56Ni()[-1]
+        lambda_ = np.log(2)/(77.236*d) #56Co
+        return list, lambda_
+
+
+
+
 
 def Ni_58Co(): #mon, two step, unkown parent activity 58mCo
     #type = "tsup"
@@ -462,6 +492,22 @@ def Ni_60Cu():  #single decay  (probably not 60Zn, thalf=2m)
     foil10 = path + 'Ni_60Cu_1028.dat'
     list = [foil1, foil2, foil3, foil4, foil5, foil6, foil7, foil8, foil9, foil10]
     lambda_ = np.log(2)/(23.7*m)
+    return list, lambda_
+
+
+def Ni_56Mn():   #single
+    foil1 = path + 'Ni_56Mn_128.dat'
+    foil2 = path + 'Ni_56Mn_228.dat'
+    foil3 = path + 'Ni_56Mn_328.dat'
+    foil4 = path + 'Ni_56Mn_428.dat'
+    foil5 = path + 'Ni_56Mn_528.dat'
+    foil6 = path + 'Ni_56Mn_628.dat'
+    foil7 = path + 'Ni_56Mn_728.dat'
+    foil8 = path + 'Ni_56Mn_828.dat'
+    foil9 = path + 'Ni_56Mn_928.dat'
+    foil10 = path + 'Ni_56Mn_1028.dat'
+    list = [foil1, foil2, foil3, foil4, foil5, foil6, foil7, foil8, foil9, foil10]
+    lambda_ = np.log(2)/(2.5789*h)
     return list, lambda_
 
 

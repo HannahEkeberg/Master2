@@ -83,6 +83,9 @@ def Ni_foil(react):
         A0_56Co, sigma_A0_56Co = getA0(A_file, n)
         A0_56Ni, sigma_A0_56Ni = getA0(A_56Ni_file, n)
 
+        #print("HELLLOOOO ", A0_56Ni, sigma_A0_56Ni)
+        #print(A0_56Co, sigma_A0_56Co)
+
 
         lambda_56Co = Ni_56Co()[-1]   #from foil_info.py
         lambda_56Ni = Ni_56Ni()[-1]
@@ -134,3 +137,9 @@ def Cu_foil(react):
         IAEA_Cs = path + 'cud65znt/cud65znt.txt'
 
     return IAEA_Cs, A0, sigma_A0, lambda_, mass_density, sigma_mass_density
+
+
+if __name__=='__main__':
+    print('__main__')
+#else:
+ #   print("beam current foil react")    
