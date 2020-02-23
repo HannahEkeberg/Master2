@@ -171,7 +171,8 @@ rows_Ir_186Re = [12]; %check
 % rows_Ir_186Ta = [20]; %check
 % rows_Ir_187W = [54,68,73,9]; %check
 % rows_Ir_187W = [54,73]; %check
-rows_Ir_188Ir = [78,89,92,93,94]; %check
+% rows_Ir_188Ir = [78,89,92,93,94]; %check
+rows_Ir_188Ir = [89,92,93]; %check
 rows_Ir_188mRe = [1,5]; %check
 % rows_Ir_188Pt = [17,42,48,53]; %check
 rows_Ir_188Pt = [17,42]; %check
@@ -193,8 +194,8 @@ rows_Ir_194m2Ir = [36,43,55,61,65,74]; %check
 
 % Select rows to plot
 % varToStr = @(x) inputname(1);
-rows = rows_Ir_188Pt;
-outName = '../csv/Ir_188Pt';
+rows = rows_Ir_193mPt;
+outName = '../csv/Ir_193mPt';
 % rows = 12;
 % Find rows for the desired decay product
 selected_rows = data(rows,:);

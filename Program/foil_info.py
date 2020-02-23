@@ -798,7 +798,8 @@ def Ir_188Ir(return_two_list=False):  #Double decay from 188Pt
         return np.array((list_parent, list_daughter)), lambda_parent, lambda_daughter
 
     else:
-        return list, lambda_daughter, lambda_parent
+        #return list, lambda_daughter, lambda_parent
+        return list, lambda_daughter
 
 
 def Ir_188mRe():   #single decay, 188W not observed?

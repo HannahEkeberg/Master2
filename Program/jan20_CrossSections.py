@@ -178,8 +178,8 @@ class CrossSections:
         #E_talys, CS_talys = models.TALYS(foil, )
         try:
             E_talys, CS_talys = self.modelling('Talys', foil, Z, A, reaction)
-            print("E_talys  ", "    CS_talys    " )
-            print(np.vstack((E_talys,CS_talys)).T)
+            #print("E_talys  ", "    CS_talys    " )
+            #print(np.vstack((E_talys,CS_talys)).T)
         except:
             print("talys file does not exist for {} ".format(reaction))
             pass
