@@ -208,7 +208,10 @@ CS.mon_CS_test(Cu_65Zn(), 'Cu', 'Cu_65Zn.csv', 10, 'Cu_65Zn', names[index], csv_
 
 ### Ir reactions  
 #CS.make_CS(Ir_183Ta(), 'Ir', 'Ir_183Ta.csv', 10, 'Ir_183Ta', csv_filename, '73', '183')   
-
+#CS.make_CS(Ir_186Re(), 'Ir', 'Ir_186Re.csv', 10, 'Ir_186Re', csv_filename, '75', '186')   
+#CS.make_CS(Ir_186Ta(), 'Ir', 'Ir_186Ta.csv', 10, 'Ir_186Ta', csv_filename, '73', '186')   
+#CS.make_CS(Ir_187W(), 'Ir', 'Ir_187W.csv', 10, 'Ir_187W', csv_filename, '74', '187')   
+CS.make_CS(Ir_188Pt(), 'Ir', 'Ir_188Pt.csv', 10, 'Ir_188Pt', csv_filename, '78', '188')   
 
 #get_vals(Cu_64Cu(), 'Cu', 'Cu_64Cu.csv', 10, 'Cu_64Cu', csv_filename)
 

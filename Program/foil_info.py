@@ -777,7 +777,7 @@ def Ir_188Pt():  #single decay
     return list, lambda_
 
 
-def Ir_188Ir():  #Double decay from 188Pt
+def Ir_188Ir(return_two_list=False):  #Double decay from 188Pt
     foil1 = path + 'Ir_188Ir_177.dat'
     foil2 = path + 'Ir_188Ir_277.dat'
     foil3 = path + 'Ir_188Ir_377.dat'
@@ -789,9 +789,16 @@ def Ir_188Ir():  #Double decay from 188Pt
     foil9 = path + 'Ir_188Ir_977.dat'
     foil10 = path + 'Ir_188Ir_1077.dat'
     list = [foil1, foil2, foil3, foil4, foil5, foil6, foil7, foil8, foil9, foil10]
+
     lambda_parent = np.log(2)/(10.2*d)
     lambda_daughter = np.log(2)/(41.5*h)
-    return list, lambda_daughter, lambda_parent
+    if return_two_list:
+        list_parent = Ir_188Pt()[0]
+        list_daughter = list
+        return np.array((list_parent, list_daughter)), lambda_parent, lambda_daughter
+
+    else:
+        return list, lambda_daughter, lambda_parent
 
 
 def Ir_188mRe():   #single decay, 188W not observed?

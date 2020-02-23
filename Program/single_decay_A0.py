@@ -585,13 +585,16 @@ np.savetxt("{}.csv".format(save_results_to +  'Ni_56Co'), np.array((A0, sigma_A0
 ###Ir
 
 #single_decay_data(Ir_183Ta(), "Ir_183Ta", 10, Save_csv=True)    #183Hf was produced!!!!!. Not correct then
-two_step_up_npat(Ir_183Ta(), "Ir_183Hf_npat", "Ir_183Ta_npat", 10, '183HF', '183TA', Save_csv=False)
+#two_step_up_npat(Ir_183Ta(), "Ir_183Hf_npat", "Ir_183Ta_npat", 10, '183HF', '183TA', Save_csv=False)
+
 #single_decay_data(Ir_186Ta(), "Ir_186Ta", 10, Save_csv=True)     #WEIRD LOOKING
 #single_decay_data(Ir_186Re(), "Ir_186Re", 10, Save_csv=True)    #seems ok
 #single_decay_data(Ir_187W(), "Ir_187W", 10, Save_csv=True)    # kind of weird looking?
 
-#single_decay_data(Ir_188Pt(), "Ir_188Pt", 10, Save_csv=True)    #commented out false peaks
+single_decay_data(Ir_188Pt(), "Ir_188Pt", 10, Save_csv=True)    #commented out false peaks
 #two_step_kp_data(Ir_188Pt(), Ir_188Ir(), "Ir_188Ir", 10, Save_csv= True)   #ok
+#two_step_up_npat(Ir_188Ir(return_two_list=True), "Ir_188Pt_npat", "Ir_188Ir_npat", 10, '188PT', '188IR', Save_csv=False)
+
 
 # single_decay_data(Ir_188mRe(), "Ir_188mRe", 10, Save_csv=True)    #WEIRD, prob not produced?
 #single_decay_data(Ir_188Re(), "Ir_188Re", 10, Save_csv=True)    #ok

@@ -1,0 +1,18 @@
+#ZVView-data-copy:  23-Feb-2020 17:25:56
+#=======================================
+#
+#name:   77-IR-0(D,X)78-PT-188,,SIG
+#X.axis: Incident Energy
+#Y.axis: Cross Section
+#wdata:  4
+#ldata:  5
+#data...
+#            X         +-dX            Y         +-dY  # Comments...
+#          MeV          MeV        barns        barns  # Year,Author(s)           ## EXFOR-ID
+          13.1          1.6      0.00071      0.00037  # 2006,F.Tarkanyi+         ## D4174002  #dY:52.1%  
+          16.5          1.4      0.00051      0.00021  # 2006,F.Tarkanyi+         ## D4174002  #dY:41.2%  
+            32          0.6       0.0088       0.0047  # 2006,F.Tarkanyi+         ## D4174002  #dY:53.4%  
+          35.1          0.4        0.064        0.015  # 2006,F.Tarkanyi+         ## D4174002  #dY:23.4%  
+            38          0.3        0.156        0.022  # 2006,F.Tarkanyi+         ## D4174002  #dY:14.1%  
+//
+#-------------------------------------------------------------------------------

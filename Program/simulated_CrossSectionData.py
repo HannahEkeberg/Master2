@@ -158,8 +158,8 @@ class SimCrossSectionData:
 
 
 
-SimCS = SimCrossSectionData('Ir_194Pt')
-SimCS.TALYS('Ir', '073', '183')
+#SimCS = SimCrossSectionData('Ir_194Pt')
+#SimCS.TALYS('Ir', '078', '193')
 #SimCS.EXFOR('Cu_65Ni')
 #SimCS.TALYS('Cu', '27', '058')
 #SimCS.ALICE('Ni', '54', '25')
