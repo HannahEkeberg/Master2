@@ -163,7 +163,8 @@ rows_Fe_59Fe = [29,36]; %check
 
 
 % % 33MeV Iridium foils:
-rows_Ir_183Ta = [23,38]; %check
+% rows_Ir_183Ta = [23,38]; %check
+rows_Ir_183Ta = [38]; %check
 rows_Ir_186Re = [8,12]; %check
 rows_Ir_186Ta = [20,58]; %check
 rows_Ir_187W = [54,68,73,9]; %check
@@ -203,9 +204,9 @@ selected_rows = data(rows,:);
 % for energy = 128:100:1028   % Just Nickel
 % for energy = 129:100:1029   % Just Copper
 % for energy = 126:100:326   % Just Iron
-% for energy = 177:100:1077   % Just Iridium
+for energy = 177:100:1077   % Just Iridium
 % 
-for energy = 177   % debug mode
+% for energy = 177   % debug mode
     if energy==0
         % Return all rows for plotting
         gammas = selected_rows;
@@ -260,5 +261,5 @@ for energy = 177   % debug mode
     
     %     Dump to csv for python / gnuplot
     %     Turn this line on to write files out!
-%      csvwrite([outName '_' num2str(energy) '.dat'],outfile);  %Saving the csv file 
+     csvwrite([outName '_' num2str(energy) '.dat'],outfile);  %Saving the csv file 
 end
