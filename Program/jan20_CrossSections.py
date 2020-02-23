@@ -176,7 +176,11 @@ class CrossSections:
         CS, dCS= self.cross_section_calc(n, A0, dA0, mass_density, sigma_mass_density, I, dI, lamb, reaction)
         #models = SimCrossSectionData(reaction)
         #E_talys, CS_talys = models.TALYS(foil, )
-        E_talys, CS_talys = self.modelling('Talys', foil, Z, A, reaction)
+        try:
+            E_talys, CS_talys = self.modelling('Talys', foil, Z, A, reaction)
+        except:
+            print("talys file does not exist for {} ".format(reaction))
+            pass
         E_EXFOR, dE_EXFOR, CS_EXFOR, dCS_EXFOR, author = self.modelling('Exfor', foil, Z, A, reaction)
         #print(E_EXFOR, "testing exfor")
 
@@ -223,11 +227,11 @@ class CrossSections:
         #self.setting_plotvalues(tab_E, tab_dE, tab_CS, tab_dCS, label='exfor')
         #self.setting_plotvalues(E, dE, CS, dCS, label='this work')
         plt.errorbar(E, CS, marker='P', linewidth=0.0001, xerr=dE, yerr=dCS, elinewidth=1.0, capthick=1.0, capsize=3.0, label='this data')
-
         #self.setting_plotvalues(E, dE, CS, dCS, label='this work')
         if E_EXFOR != 0:
             self.setting_plotvalues(E_EXFOR, dE_EXFOR, CS_EXFOR, dCS_EXFOR, author[0])
         plt.plot(E_talys, CS_talys, label='TALYS')
+        #plt.plot(E_talys, CS_talys, label='TALYS')
         #CS, dCS = self.cross_section_calc(n, A0, dA0, mass_density, sigma_mass_density, I_Ir, sigma_I, lamb, reaction)
         #self.setting_plotvalues(E, dE, CS, dCS, label='this work using I')
 
@@ -249,9 +253,13 @@ class CrossSections:
     def modelling(self, model, foil, Z, A, reaction):
         SimCS = SimCrossSectionData(reaction)
         if model== 'Talys':
-            #SimCS = SimCrossSectionData('Ir_194Pt')
-            Z = '0'+Z; A = '0'+A
+            if len(Z)==2: 
+                Z = '0'+Z
+            if len(A)==2: 
+                A = '0'+A
+            print(Z, A)
             E, CS = SimCS.TALYS(foil, Z, A)
+            print(E)
             return E, CS
         elif model == 'Exfor':
              E_EXFOR, dE_EXFOR, CS_EXFOR, dCS_EXFOR, author_EXFOR =  SimCS.EXFOR(reaction)
@@ -296,7 +304,7 @@ class CrossSections:
         for j in range(n):
 
             CS[j] = A0[j] / (mass_density[j] * I[j]*(1/(elementary_charge*1e9))   *(1-np.exp(-lamb*self.irr_time)))/(1e-27)   #mb  ###1 barn = 1e-24 cm^2
-
+            #print(CS[j])
             if A0[j]==0:
                 dCS[j]=0
             else:

@@ -699,94 +699,95 @@ def Fe_59Fe(): #single decay
 def Ir_183Ta():  #single decay, 183Hf prob not produced
 
     #### NOte 183Hf must have been produced, something is feeding in!!
-    foil1 = path + '183Ta_177.dat'
-    foil2 = path + '183Ta_277.dat'
-    foil3 = path + '183Ta_377.dat'
-    foil4 = path + '183Ta_477.dat'
-    foil5 = path + '183Ta_577.dat'
-    foil6 = path + '183Ta_677.dat'
-    foil7 = path + '183Ta_777.dat'
-    foil8 = path + '183Ta_877.dat'
-    foil9 = path + '183Ta_977.dat'
-    foil10 = path + '183Ta_1077.dat'
+    foil1 = path + 'Ir_183Ta_177.dat'
+    foil2 = path + 'Ir_183Ta_277.dat'
+    foil3 = path + 'Ir_183Ta_377.dat'
+    foil4 = path + 'Ir_183Ta_477.dat'
+    foil5 = path + 'Ir_183Ta_577.dat'
+    foil6 = path + 'Ir_183Ta_677.dat'
+    foil7 = path + 'Ir_183Ta_777.dat'
+    foil8 = path + 'Ir_183Ta_877.dat'
+    foil9 = path + 'Ir_183Ta_977.dat'
+    foil10 = path + 'Ir_183Ta_1077.dat'
     list = [foil1, foil2, foil3, foil4, foil5, foil6, foil7, foil8, foil9, foil10]
-    lambda_ = np.log(2)/(5.1*d)
-    return list, lambda_
+    lambda_daughter = np.log(2)/(5.1*d)
+    lambda_parent = np.log(2)/(1.018*h)
+    return list, lambda_parent, lambda_daughter
 
 def Ir_186Ta():  #single decay
 
-    foil1 = path + '186Ta_177.dat'
-    foil2 = path + '186Ta_277.dat'
-    foil3 = path + '186Ta_377.dat'
-    foil4 = path + '186Ta_477.dat'
-    foil5 = path + '186Ta_577.dat'
-    foil6 = path + '186Ta_677.dat'
-    foil7 = path + '186Ta_777.dat'
-    foil8 = path + '186Ta_877.dat'
-    foil9 = path + '186Ta_977.dat'
-    foil10 = path + '186Ta_1077.dat'
+    foil1 = path + 'Ir_186Ta_177.dat'
+    foil2 = path + 'Ir_186Ta_277.dat'
+    foil3 = path + 'Ir_186Ta_377.dat'
+    foil4 = path + 'Ir_186Ta_477.dat'
+    foil5 = path + 'Ir_186Ta_577.dat'
+    foil6 = path + 'Ir_186Ta_677.dat'
+    foil7 = path + 'Ir_186Ta_777.dat'
+    foil8 = path + 'Ir_186Ta_877.dat'
+    foil9 = path + 'Ir_186Ta_977.dat'
+    foil10 = path + 'Ir_186Ta_1077.dat'
     list = [foil1, foil2, foil3, foil4, foil5, foil6, foil7, foil8, foil9, foil10]
     lambda_ = np.log(2)/(3.7186*d)
     return list, lambda_
 
 def Ir_186Re():  #single decay
-    foil1 = path + '186Re_177.dat'
-    foil2 = path + '186Re_277.dat'
-    foil3 = path + '186Re_377.dat'
-    foil4 = path + '186Re_477.dat'
-    foil5 = path + '186Re_577.dat'
-    foil6 = path + '186Re_677.dat'
-    foil7 = path + '186Re_777.dat'
-    foil8 = path + '186Re_877.dat'
-    foil9 = path + '186Re_977.dat'
-    foil10 = path + '186Re_1077.dat'
+    foil1 = path + 'Ir_186Re_177.dat'
+    foil2 = path + 'Ir_186Re_277.dat'
+    foil3 = path + 'Ir_186Re_377.dat'
+    foil4 = path + 'Ir_186Re_477.dat'
+    foil5 = path + 'Ir_186Re_577.dat'
+    foil6 = path + 'Ir_186Re_677.dat'
+    foil7 = path + 'Ir_186Re_777.dat'
+    foil8 = path + 'Ir_186Re_877.dat'
+    foil9 = path + 'Ir_186Re_977.dat'
+    foil10 = path + 'Ir_186Re_1077.dat'
     list = [foil1, foil2, foil3, foil4, foil5, foil6, foil7, foil8, foil9, foil10]
     lambda_ = np.log(2)/(3.7186*d)
     return list, lambda_
 
 def Ir_187W():  #single decay, parents decay too fast
-    foil1 = path + '187W_177.dat'
-    foil2 = path + '187W_277.dat'
-    foil3 = path + '187W_377.dat'
-    foil4 = path + '187W_477.dat'
-    foil5 = path + '187W_577.dat'
-    foil6 = path + '187W_677.dat'
-    foil7 = path + '187W_777.dat'
-    foil8 = path + '187W_877.dat'
-    foil9 = path + '187W_977.dat'
-    foil10 = path + '187W_1077.dat'
+    foil1 = path + 'Ir_187W_177.dat'
+    foil2 = path + 'Ir_187W_277.dat'
+    foil3 = path + 'Ir_187W_377.dat'
+    foil4 = path + 'Ir_187W_477.dat'
+    foil5 = path + 'Ir_187W_577.dat'
+    foil6 = path + 'Ir_187W_677.dat'
+    foil7 = path + 'Ir_187W_777.dat'
+    foil8 = path + 'Ir_187W_877.dat'
+    foil9 = path + 'Ir_187W_977.dat'
+    foil10 = path + 'Ir_187W_1077.dat'
     list = [foil1, foil2, foil3, foil4, foil5, foil6, foil7, foil8, foil9, foil10]
     lambda_ = np.log(2)/(24.0*h)
     return list, lambda_
 
 
 def Ir_188Pt():  #single decay
-    foil1 = path + '188Pt_177.dat'
-    foil2 = path + '188Pt_277.dat'
-    foil3 = path + '188Pt_377.dat'
-    foil4 = path + '188Pt_477.dat'
-    foil5 = path + '188Pt_577.dat'
-    foil6 = path + '188Pt_677.dat'
-    foil7 = path + '188Pt_777.dat'
-    foil8 = path + '188Pt_877.dat'
-    foil9 = path + '188Pt_977.dat'
-    foil10 = path + '188Pt_1077.dat'
+    foil1 = path + 'Ir_188Pt_177.dat'
+    foil2 = path + 'Ir_188Pt_277.dat'
+    foil3 = path + 'Ir_188Pt_377.dat'
+    foil4 = path + 'Ir_188Pt_477.dat'
+    foil5 = path + 'Ir_188Pt_577.dat'
+    foil6 = path + 'Ir_188Pt_677.dat'
+    foil7 = path + 'Ir_188Pt_777.dat'
+    foil8 = path + 'Ir_188Pt_877.dat'
+    foil9 = path + 'Ir_188Pt_977.dat'
+    foil10 = path + 'Ir_188Pt_1077.dat'
     list = [foil1, foil2, foil3, foil4, foil5, foil6, foil7, foil8, foil9, foil10]
     lambda_ = np.log(2)/(10.2*d)
     return list, lambda_
 
 
 def Ir_188Ir():  #Double decay from 188Pt
-    foil1 = path + '188Ir_177.dat'
-    foil2 = path + '188Ir_277.dat'
-    foil3 = path + '188Ir_377.dat'
-    foil4 = path + '188Ir_477.dat'
-    foil5 = path + '188Ir_577.dat'
-    foil6 = path + '188Ir_677.dat'
-    foil7 = path + '188Ir_777.dat'
-    foil8 = path + '188Ir_877.dat'
-    foil9 = path + '188Ir_977.dat'
-    foil10 = path + '188Ir_1077.dat'
+    foil1 = path + 'Ir_188Ir_177.dat'
+    foil2 = path + 'Ir_188Ir_277.dat'
+    foil3 = path + 'Ir_188Ir_377.dat'
+    foil4 = path + 'Ir_188Ir_477.dat'
+    foil5 = path + 'Ir_188Ir_577.dat'
+    foil6 = path + 'Ir_188Ir_677.dat'
+    foil7 = path + 'Ir_188Ir_777.dat'
+    foil8 = path + 'Ir_188Ir_877.dat'
+    foil9 = path + 'Ir_188Ir_977.dat'
+    foil10 = path + 'Ir_188Ir_1077.dat'
     list = [foil1, foil2, foil3, foil4, foil5, foil6, foil7, foil8, foil9, foil10]
     lambda_parent = np.log(2)/(10.2*d)
     lambda_daughter = np.log(2)/(41.5*h)
@@ -794,94 +795,94 @@ def Ir_188Ir():  #Double decay from 188Pt
 
 
 def Ir_188mRe():   #single decay, 188W not observed?
-    foil1 = path + '188mRe_177.dat'
-    foil2 = path + '188mRe_277.dat'
-    foil3 = path + '188mRe_377.dat'
-    foil4 = path + '188mRe_477.dat'
-    foil5 = path + '188mRe_577.dat'
-    foil6 = path + '188mRe_677.dat'
-    foil7 = path + '188mRe_777.dat'
-    foil8 = path + '188mRe_877.dat'
-    foil9 = path + '188mRe_977.dat'
-    foil10 = path + '188mRe_1077.dat'
+    foil1 = path + 'Ir_188mRe_177.dat'
+    foil2 = path + 'Ir_188mRe_277.dat'
+    foil3 = path + 'Ir_188mRe_377.dat'
+    foil4 = path + 'Ir_188mRe_477.dat'
+    foil5 = path + 'Ir_188mRe_577.dat'
+    foil6 = path + 'Ir_188mRe_677.dat'
+    foil7 = path + 'Ir_188mRe_777.dat'
+    foil8 = path + 'Ir_188mRe_877.dat'
+    foil9 = path + 'Ir_188mRe_977.dat'
+    foil10 = path + 'Ir_188mRe_1077.dat'
     list = [foil1, foil2, foil3, foil4, foil5, foil6, foil7, foil8, foil9, foil10]
     lambda_ = np.log(2)/(18.59*m)
     return list, lambda_
 
 def Ir_188Re():  #double decay 188mRe
-    foil1 = path + '188Re_177.dat'
-    foil2 = path + '188Re_277.dat'
-    foil3 = path + '188Re_377.dat'
-    foil4 = path + '188Re_477.dat'
-    foil5 = path + '188Re_577.dat'
-    foil6 = path + '188Re_677.dat'
-    foil7 = path + '188Re_777.dat'
-    foil8 = path + '188Re_877.dat'
-    foil9 = path + '188Re_977.dat'
-    foil10 = path + '188Re_1077.dat'
+    foil1 = path + 'Ir_188Re_177.dat'
+    foil2 = path + 'Ir_188Re_277.dat'
+    foil3 = path + 'Ir_188Re_377.dat'
+    foil4 = path + 'Ir_188Re_477.dat'
+    foil5 = path + 'Ir_188Re_577.dat'
+    foil6 = path + 'Ir_188Re_677.dat'
+    foil7 = path + 'Ir_188Re_777.dat'
+    foil8 = path + 'Ir_188Re_877.dat'
+    foil9 = path + 'Ir_188Re_977.dat'
+    foil10 = path + 'Ir_188Re_1077.dat'
     list = [foil1, foil2, foil3, foil4, foil5, foil6, foil7, foil8, foil9, foil10]
     #lambda_parent = np.log(2)/(18.59*m)
     lambda_ = np.log(2)/(17.003*h)
     return list, lambda_#parent, lambda_daughter
 
 def Ir_189Pt():  #single decay
-    foil1 = path + '189Pt_177.dat'
-    foil2 = path + '189Pt_277.dat'
-    foil3 = path + '189Pt_377.dat'
-    foil4 = path + '189Pt_477.dat'
-    foil5 = path + '189Pt_577.dat'
-    foil6 = path + '189Pt_677.dat'
-    foil7 = path + '189Pt_777.dat'
-    foil8 = path + '189Pt_877.dat'
-    foil9 = path + '189Pt_977.dat'
-    foil10 = path + '189Pt_1077.dat'
+    foil1 = path + 'Ir_189Pt_177.dat'
+    foil2 = path + 'Ir_189Pt_277.dat'
+    foil3 = path + 'Ir_189Pt_377.dat'
+    foil4 = path + 'Ir_189Pt_477.dat'
+    foil5 = path + 'Ir_189Pt_577.dat'
+    foil6 = path + 'Ir_189Pt_677.dat'
+    foil7 = path + 'Ir_189Pt_777.dat'
+    foil8 = path + 'Ir_189Pt_877.dat'
+    foil9 = path + 'Ir_189Pt_977.dat'
+    foil10 = path + 'Ir_189Pt_1077.dat'
     list = [foil1, foil2, foil3, foil4, foil5, foil6, foil7, foil8, foil9, foil10]
     lambda_ = np.log(2)/(10.87*h)
     return list, lambda_
 
 
 def Ir_189Ir():  #double decay from 189Pt
-    foil1 = path + '189Ir_177.dat'
-    foil2 = path + '189Ir_277.dat'
-    foil3 = path + '189Ir_377.dat'
-    foil4 = path + '189Ir_477.dat'
-    foil5 = path + '189Ir_577.dat'
-    foil6 = path + '189Ir_677.dat'
-    foil7 = path + '189Ir_777.dat'
-    foil8 = path + '189Ir_877.dat'
-    foil9 = path + '189Ir_977.dat'
-    foil10 = path + '189Ir_1077.dat'
+    foil1 = path + 'Ir_189Ir_177.dat'
+    foil2 = path + 'Ir_189Ir_277.dat'
+    foil3 = path + 'Ir_189Ir_377.dat'
+    foil4 = path + 'Ir_189Ir_477.dat'
+    foil5 = path + 'Ir_189Ir_577.dat'
+    foil6 = path + 'Ir_189Ir_677.dat'
+    foil7 = path + 'Ir_189Ir_777.dat'
+    foil8 = path + 'Ir_189Ir_877.dat'
+    foil9 = path + 'Ir_189Ir_977.dat'
+    foil10 = path + 'Ir_189Ir_1077.dat'
     list = [foil1, foil2, foil3, foil4, foil5, foil6, foil7, foil8, foil9, foil10]
     lambda_parent = np.log(2)/(10.87*h)
     lambda_daughter = np.log(2)/(13.2*d)
     return list, lambda_daughter, lambda_parent
 
 def Ir_189W():  #single decay
-    foil1 = path + '189W_177.dat'
-    foil2 = path + '189W_277.dat'
-    foil3 = path + '189W_377.dat'
-    foil4 = path + '189W_477.dat'
-    foil5 = path + '189W_577.dat'
-    foil6 = path + '189W_677.dat'
-    foil7 = path + '189W_777.dat'
-    foil8 = path + '189W_877.dat'
-    foil9 = path + '189W_977.dat'
-    foil10 = path + '189W_1077.dat'
+    foil1 = path + 'Ir_189W_177.dat'
+    foil2 = path + 'Ir_189W_277.dat'
+    foil3 = path + 'Ir_189W_377.dat'
+    foil4 = path + 'Ir_189W_477.dat'
+    foil5 = path + 'Ir_189W_577.dat'
+    foil6 = path + 'Ir_189W_677.dat'
+    foil7 = path + 'Ir_189W_777.dat'
+    foil8 = path + 'Ir_189W_877.dat'
+    foil9 = path + 'Ir_189W_977.dat'
+    foil10 = path + 'Ir_189W_1077.dat'
     list = [foil1, foil2, foil3, foil4, foil5, foil6, foil7, foil8, foil9, foil10]
     lambda_ = np.log(2)/(10.7*m)
     return list, lambda_
 
 def Ir_189Re():     #double decay from 189W
-    foil1 = path + '189Re_177.dat'
-    foil2 = path + '189Re_277.dat'
-    foil3 = path + '189Re_377.dat'
-    foil4 = path + '189Re_477.dat'
-    foil5 = path + '189Re_577.dat'
-    foil6 = path + '189Re_677.dat'
-    foil7 = path + '189Re_777.dat'
-    foil8 = path + '189Re_877.dat'
-    foil9 = path + '189Re_977.dat'
-    foil10 = path + '189Re_1077.dat'
+    foil1 = path + 'Ir_189Re_177.dat'
+    foil2 = path + 'Ir_189Re_277.dat'
+    foil3 = path + 'Ir_189Re_377.dat'
+    foil4 = path + 'Ir_189Re_477.dat'
+    foil5 = path + 'Ir_189Re_577.dat'
+    foil6 = path + 'Ir_189Re_677.dat'
+    foil7 = path + 'Ir_189Re_777.dat'
+    foil8 = path + 'Ir_189Re_877.dat'
+    foil9 = path + 'Ir_189Re_977.dat'
+    foil10 = path + 'Ir_189Re_1077.dat'
     list = [foil1, foil2, foil3, foil4, foil5, foil6, foil7, foil8, foil9, foil10]
     #lambda_parent = np.log(2)/(10.7*m)
     lambda_ = np.log(2)/(24.3*h)
@@ -890,32 +891,32 @@ def Ir_189Re():     #double decay from 189W
 def Ir_190Ir():   #Difficult, because lacking isomer gamma lines.... for 2 states (3-step)
     pass
 def Ir_190mRe():   #single decay
-    foil1 = path + '190mRe_177.dat'
-    foil2 = path + '190mRe_277.dat'
-    foil3 = path + '190mRe_377.dat'
-    foil4 = path + '190mRe_477.dat'
-    foil5 = path + '190mRe_577.dat'
-    foil6 = path + '190mRe_677.dat'
-    foil7 = path + '190mRe_777.dat'
-    foil8 = path + '190mRe_877.dat'
-    foil9 = path + '190mRe_977.dat'
-    foil10 = path + '190mRe_1077.dat'
+    foil1 = path + 'Ir_190mRe_177.dat'
+    foil2 = path + 'Ir_190mRe_277.dat'
+    foil3 = path + 'Ir_190mRe_377.dat'
+    foil4 = path + 'Ir_190mRe_477.dat'
+    foil5 = path + 'Ir_190mRe_577.dat'
+    foil6 = path + 'Ir_190mRe_677.dat'
+    foil7 = path + 'Ir_190mRe_777.dat'
+    foil8 = path + 'Ir_190mRe_877.dat'
+    foil9 = path + 'Ir_190mRe_977.dat'
+    foil10 = path + 'Ir_190mRe_1077.dat'
     list = [foil1, foil2, foil3, foil4, foil5, foil6, foil7, foil8, foil9, foil10]
     lambda_ = np.log(2)/(3.1*m)
     return list, lambda_
 
 
 def Ir_190Re():
-    foil1 = path + '190Re_177.dat'
-    foil2 = path + '190Re_277.dat'
-    foil3 = path + '190Re_377.dat'
-    foil4 = path + '190Re_477.dat'
-    foil5 = path + '190Re_577.dat'
-    foil6 = path + '190Re_677.dat'
-    foil7 = path + '190Re_777.dat'
-    foil8 = path + '190Re_877.dat'
-    foil9 = path + '190Re_977.dat'
-    foil10 = path + '190Re_1077.dat'
+    foil1 = path + 'Ir_190Re_177.dat'
+    foil2 = path + 'Ir_190Re_277.dat'
+    foil3 = path + 'Ir_190Re_377.dat'
+    foil4 = path + 'Ir_190Re_477.dat'
+    foil5 = path + 'Ir_190Re_577.dat'
+    foil6 = path + 'Ir_190Re_677.dat'
+    foil7 = path + 'Ir_190Re_777.dat'
+    foil8 = path + 'Ir_190Re_877.dat'
+    foil9 = path + 'Ir_190Re_977.dat'
+    foil10 = path + 'Ir_190Re_1077.dat'
     list = [foil1, foil2, foil3, foil4, foil5, foil6, foil7, foil8, foil9, foil10]
     #lambda_parent = np.log(2)/(3.1*m)
     #lambda_daughter = np.log(2)/(3.2*h)
@@ -924,32 +925,32 @@ def Ir_190Re():
 
 
 def Ir_191Pt():   #single decay
-    foil1 = path + '191Pt_177.dat'
-    foil2 = path + '191Pt_277.dat'
-    foil3 = path + '191Pt_377.dat'
-    foil4 = path + '191Pt_477.dat'
-    foil5 = path + '191Pt_577.dat'
-    foil6 = path + '191Pt_677.dat'
-    foil7 = path + '191Pt_777.dat'
-    foil8 = path + '191Pt_877.dat'
-    foil9 = path + '191Pt_977.dat'
-    foil10 = path + '191Pt_1077.dat'
+    foil1 = path + 'Ir_191Pt_177.dat'
+    foil2 = path + 'Ir_191Pt_277.dat'
+    foil3 = path + 'Ir_191Pt_377.dat'
+    foil4 = path + 'Ir_191Pt_477.dat'
+    foil5 = path + 'Ir_191Pt_577.dat'
+    foil6 = path + 'Ir_191Pt_677.dat'
+    foil7 = path + 'Ir_191Pt_777.dat'
+    foil8 = path + 'Ir_191Pt_877.dat'
+    foil9 = path + 'Ir_191Pt_977.dat'
+    foil10 = path + 'Ir_191Pt_1077.dat'
     list = [foil1, foil2, foil3, foil4, foil5, foil6, foil7, foil8, foil9, foil10]
     lambda_ = np.log(2)/(2.83*d)
     return list, lambda_
 
 
 def Ir_192Ir():  #single decay, too short and long half life of isomers
-    foil1 = path + '192Ir_177.dat'
-    foil2 = path + '192Ir_277.dat'
-    foil3 = path + '192Ir_377.dat'
-    foil4 = path + '192Ir_477.dat'
-    foil5 = path + '192Ir_577.dat'
-    foil6 = path + '192Ir_677.dat'
-    foil7 = path + '192Ir_777.dat'
-    foil8 = path + '192Ir_877.dat'
-    foil9 = path + '192Ir_977.dat'
-    foil10 = path + '192Ir_1077.dat'
+    foil1 = path + 'Ir_192Ir_177.dat'
+    foil2 = path + 'Ir_192Ir_277.dat'
+    foil3 = path + 'Ir_192Ir_377.dat'
+    foil4 = path + 'Ir_192Ir_477.dat'
+    foil5 = path + 'Ir_192Ir_577.dat'
+    foil6 = path + 'Ir_192Ir_677.dat'
+    foil7 = path + 'Ir_192Ir_777.dat'
+    foil8 = path + 'Ir_192Ir_877.dat'
+    foil9 = path + 'Ir_192Ir_977.dat'
+    foil10 = path + 'Ir_192Ir_1077.dat'
     list = [foil1, foil2, foil3, foil4, foil5, foil6, foil7, foil8, foil9, foil10]
     lambda_ = np.log(2)/(78.829*d)
     return list, lambda_
@@ -971,31 +972,31 @@ def Ir_193mPt(): #Single decay
     return list, lambda_    #mon, single"
 
 def Ir_194m2Ir(): #single decay
-    foil1 = path + '194m2Ir_177.dat'
-    foil2 = path + '194m2Ir_277.dat'
-    foil3 = path + '194m2Ir_377.dat'
-    foil4 = path + '194m2Ir_477.dat'
-    foil5 = path + '194m2Ir_577.dat'
-    foil6 = path + '194m2Ir_677.dat'
-    foil7 = path + '194m2Ir_777.dat'
-    foil8 = path + '194m2Ir_877.dat'
-    foil9 = path + '194m2Ir_977.dat'
-    foil10 = path + '194m2Ir_1077.dat'
+    foil1 = path + 'Ir_194m2Ir_177.dat'
+    foil2 = path + 'Ir_194m2Ir_277.dat'
+    foil3 = path + 'Ir_194m2Ir_377.dat'
+    foil4 = path + 'Ir_194m2Ir_477.dat'
+    foil5 = path + 'Ir_194m2Ir_577.dat'
+    foil6 = path + 'Ir_194m2Ir_677.dat'
+    foil7 = path + 'Ir_194m2Ir_777.dat'
+    foil8 = path + 'Ir_194m2Ir_877.dat'
+    foil9 = path + 'Ir_194m2Ir_977.dat'
+    foil10 = path + 'Ir_194m2Ir_1077.dat'
     list = [foil1, foil2, foil3, foil4, foil5, foil6, foil7, foil8, foil9, foil10]
     lambda_ = np.log(2)/(171.0*d)
     return list, lambda_
 
 def Ir_194Ir():    #two step from 194m2Ir (193m1Ir too short half life)
-    foil1 = path + '194Ir_177.dat'
-    foil2 = path + '194Ir_277.dat'
-    foil3 = path + '194Ir_377.dat'
-    foil4 = path + '194Ir_477.dat'
-    foil5 = path + '194Ir_577.dat'
-    foil6 = path + '194Ir_677.dat'
-    foil7 = path + '194Ir_777.dat'
-    foil8 = path + '194Ir_877.dat'
-    foil9 = path + '194Ir_977.dat'
-    foil10 = path + '194Ir_1077.dat'
+    foil1 = path + 'Ir_194Ir_177.dat'
+    foil2 = path + 'Ir_194Ir_277.dat'
+    foil3 = path + 'Ir_194Ir_377.dat'
+    foil4 = path + 'Ir_194Ir_477.dat'
+    foil5 = path + 'Ir_194Ir_577.dat'
+    foil6 = path + 'Ir_194Ir_677.dat'
+    foil7 = path + 'Ir_194Ir_777.dat'
+    foil8 = path + 'Ir_194Ir_877.dat'
+    foil9 = path + 'Ir_194Ir_977.dat'
+    foil10 = path + 'Ir_194Ir_1077.dat'
     list = [foil1, foil2, foil3, foil4, foil5, foil6, foil7, foil8, foil9, foil10]
     lambda_parent = np.log(2)/(171.0*d)
     lambda_daughter = np.log(2)/(19.28*h)

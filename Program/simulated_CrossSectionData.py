@@ -86,10 +86,12 @@ class SimCrossSectionData:
 		E  = np.genfromtxt(filename, delimiter=' ', usecols=[0],skip_header=5)
 		CS = np.genfromtxt(filename, delimiter=' ', usecols=[1],skip_header=5)
 
+		#print(CS)
+		#print(E)
 
-		return E, CS
 		#plt.plot(E,CS)
 		#plt.show()
+		return E, CS
 		
 
 	def Tendl(self):
@@ -157,6 +159,7 @@ class SimCrossSectionData:
 
 
 SimCS = SimCrossSectionData('Ir_194Pt')
+SimCS.TALYS('Ir', '073', '183')
 #SimCS.EXFOR('Cu_65Ni')
 #SimCS.TALYS('Cu', '27', '058')
 #SimCS.ALICE('Ni', '54', '25')

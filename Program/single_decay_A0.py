@@ -578,13 +578,14 @@ np.savetxt("{}.csv".format(save_results_to +  'Ni_56Co'), np.array((A0, sigma_A0
 #single_decay_data(Fe_57Co(), "Fe_57Co", 3, Save_csv=True)     #EXCELLENT
 #single_decay_data(Fe_58Co(), "Fe_58Co", 3, Save_csv=True)     #EXCELLENT
 
-single_decay_data(Fe_59Fe(), "Fe_59Fe", 3, Save_csv=True)     #EXCELLENT
+#single_decay_data(Fe_59Fe(), "Fe_59Fe", 3, Save_csv=True)     #EXCELLENT
 
 
 
 ###Ir
 
 #single_decay_data(Ir_183Ta(), "Ir_183Ta", 10, Save_csv=True)    #183Hf was produced!!!!!. Not correct then
+two_step_up_npat(Ir_183Ta(), "Ir_183Hf_npat", "Ir_183Ta_npat", 10, '183HF', '183TA', Save_csv=False)
 #single_decay_data(Ir_186Ta(), "Ir_186Ta", 10, Save_csv=True)     #WEIRD LOOKING
 #single_decay_data(Ir_186Re(), "Ir_186Re", 10, Save_csv=True)    #seems ok
 #single_decay_data(Ir_187W(), "Ir_187W", 10, Save_csv=True)    # kind of weird looking?
