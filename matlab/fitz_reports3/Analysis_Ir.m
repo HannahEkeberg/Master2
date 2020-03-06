@@ -176,27 +176,35 @@ rows_Ir_188Ir = [89,92,93]; %check
 rows_Ir_188mRe = [1,5]; %check
 % rows_Ir_188Pt = [17,42,48,53]; %check
 rows_Ir_188Pt = [17,42]; %check
-rows_Ir_188Re = [77,82]; %check
+%rows_Ir_188Re = [77,82]; %check
+rows_Ir_188Re = [77]; %check
 rows_Ir_189Ir = [3,21]; %check
-rows_Ir_189Pt = [2,6,22,31,35,60,75]; %check
+%rows_Ir_189Pt = [2,6,22,31,35,60,75]; %check
+rows_Ir_189Pt = [2,6,22,35]; %check
 rows_Ir_189Re = [13,14,16,62]; %check
+%rows_Ir_189Re = [13, 62]; %check
 rows_Ir_189W = [24,47,80]; %check
-rows_Ir_190Ir = [27,29,41,44,49,76,84]; %check
+%rows_Ir_190Ir = [27,29,41,44,49,76,84]; %check
+rows_Ir_190Ir = [29,41,84]; %check
 rows_Ir_190mRe = [7,72]; %check
 rows_Ir_190Re = [50,79,88,90]; %check
-rows_Ir_191Pt = [4,15,25,37,39,45,51,59,70]; %check
-rows_Ir_192Ir = [11,18,19,26,30,33,34,40,46,52,56,57,63,66,67,81,85]; %check
+rows_Ir_190Re = [50,79,88]; %check
+%rows_Ir_191Pt = [4,15,25,37,39,45,51,59,70]; %check
+rows_Ir_191Pt = [15,37,45,51,59,70]; %check
+%rows_Ir_192Ir = [11,18,19,26,30,33,34,40,46,52,56,57,63,66,67,81,85]; %check
+rows_Ir_192Ir = [18,30,40,46,52,57,67,85]; %check
 rows_Ir_193mPt = [10,98]; %check
 % rows_Ir_193mPt = [10]; %check
-rows_Ir_194Ir = [28,32,64,69,71,83,86,87,91];%check
+%rows_Ir_194Ir = [28,32,64,69,71,83,86,87,91];%check
+rows_Ir_194Ir = [28,32,64,83,86,91];%check
 rows_Ir_194m2Ir = [36,43,55,61,65,74]; %check
 
 
 
 % Select rows to plot
 % varToStr = @(x) inputname(1);
-rows = rows_Ir_193mPt;
-outName = '../csv/Ir_193mPt';
+rows = rows_Ir_190Ir;
+outName = '../csv/Ir_190Ir';
 % rows = 12;
 % Find rows for the desired decay product
 selected_rows = data(rows,:);
@@ -212,7 +220,7 @@ selected_rows = data(rows,:);
 % for energy = 126:100:326   % Just Iron
 for energy = 177:100:1077   % Just Iridium
 % 
-% for energy = 777   % debug mode
+%  for energy = 177   % debug mode
     if energy==0
         % Return all rows for plotting
         gammas = selected_rows;
@@ -267,5 +275,5 @@ for energy = 177:100:1077   % Just Iridium
     
     %     Dump to csv for python / gnuplot
     %     Turn this line on to write files out!
-     csvwrite([outName '_' num2str(energy) '.dat'],outfile);  %Saving the csv file 
+    csvwrite([outName '_' num2str(energy) '.dat'],outfile);  %Saving the csv file 
 end

@@ -863,7 +863,9 @@ def Ir_189Ir():  #double decay from 189Pt
     list = [foil1, foil2, foil3, foil4, foil5, foil6, foil7, foil8, foil9, foil10]
     lambda_parent = np.log(2)/(10.87*h)
     lambda_daughter = np.log(2)/(13.2*d)
-    return list, lambda_daughter, lambda_parent
+    return list, lambda_parent, lambda_daughter
+    # instead we try single decay and remove timepoints before 60 hours after eob. 
+    #return list, lambda_daughter
 
 def Ir_189W():  #single decay
     foil1 = path + 'Ir_189W_177.dat'
@@ -897,7 +899,20 @@ def Ir_189Re():     #double decay from 189W
     return list, lambda_#daughter, lambda_parent
 
 def Ir_190Ir():   #Difficult, because lacking isomer gamma lines.... for 2 states (3-step)
-    pass
+    foil1 = path + 'Ir_190Ir_177.dat'
+    foil2 = path + 'Ir_190Ir_277.dat'
+    foil3 = path + 'Ir_190Ir_377.dat'
+    foil4 = path + 'Ir_190Ir_477.dat'
+    foil5 = path + 'Ir_190Ir_577.dat'
+    foil6 = path + 'Ir_190Ir_677.dat'
+    foil7 = path + 'Ir_190Ir_777.dat'
+    foil8 = path + 'Ir_190Ir_877.dat'
+    foil9 = path + 'Ir_190Ir_977.dat'
+    foil10 = path + 'Ir_190Ir_1077.dat'  
+    lambda_ = np.log(2)/(11.78*d)
+    list = [foil1, foil2, foil3, foil4, foil5, foil6, foil7, foil8, foil9, foil10]
+    return list, lambda_
+
 def Ir_190mRe():   #single decay
     foil1 = path + 'Ir_190mRe_177.dat'
     foil2 = path + 'Ir_190mRe_277.dat'

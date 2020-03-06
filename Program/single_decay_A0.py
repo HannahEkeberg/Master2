@@ -32,9 +32,14 @@ if not os.path.exists(dir_csv):
 def A0_single_decay(filename_activity_time, lambda_, makePlot=False):
     #ID = filename_activity_time[-8:-4]
     #Nucleus = filename_activity_time[-12:-8]
-    name = filename_activity_time[-13:-4]
+   
 
-    print(filename_activity_time)
+    #name = filename_activity_time[-13:-4]
+    name = filename_activity_time[-14:-4]  #change back to above only for nice plotting of 193mPt
+
+    #print(name)
+
+    #print(filename_activity_time)
    # with open(filename_activity_time) as f:
         #  print(f.readlines())
     #print("****", name)
@@ -68,21 +73,35 @@ def A0_single_decay(filename_activity_time, lambda_, makePlot=False):
     if makePlot == True:
         plt.plot(xplot,direct_decay(xplot*3600,*popt),'r-', color='red')
         plt.plot(xplot,direct_decay(xplot*3600,*(popt+sigma_activity_estimated)), color='blue', linewidth=0.4)
-        plt.plot(xplot,direct_decay(xplot*3600,*(popt-sigma_activity_estimated)), color='green', linewidth=0.4)
+        plt.plot(xplot,direct_decay(xplot*3600,*(popt-sigma_activity_estimated)), color='blue', linewidth=0.4)
         plt.plot(time[index],A[index], '.')
         plt.errorbar(time[index], A[index], color='green', linewidth=0.001,yerr=sigma_A[index], elinewidth=0.5, ecolor='k', capthick=0.5)   # cap thickness for error bar color='blue')
         #plt.title('Activity for foil {} nucleus {}'.format(ID, Nucleus) )
         plt.xlabel('time since eob, hours')
         plt.ylabel('Activity, Bq')
+        plt.legend(['Fit', r'1$\sigma$ uncertainty'] )
         save_curves_to = os.getcwd()+'/activity_curves/'
         #save_csv_to = os.getcwd()+'/activity_csv/'
         #np.savetxt("{}.csv".format(save_results_to +  reaction), np.array((A0, sigma_A0)), delimiter=",")
         #plt.savefig('{}.png'.format(save_curves_to, name), dpi=300)
-        if name[0]=='/':
+       
+       
+        #print(name[0])
+        if name[0]=='/':   #only the first statement is original. 
             print(name[1:])
             name = name[1:]
+        elif name[1] == '/':
+            print(name[2:])
+            name = name[2:]
+        #else:
+        #    print(name[0:])
+        #    name = name[0:]
         #print(name)
+        #foil_numb = name[-4:]
+        #if foil_numb[0]=='_':
+        #    foil_numb = foil_numb[1:]
         plt.title('Activity for {}'.format(name) )
+        #plt.title(r'Activity $^{193m}$Pt - foil' + foil_numb[:-2])#.format(name[0]))
         plt.savefig(save_curves_to + '_activity_{}.png'.format(name), dpi=300)
         plt.show()
 
@@ -186,7 +205,7 @@ def A0_double_decay_known_parent(filename_activity_time, A0_parent, lambda_paren
     xplot = np.linspace(0,t,1000)
 
     #non direct decay
-    A0_daughter_guess=80000
+    A0_daughter_guess=40000
 
     def non_direct_decay_known_parent(time,A0_daughter_guess):  #if there are no gammas to be detected from parent
         A_est        = A0_parent  *lambda_daughter / (lambda_parent-lambda_daughter) * (np.exp(-lambda_daughter*time)-np.exp(-lambda_parent*time)) + A0_daughter_guess*np.exp(-lambda_daughter*time)
@@ -400,7 +419,7 @@ def two_step_kp_data(func_parent, func_daughter, reaction, n, Save_csv=False):
     A0 = np.zeros(n); sigma_A0 = np.zeros(n)
     A0_list = []; dA0_list = []
     for i,e in enumerate(list_parent):
-        A0_estimated_parent, sigma_A0_estimated_parent = A0_single_decay(e,lambda_parent, makePlot=True)
+        A0_estimated_parent, sigma_A0_estimated_parent = A0_single_decay(e,lambda_parent, makePlot=False)
         A0_list.append(A0_estimated_parent)  #add is all A0's for Ni56 from single decay function.
         dA0_list.append(sigma_A0_estimated_parent)
 
@@ -453,6 +472,7 @@ def two_step_up_data(func, reaction_parent, reaction_daughter, n, Save_csv=False
 #two_step_up_npat(Ni_58Co(), "Ni_58mCo_npat", "Ni_58Co_npat", 10, '58COm', '58COg', Save_csv=True)
 #two_step_up_npat(Ni_56Co(return_two_list=True), "Ni_56Ni_npat", "Ni_56Co_npat", 10, '56NI', '56CO', Save_csv=True)
 
+
 """
 ### For 56Co: Need two_step_kp_data for foil 1,2,3. Need single decay for foil 4,5,6,7,8,9,10
 A0_single, sigma_A0_single = single_decay_data(Ni_56Co(False), "Ni_56Co", 7)
@@ -461,7 +481,9 @@ A0_twostep, sigma_A0_twostep = two_step_kp_data(Ni_56Ni(), Ni_56Co(True), "Ni_56
 #print(A0_twostep)
 
 A0 = np.concatenate((A0_twostep, A0_single))
+print(A0)
 sigma_A0 = np.concatenate((sigma_A0_twostep, sigma_A0_single))
+print(sigma_A0)
 save_results_to = os.getcwd()+'/activity_csv/'
 np.savetxt("{}.csv".format(save_results_to +  'Ni_56Co'), np.array((A0, sigma_A0)), delimiter=",")
 """
@@ -596,23 +618,32 @@ np.savetxt("{}.csv".format(save_results_to +  'Ni_56Co'), np.array((A0, sigma_A0
 #two_step_up_npat(Ir_188Ir(return_two_list=True), "Ir_188Pt", "Ir_188Ir", 10, '188PT', '188IR', Save_csv=True)
 #single_decay_data(Ir_188Ir(), "Ir_188Ir", 10, Save_csv=True)    #USED
 
-# single_decay_data(Ir_188mRe(), "Ir_188mRe", 10, Save_csv=True)    #WEIRD, prob not produced?
+#single_decay_data(Ir_188mRe(), "Ir_188mRe", 10, Save_csv=True)    #WEIRD, prob not produced?
 #single_decay_data(Ir_188Re(), "Ir_188Re", 10, Save_csv=True)    #ok
 
+
+
+
 #single_decay_data(Ir_189Pt(), "Ir_189Pt", 10, Save_csv=True)    #EXCELLENT
-#two_step_kp_data(Ir_189Pt(), Ir_189Ir(), "Ir_189Ir", 10, Save_csv= True)   #WEIRD  prob not in foil 4 and out if even produced
+#two_step_kp_data(Ir_189Pt(), Ir_189Ir(), "Ir_189Ir", 10, Save_csv= True)   #try single instead
+#single_decay_data(Ir_189Ir(), "Ir_189Ir", 10, Save_csv=True)    #works but gives wrong result. 
+#try: npat
+two_step_up_npat(Ir_189Ir(), "Ir_189Pt_npat", "Ir_189Ir_npat", 10, '189PT', '189IR', Save_csv=False)   #crashes after first plot.
+
+
 
 #single_decay_data(Ir_189W(), "Ir_189W", 10, Save_csv=True)    #Prob not oberved
 #single_decay_data(Ir_189Re(), "Ir_189Re", 10, Save_csv=True)    #two gamma lines, does not agree
 #single_decay_data(Ir_190mRe(), "Ir_190mRe", 10, Save_csv=True)    #prob not observed?
 #single_decay_data(Ir_190Re(), "Ir_190Re", 10, Save_csv=True)    #must go through false peaks
 
+#single_decay_data(Ir_190Ir(), "Ir_190Ir", 10, Save_csv=True)  
 #single_decay_data(Ir_191Pt(), "Ir_191Pt", 10, Save_csv=True)    #two gamma lines, does not agree
 #single_decay_data(Ir_192Ir(), "Ir_192Ir", 10, Save_csv=True)    #must go through false peaks
-single_decay_data(Ir_193mPt(), "Ir_193mPt", 10, Save_csv=True)   
-#single_decay_data(Ir_194m2Ir(), "Ir_194m2Ir", 10, Save_csv=True)    #ok, must go through false peaks
 
-#two_step_kp_data(Ir_194m2Ir(), Ir_194Ir(), "Ir_194Ir", 10, Save_csv= True)   #Ok, must go through false peaks
+###  single_decay_data(Ir_193mPt(), "Ir_193mPt", 10, Save_csv=True)   
+#single_decay_data(Ir_194m2Ir(), "Ir_194m2Ir", 10, Save_csv=True)    #ok, must go through false peaks
+#two_step_kp_data(Ir_194m2Ir(), Ir_194Ir(), "Ir_194Ir", 10, Save_csv= True)  
 
 
 #HH

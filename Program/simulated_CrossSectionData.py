@@ -83,6 +83,7 @@ class SimCrossSectionData:
 		# Z = 0XX, A=0XX
 
 		filename = self.path + '/../Talys/' +foil+ '/rp'+Z+A+'.tot'
+		#filename = self.path + '/../Talys/' +foil+ '/rp'+Z+A+'.L02'
 		E  = np.genfromtxt(filename, delimiter=' ', usecols=[0],skip_header=5)
 		CS = np.genfromtxt(filename, delimiter=' ', usecols=[1],skip_header=5)
 

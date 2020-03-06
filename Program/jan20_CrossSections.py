@@ -166,6 +166,7 @@ class CrossSections:
         ### The weighted average beam current  - made by Andrew
 
         I = np.genfromtxt(BC_csv_filename, delimiter=',', usecols=[1])
+        print(I)
         #weighted_average_beam = weighted_average_beam[::-1]
         dI = np.genfromtxt(BC_csv_filename, delimiter=',', usecols=[2])
 
@@ -300,8 +301,8 @@ class CrossSections:
         print("dlamb: ", dlamb)
         print("% lamb: ", 100*dlamb/lamb)
         print("self.irr_time: ", self.irr_time)
+        
         """
-
 
         for j in range(n):
 
@@ -325,6 +326,7 @@ class CrossSections:
     def mon_CS_test(self, react_func, foil, filename, n, reaction,scaling_parameter, BC_csv_filename):
         #print("*")
         I_Fe, I_Ni, I_Cu, sigma_I = self.current_class.current_for_CS(mon_test=True)
+        sigma_I = np.ones(len(I_Ni))*sigma_I
 
 
 
@@ -365,6 +367,7 @@ class CrossSections:
 
 
         if reaction=='Fe_56Co':
+            sigma_I = sigma_I[:3]
             CS, dCS = self.cross_section_calc(n, A0, sigma_A0, mass_density, sigma_mass_density, I_Fe, sigma_I, lamb, reaction)
             E = self.E_Fe; dE = self.dE_Fe
             filename =  path_to_monitor_data+'fed56cot/fed56cot.txt'
@@ -451,7 +454,8 @@ class CrossSections:
         else:
             label = 'monitor data'
         plt.plot(E_mon, Cs_mon, label=label)
-        self.setting_plotvalues(E, dE, CS, dCS, 'this data')
+        #self.setting_plotvalues(E, dE, CS, dCS, 'this data')
+        plt.errorbar(E, CS, marker='P', markersize=4, color='red', linewidth=0.0001, xerr=dE, yerr=dCS, elinewidth=0.5, capthick=0.25, capsize=3.0, label=label )
         self.plot_CrossSections(reaction)
 
         #plt.plot(E_mon, Cs_mon, label='monitor data')

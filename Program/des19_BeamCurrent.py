@@ -144,22 +144,32 @@ class BeamCurrent:
         if foil == 'Ni':
             #print('way')
             self.get_sigmaE(self.E_Ni, self.F_Ni, foil, makePlot=True)
+            plt.legend()
 
         elif foil == 'Cu':
             #print('way')
             self.get_sigmaE(self.E_Cu, self.F_Cu, foil, makePlot=True)
+            plt.legend()
 
         elif foil == 'Fe':
             self.get_sigmaE(self.E_Fe, self.F_Fe, foil, makePlot=True)
+            plt.legend()
 
         elif foil == 'Ir':
             self.get_sigmaE(self.E_Ir, self.F_Ir, foil, makePlot=True)
+            print("test")
+            plt.legend()
+        elif foil == 'all':
+            self.get_sigmaE(self.E_Ir, self.F_Ir, foil, makePlot=True)
+            self.get_sigmaE(self.E_Fe, self.F_Fe, foil, makePlot=True)
+            self.get_sigmaE(self.E_Cu, self.F_Cu, foil, makePlot=True)
+            self.get_sigmaE(self.E_Ni, self.F_Ni, foil, makePlot=True)
             #print('way')
         path_to_folder = self.path + '/BeamCurrent/beam_fluxes/'
         plt.title('Energy distribution for {}-foils - '.format(foil) + name)
         plt.savefig(path_to_folder + foil + '_flux_distribution_'+name+'.png', dpi=300)
-        plt.close()
-        #plt.show()
+        #plt.close()
+        plt.show()
 
     def Plot_energy_distribution(self, E, F, mu, fwhm, half_max, foil):
         #print(half_max[0])
@@ -174,7 +184,7 @@ class BeamCurrent:
         #plt.title('Energy distribution for {}-foils'.format(foil))
         plt.xlabel('Energy, MeV')
         plt.ylabel(r'Relative deuteron flux, $d\phi/dE$')
-        plt.legend()
+        #plt.legend()
         #plt.savefig(path_to_folder + foil + '_flux_distribution'+name+'.png', dpi=300)
         #plt.show()
 
@@ -280,13 +290,16 @@ class BeamCurrent:
             BR = 1.0
             sigma_BR = 0.0 # no BR for these reactions.
 
+            #print("dir: ", A0_dir)
+            #print("nondir: ", A0_nondir)
+
             #I = 1/(mass_density * reaction_integral)  * ( A0_dir*elementary_charge*1e9/(1-np.exp(-lambda_dir*irr_time)) + BR*A0_nondir*elementary_charge*1e9/ (1-np.exp(-lambda_nondir*irr_time)) )
             I = ( 1/(mass_density * reaction_integral) ) * (A0_dir + BR*A0_nondir*(lambda_dir/lambda_nondir))*elementary_charge*1e9/(1-np.exp(-lambda_dir*irr_time))
             #print(reaction_integral)
             #dI = np.zeros(len(I))
             dI = np.zeros(len(I))
             #print(dI)
-            for i in range(len(A0_nondir)):
+            for i in range(len(A0_nondir)):      #this testing is for 56Co, where the activities of 56Ni is zero for E less than 20MeV. 
                 #print("**", i)
 
                 if A0_nondir[i]==0:    
@@ -296,6 +309,7 @@ class BeamCurrent:
                     #print("nondir = 0: ", dI[i])
                     #print(dI)
                 else:
+                    #print("non_dir")
                     #print(A0_nondir[i])
                     dI[i] = I[i] * np.sqrt((sigma_A0_dir[i]/A0_dir[i])**2 + (sigma_A0_nondir[i]/A0_nondir[i])**2  + (sigma_BR/BR)**2 + (sigma_mass_density[i]/mass_density[i])**2 + (sigma_irr_time/irr_time)**2 + uncertainty_integral[i]**2)
                     #print("nondir != 0: ", dI[i])
@@ -404,6 +418,7 @@ class BeamCurrent:
             return E_Fe, E_Ni, E_Cu, E_Ir
 
     def variance_minimization(self, compartment, name, include_56Co=False, MakePlot=False):
+        compartment=compartment-1
 
 
         # Compartment means foil number positions
@@ -459,8 +474,7 @@ class BeamCurrent:
             m = 0
             b = np.ones(len(x))*b
             return x*m + b
-
-        if compartment <= len(I_Fe_56Co):
+        if compartment < len(I_Fe_56Co):
             I_Fe = I_Fe_56Co[compartment]; dI_Fe = dI_Fe_56Co[compartment]
             WE_Fe = WE_Fe[compartment]
 
@@ -480,26 +494,33 @@ class BeamCurrent:
         chi_sq = self.chi_sqaured(I, I_est, dI)
 
         if MakePlot == True:
-
-            plt.plot(WE_Ni, I_Ni_61Cu, marker='o', label=r'$Ni(d,x)^{61}Cu$')
-            plt.errorbar(WE_Ni, I_Ni_61Cu, color='green', linewidth=0.001,xerr=dWE_Ni, yerr=dI_Ni_61Cu, elinewidth=0.5, ecolor='k', capthick=2 )
-            plt.plot(WE_Ni, I_Ni_56Co, marker='o', label=r'$Ni(d,x)^{56}Co$ (CUM)')
-            plt.errorbar(WE_Ni, I_Ni_56Co, color='green', linewidth=0.001,xerr=dWE_Ni, yerr=dI_Ni_56Co, elinewidth=0.5, ecolor='k', capthick=0.5 )
-            plt.plot(WE_Ni, I_Ni_58Co, marker='o', label=r'$Ni(d,x)^{58}Co (CUM)$')
-            plt.errorbar(WE_Ni, I_Ni_58Co, color='green', linewidth=0.001,xerr=dWE_Ni, yerr=dI_Ni_58Co, elinewidth=0.5, ecolor='k', capthick=0.5 )
+            plt.errorbar(WE_Ni, I_Ni_61Cu, color='magenta', marker='.', linewidth=0.001, xerr=dWE_Ni, yerr=dI_Ni_61Cu, elinewidth=0.5, capthick=0.5, capsize=3.0,label=r'$^{nat}$Ni(d,x)$^{61}$Cu' )
+            plt.errorbar(WE_Ni, I_Ni_56Co, color='blue', marker='.', linewidth=0.001, xerr=dWE_Ni, yerr=dI_Ni_56Co, elinewidth=0.5, capthick=0.5, capsize=3.0, label=r'$^{nat}$Ni(d,x)$^{56}$Co (CUM)' )
+            plt.errorbar(WE_Ni, I_Ni_58Co, color='black', marker='.', linewidth=0.001, xerr=dWE_Ni, yerr=dI_Ni_58Co, elinewidth=0.5, capthick=0.5, capsize=3.0, label=r'$^{nat}$Ni(d,x)$^{58}$Co (CUM)' )
+            
+            plt.errorbar(WE_Cu, I_Cu_62Zn, color='mediumpurple', marker='.', linewidth=0.001, xerr=dWE_Cu, yerr=dI_Cu_62Zn, elinewidth=0.5, capthick=0.5, capsize=3.0, label=r'$^{nat}$Cu(d,x)$^{62}$Zn' )
+            plt.errorbar(WE_Cu, I_Cu_63Zn, color='teal', marker='.', linewidth=0.001, xerr=dWE_Cu, yerr=dI_Cu_63Zn, elinewidth=0.5, capthick=0.5, capsize=3.0, label=r'$^{nat}$Cu(d,x)$^{63}$Zn' )
+            plt.errorbar(WE_Cu, I_Cu_65Zn, color='crimson', marker='.', linewidth=0.001, xerr=dWE_Cu, yerr=dI_Cu_65Zn, elinewidth=0.5, capthick=0.5, capsize=3.0, label=r'$^{nat}$Cu(d,x)$^{65}$Zn' )
+            
+            #plt.plot(WE_Ni, I_Ni_61Cu, marker='o', label=r'$Ni(d,x)^{61}Cu$')
+            #plt.errorbar(WE_Ni, I_Ni_61Cu, color='green', linewidth=0.001,xerr=dWE_Ni, yerr=dI_Ni_61Cu, elinewidth=0.5, ecolor='k', capthick=2 )
+            #plt.plot(WE_Ni, I_Ni_56Co, marker='o', label=r'$Ni(d,x)^{56}Co$ (CUM)')
+            #plt.errorbar(WE_Ni, I_Ni_56Co, color='green', linewidth=0.001,xerr=dWE_Ni, yerr=dI_Ni_56Co, elinewidth=0.5, ecolor='k', capthick=0.5 )
+            #plt.plot(WE_Ni, I_Ni_58Co, marker='o', label=r'$Ni(d,x)^{58}Co (CUM)$')
+            #plt.errorbar(WE_Ni, I_Ni_58Co, color='green', linewidth=0.001,xerr=dWE_Ni, yerr=dI_Ni_58Co, elinewidth=0.5, ecolor='k', capthick=0.5 )
 
             #i = np.where(I_Cu_62Zn>0)
             #j = np.where(I_Cu_63Zn>0)
-            plt.plot(WE_Cu, I_Cu_62Zn, marker='o', label=r'$Cu(d,x)^{62}Zn$')
-            plt.errorbar(WE_Cu, I_Cu_62Zn, color='green', linewidth=0.001,xerr=dWE_Cu, yerr=dI_Cu_62Zn, elinewidth=0.5, ecolor='k', capthick=0.5 )
-            plt.plot(WE_Cu, I_Cu_63Zn, marker='o', label=r'$Cu(d,x)^{63}Zn$')
-            plt.errorbar(WE_Cu, I_Cu_63Zn, color='green', linewidth=0.001,xerr=dWE_Cu, yerr=dI_Cu_63Zn, elinewidth=0.5, ecolor='k', capthick=0.5 )
-            plt.plot(WE_Cu, I_Cu_65Zn, marker='o', label=r'$Cu(d,x)^{65}Zn$')
-            plt.errorbar(WE_Cu, I_Cu_65Zn, color='green', linewidth=0.001,xerr=dWE_Cu, yerr=dI_Cu_65Zn, elinewidth=0.5, ecolor='k', capthick=0.5 )
-
-            if compartment <= len(I_Fe_56Co):
-                plt.plot(WE_Fe, I_Fe,marker='o', label=r'$Fe(d,x)^{56}Co$')
-                plt.errorbar(WE_Fe, I_Fe, color='green', linewidth=0.001,xerr=dWE_Fe, yerr=dI_Fe, elinewidth=0.5, ecolor='k', capthick=0.5 )
+            #plt.plot(WE_Cu, I_Cu_62Zn, marker='o', label=r'$Cu(d,x)^{62}Zn$')
+            #plt.errorbar(WE_Cu, I_Cu_62Zn, color='green', linewidth=0.001,xerr=dWE_Cu, yerr=dI_Cu_62Zn, elinewidth=0.5, ecolor='k', capthick=0.5 )
+            #plt.plot(WE_Cu, I_Cu_63Zn, marker='o', label=r'$Cu(d,x)^{63}Zn$')
+            #plt.errorbar(WE_Cu, I_Cu_63Zn, color='green', linewidth=0.001,xerr=dWE_Cu, yerr=dI_Cu_63Zn, elinewidth=0.5, ecolor='k', capthick=0.5 )
+            #plt.plot(WE_Cu, I_Cu_65Zn, marker='o', label=r'$Cu(d,x)^{65}Zn$')
+            #plt.errorbar(WE_Cu, I_Cu_65Zn, color='green', linewidth=0.001,xerr=dWE_Cu, yerr=dI_Cu_65Zn, elinewidth=0.5, ecolor='k', capthick=0.5 )
+            if compartment < len(I_Fe_56Co):
+                plt.errorbar(WE_Fe, I_Fe, color='darkorange', marker='.',  linewidth=0.001, xerr=dWE_Fe, yerr=dI_Fe, elinewidth=0.5, capthick=0.5, capsize=3.0,  label=r'$^{nat}$Fe(d,x)$^{56}$Co' )
+                #plt.plot(WE_Fe, I_Fe,marker='o', label=r'$Fe(d,x)^{56}Co$')
+                #plt.errorbar(WE_Fe, I_Fe, color='green', marker='.', linewidth=0.001,xerr=dWE_Fe, yerr=dI_Fe, elinewidth=0.5, ecolor='k', capthick=0.5 )
 
             xplot = np.linspace(min(E)-1.2, max(E)+1.2,len(E))
             plt.plot(xplot, I_model(E, *popt), label=r'Linear fit I={:.2f} $\pm$ {:.2f} nA'.format(I_est, sigma_I_est), linestyle='--', color='red')
@@ -634,7 +655,7 @@ class BeamCurrent:
 
         colors = ['darkorange', 'forestgreen', 'palevioletred']#, 'darkorange', 'forestgreen', 'orchid', 'dodgerblue', 'lime', 'crimson', 'indianred']
         for i in range(len(compartment)):
-            WE_Ni, chi_sq, I_est, sigma_I_est = self.variance_minimization(compartment[i]-1, name)
+            WE_Ni, chi_sq, I_est, sigma_I_est = self.variance_minimization(compartment[i], name)
             labelling = r'compartment {} - $\chi^2=${:.2f}'.format(compartment[i], chi_sq)
             plt.axhline(I_est, color=colors[i], linestyle='--', linewidth=0.7, label=labelling)# label='compartment {}'.format(compartment[i]))
             #plt.errorbar(WE_Ni, weighted_average_beam, color='black', marker='o', linewidth=0.001, xerr=sigma_weighted_average_beam, yerr=dI_Ni_61Cu, elinewidth=0.5, capthick=0.5, capsize=3.0,label=r'$^{nat}$Ni(d,x)$^{61}$Cu' )
@@ -938,8 +959,6 @@ class BeamCurrent:
         #print(matrix_lambda_)
 
 
-
-
     def calling_parameters_to_weightedaverage_func(self, foil, react):
         irr_time = 3600; sigma_irr_time = 3 #seconds
         if foil == 'Fe':
@@ -954,8 +973,28 @@ class BeamCurrent:
             if react =='Ni_56Co' or react=='Ni_58Co':
                 IAEA_Cs, A0_dir, sigma_A0_dir, A0_nondir, sigma_A0_nondir, lambda_dir, lambda_nondir, mass_density, sigma_mass_density = self.Ni_foil(react)
                 A0 = (A0_dir + A0_nondir*(lambda_dir/lambda_nondir))  # From the function calculate_beam_current, see book for further description, but we managed to find a different way to express A0 withot any changes. We hope
-                sigma_A0 = np.sqrt( (sigma_A0_dir/A0_dir)**2  + (sigma_A0_nondir/A0_nondir)**2 + (lambda_dir*0.001/lambda_dir)**2 + (lambda_nondir*0.001/lambda_nondir)**2 )
+                
+                ### For 56Co: Sigma A0 is inf high due to values set to 1. Doesnt really apply for 58Co. 
+                sigma_A0 = np.zeros(len(A0_dir))
+                for i in range(len(sigma_A0_nondir)):
+                    if sigma_A0_nondir[i]==1:
+                        sigma_A0[i] = np.sqrt( (sigma_A0_dir[i]/A0_dir[i])**2+ (lambda_dir*0.001/lambda_dir)**2 + (lambda_nondir*0.001/lambda_nondir)**2 )
+                        #print(i)
+                        #print(sigma_A0[i])
+                    else:
+                        sigma_A0[i] = np.sqrt( (sigma_A0_dir[i]/A0_dir[i])**2+ (sigma_A0_nondir[i]/A0_nondir[i])**2 + (lambda_dir*0.001/lambda_dir)**2 + (lambda_nondir*0.001/lambda_nondir)**2 )
+                        #print(i)
+                        #print(sigma_A0[i])
+
+                #sigma_A0 = np.sqrt( (sigma_A0_dir/A0_dir)**2+ (sigma_A0_nondir/A0_nondir)**2 + (lambda_dir*0.001/lambda_dir)**2 + (lambda_nondir*0.001/lambda_nondir)**2 )
                 lambda_=lambda_dir
+               #print("Final dA0: ",sigma_A0)
+
+
+                #print(A0)
+                #print("dA0 dir: ", sigma_A0_dir)
+                #print("dA0 nondir: ", sigma_A0_nondir)
+                #print(sigma_A0)
             else:
                 IAEA_Cs, A0, sigma_A0, lambda_, mass_density, sigma_mass_density = self.Ni_foil(react)  #from beam_current_FoilReact
             E_mon, Cs, sigma_Cs, tck, sigma_tck = self.data(IAEA_Cs) #from monitor foils
@@ -967,6 +1006,15 @@ class BeamCurrent:
             E_mon, Cs, sigma_Cs, tck, sigma_tck = self.data(IAEA_Cs) #from monitor foils
             uncertainty_integral, reaction_integral =  self.E_flux_integral(Cs, sigma_Cs, tck, sigma_tck, E, F, return_interp_CS=False)
 
+
+        #print("A0: ", A0)
+        #print("dA0: ", sigma_A0)
+        #print("lamb: ", lambda_ )
+        #print("mass density: ", mass_density)
+        #print("sigma mass density: ", sigma_mass_density)
+        #print("reaction int: ", reaction_integral)
+        #print("uncert integral: ", uncertainty_integral) 
+        #print(irr_time, sigma_irr_time)
         return A0, sigma_A0, lambda_, mass_density, sigma_mass_density, reaction_integral, uncertainty_integral, irr_time, sigma_irr_time
 
         #E_Fe, E_Ni, E_Cu, E_Ir = self.WABE(foil)

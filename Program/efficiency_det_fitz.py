@@ -124,13 +124,18 @@ class Efficiency_calculations(Detector_Information_fitz):
 
 
     def plot_data(self):
-        plt.plot(self.E_Cs, self.eps_Cs, '.', color='magenta')
-        plt.plot(self.E_Ba, self.eps_Ba,'.', color='green')
-        plt.plot(self.E_Eu, self.eps_Eu, '.', color='blue')
+        #plt.plot(self.E_Cs, self.eps_Cs, '.', color='magenta')
+        #plt.plot(self.E_Ba, self.eps_Ba,'.', color='green')
+        #plt.plot(self.E_Eu, self.eps_Eu, '.', color='blue')
 
-        plt.errorbar(self.E_Cs, self.eps_Cs, color='green', linewidth=0.001, yerr=self.sigma_eps_Cs, elinewidth=0.5, ecolor='k', capthick=0.5)   # cap thickness for error bar color='blue')
-        plt.errorbar(self.E_Ba, self.eps_Ba, color='magenta', linewidth=0.001, yerr=self.sigma_eps_Ba, elinewidth=0.5, ecolor='k', capthick=0.5)   # cap thickness for error bar color='blue')
-        plt.errorbar(self.E_Eu, self.eps_Eu,color='blue', linewidth=0.001, yerr=self.sigma_eps_Eu, elinewidth=0.5, ecolor='k', capthick=0.5)   # cap thickness for error bar color='blue')
+        #plt.errorbar(self.E_Cs, self.eps_Cs, marker='P', linewidth=0.0001, yerr=self.sigma_eps_Cs, elinewidth=1.0, capthick=1.0, capsize=3.0, label='this data')
+        #plt.errorbar(self.E_Ba, self.eps_Ba, marker='P', linewidth=0.0001, yerr=self.sigma_eps_Ba, elinewidth=1.0, capthick=1.0, capsize=3.0, label='this data')
+        #plt.errorbar(self.E_Eu, self.eps_Eu, marker='P', linewidth=0.0001, yerr=self.sigma_eps_Eu, elinewidth=1.0, capthick=1.0, capsize=3.0, label='this data')
+        #plt.errorbar(E, CS, marker='P', linewidth=0.0001, xerr=dE, yerr=dCS, elinewidth=1.0, capthick=1.0, capsize=3.0, label='this data')
+        #plt.errorbar(E, CS, marker='P', linewidth=0.0001, xerr=dE, yerr=dCS, elinewidth=1.0, capthick=1.0, capsize=3.0, label='this data')
+        #plt.errorbar(self.E_Cs, self.eps_Cs, color='green', linewidth=0.001, yerr=self.sigma_eps_Cs, elinewidth=0.5, ecolor='k', capthick=0.5)   # cap thickness for error bar color='blue')
+        #plt.errorbar(self.E_Ba, self.eps_Ba, color='magenta', linewidth=0.001, yerr=self.sigma_eps_Ba, elinewidth=0.5, ecolor='k', capthick=0.5)   # cap thickness for error bar color='blue')
+        #plt.errorbar(self.E_Eu, self.eps_Eu,color='blue', linewidth=0.001, yerr=self.sigma_eps_Eu, elinewidth=0.5, ecolor='k', capthick=0.5)   # cap thickness for error bar color='blue')
         plt.title("Datapoints and errors for calibration sources measured at {}".format(self.detector))
         plt.xlabel("Energy (keV)")
         plt.ylabel("Efficiency")
@@ -164,7 +169,7 @@ class Efficiency_calculations(Detector_Information_fitz):
         ### The error is calculated in matlab script by Andrew. Make matrix to import in matlab scripts
         ### One for optimal parameters, and one for the covarian matrix
         #path_to_matlab_folder
-        scipy.io.savemat('efficiency_csv/eff_{}'.format(self.detector), {'popt_{}'.format(self.detector): popt, 'pcov_{}'.format(self.detector):pcov} )
+        #scipy.io.savemat('efficiency_csv/eff_{}'.format(self.detector), {'popt_{}'.format(self.detector): popt, 'pcov_{}'.format(self.detector):pcov} )
 
 
         #sigma_efficiency_estimated = np.sqrt(np.diagonal(pcov))
@@ -172,7 +177,7 @@ class Efficiency_calculations(Detector_Information_fitz):
 
         xplot = np.linspace(20, 1600, 1000)
 
-        plt.plot(xplot,self.efficiency_estimated_popt(xplot,*popt),'r-', color='red')
+        plt.plot(xplot,self.efficiency_estimated_popt(xplot,*popt),'r-', color='red', label='fit')
         #plt.plot(xplot,self.efficiency_estimated_popt(xplot,*(popt+sigma_efficiency_estimated)), color='blue', linewidth=0.4, linestyle='--')
         #plt.plot(xplot,self.efficiency_estimated_popt(xplot,*(popt-sigma_efficiency_estimated)), color='green', linewidth=0.4, linestyle='--')
 
@@ -182,16 +187,20 @@ class Efficiency_calculations(Detector_Information_fitz):
 
         ##### OBS if want squares and not circles as uncertainty points, use fmt="rs--"
         #plt.errorbar(self.E_Cs[-1], self.eps_Cs[-1], color='green', linewidth=0.001,yerr=self.sigma_eps_Cs[-1], elinewidth=0.5, ecolor='k', capthick=0.5)   # cap thickness for error bar color='blue')
-        plt.errorbar(self.E_Cs, self.eps_Cs, color='green', linewidth=0.001,yerr=self.sigma_eps_Cs[-1], elinewidth=0.5, ecolor='k', capthick=0.5)   # cap thickness for error bar color='blue')
-        plt.errorbar(self.E_Ba, self.eps_Ba, color='magenta', linewidth=0.001, yerr=self.sigma_eps_Ba, elinewidth=0.5, ecolor='k', capthick=0.5)   # cap thickness for error bar color='blue')
-        plt.errorbar(self.E_Eu, self.eps_Eu,color='blue', linewidth=0.001, yerr=self.sigma_eps_Eu, elinewidth=0.5, ecolor='k', capthick=0.5)   # cap thickness for error bar color='blue')
+        #plt.errorbar(self.E_Cs, self.eps_Cs, color='green', linewidth=0.001,yerr=self.sigma_eps_Cs[-1], elinewidth=0.5, ecolor='k', capthick=0.5)   # cap thickness for error bar color='blue')
+        #plt.errorbar(self.E_Ba, self.eps_Ba, color='magenta', linewidth=0.001, yerr=self.sigma_eps_Ba, elinewidth=0.5, ecolor='k', capthick=0.5)   # cap thickness for error bar color='blue')
+        #plt.errorbar(self.E_Eu, self.eps_Eu,color='blue', linewidth=0.001, yerr=self.sigma_eps_Eu, elinewidth=0.5, ecolor='k', capthick=0.5)   # cap thickness for error bar color='blue')
 
         #plt.plot(self.E_Cs[-1], self.eps_Cs[-1], '.', color='magenta')
-        plt.plot(self.E_Cs, self.eps_Cs, '.', color='magenta')
-        plt.plot(self.E_Ba, self.eps_Ba,'.', color='green')
-        plt.plot(self.E_Eu, self.eps_Eu, '.', color='blue')
+        #plt.plot(self.E_Cs, self.eps_Cs, '.', color='magenta')
+        #plt.plot(self.E_Ba, self.eps_Ba,'.', color='green')
+        #plt.plot(self.E_Eu, self.eps_Eu, '.', color='blue')
+        plt.errorbar(self.E_Cs, self.eps_Cs, marker='.', linewidth=0.0001, yerr=self.sigma_eps_Cs, elinewidth=1.0, capthick=1.0, capsize=3.0, label=r'$^{137}$Cs')
+        plt.errorbar(self.E_Ba, self.eps_Ba, marker='.', linewidth=0.0001, yerr=self.sigma_eps_Ba, elinewidth=1.0, capthick=1.0, capsize=3.0, label=r'$^{133}$Ba')
+        plt.errorbar(self.E_Eu, self.eps_Eu, marker='.', linewidth=0.0001, yerr=self.sigma_eps_Eu, elinewidth=1.0, capthick=1.0, capsize=3.0, label=r'$^{152}$Eu')
         #plt.yscale('log')
-        plt.legend(['Cs137', 'Ba133', 'Eu152', 'fit', 'sigma +', 'sigma -'], loc='best')
+        plt.legend()
+        #plt.legend(['Cs137', 'Ba133', 'Eu152', 'fit', 'sigma +', 'sigma -'], loc='best')
         #plt.axis((20,1600,0,0.016))
 
         #chi = np.sum((efficiency_measured-efficiency_estimated)/error)**2 / (len(efficiency_measured-5)) #5 DEGREES OF FREEDOM
@@ -204,9 +213,9 @@ class Efficiency_calculations(Detector_Information_fitz):
         plt.legend(['Fit','Cs137', 'Ba133', 'Eu152'], loc='best')
 
         plt.title('Efficiency calibration of det {}'.format(self.detector))
-        #plt.savefig("Efficiency_curves/{}".format(self.detector), dpi=300)
-        #plt.show()
-        plt.clf()
+        plt.savefig("Efficiency_curves/{}".format(self.detector), dpi=300)
+        plt.show()
+        #plt.clf()
 
     #def chi(self):
     #    np.sum(((self.eps - self.efficiency_estimated(self.E))/self.sigma_eps)**2 / len(self.eps) -5)
