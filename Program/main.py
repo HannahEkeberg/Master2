@@ -259,12 +259,12 @@ CS.mon_CS_test(Cu_65Zn(), 'Cu', 'Cu_65Zn.csv', 10, 'Cu_65Zn', names[index], csv_
 #CS.make_CS(Ir_187W(), 'Ir', 'Ir_187W.csv', 10, 'Ir_187W', csv_filename, '74', '187')   
 #CS.make_CS(Ir_188Pt(), 'Ir', 'Ir_188Pt.csv', 10, 'Ir_188Pt', csv_filename, '78', '188')   
 #CS.make_CS(Ir_188Ir(), 'Ir', 'Ir_188Ir.csv', 10, 'Ir_188Ir', csv_filename, '77', '188')   
-#CS.make_CS(Ir_188Re(), 'Ir', 'Ir_188Re.csv', 10, 'Ir_188Re', csv_filename, '75', '188') # not working
+CS.make_CS(Ir_188Re(), 'Ir', 'Ir_188Re.csv', 10, 'Ir_188Re', csv_filename, '75', '188') # not working
 #CS.make_CS(Ir_188mRe(), 'Ir', 'Ir_188mRe.csv', 10, 'Ir_188mRe', csv_filename, '75', '188')   not working      
 #CS.make_CS(Ir_193mPt(), 'Ir', 'Ir_193mPt.csv', 10, 'Ir_193mPt', csv_filename, '78', '193')   
 
 #CS.make_CS(Ir_189Pt(), 'Ir', 'Ir_189Pt.csv', 10, 'Ir_189Pt', csv_filename, '78', '189')    # 
-CS.make_CS(Ir_189Ir(), 'Ir', 'Ir_189Ir.csv', 10, 'Ir_189Ir', csv_filename, '77', '189')    # need work on activity 
+#CS.make_CS(Ir_189Ir(), 'Ir', 'Ir_189Ir.csv', 10, 'Ir_189Ir', csv_filename, '77', '189')    # need work on activity 
 #CS.make_CS(Ir_189Re(), 'Ir', 'Ir_189Re.csv', 10, 'Ir_189Re', csv_filename, '75', '189')     # needs work
 
 #CS.make_CS(Ir_190Ir(), 'Ir', 'Ir_190Ir.csv', 10, 'Ir_190Ir', csv_filename, '77', '190')   

@@ -619,16 +619,17 @@ np.savetxt("{}.csv".format(save_results_to +  'Ni_56Co'), np.array((A0, sigma_A0
 #single_decay_data(Ir_188Ir(), "Ir_188Ir", 10, Save_csv=True)    #USED
 
 #single_decay_data(Ir_188mRe(), "Ir_188mRe", 10, Save_csv=True)    #WEIRD, prob not produced?
-#single_decay_data(Ir_188Re(), "Ir_188Re", 10, Save_csv=True)    #ok
+single_decay_data(Ir_188Re(), "Ir_188Re", 10, Save_csv=True)    #ok
 
 
 
 
 #single_decay_data(Ir_189Pt(), "Ir_189Pt", 10, Save_csv=True)    #EXCELLENT
+
 #two_step_kp_data(Ir_189Pt(), Ir_189Ir(), "Ir_189Ir", 10, Save_csv= True)   #try single instead
 #single_decay_data(Ir_189Ir(), "Ir_189Ir", 10, Save_csv=True)    #works but gives wrong result. 
 #try: npat
-two_step_up_npat(Ir_189Ir(), "Ir_189Pt_npat", "Ir_189Ir_npat", 10, '189PT', '189IR', Save_csv=False)   #crashes after first plot.
+#two_step_up_npat(Ir_189Ir(), "Ir_189Pt_npat", "Ir_189Ir_npat", 10, '189PT', '189IR', Save_csv=False)   #crashes after first plot.
 
 
 

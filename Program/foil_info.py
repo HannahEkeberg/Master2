@@ -863,9 +863,9 @@ def Ir_189Ir():  #double decay from 189Pt
     list = [foil1, foil2, foil3, foil4, foil5, foil6, foil7, foil8, foil9, foil10]
     lambda_parent = np.log(2)/(10.87*h)
     lambda_daughter = np.log(2)/(13.2*d)
-    return list, lambda_parent, lambda_daughter
+    #return list, lambda_parent, lambda_daughter
     # instead we try single decay and remove timepoints before 60 hours after eob. 
-    #return list, lambda_daughter
+    return list, lambda_daughter
 
 def Ir_189W():  #single decay
     foil1 = path + 'Ir_189W_177.dat'
