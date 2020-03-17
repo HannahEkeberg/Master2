@@ -9,6 +9,8 @@ from BC_ziegler_run import *
 #from feb20_activity import *
 from foil_info import *
 
+from simulated_CrossSectionData import SimCrossSectionData
+
 
 #func=Cu_62Zn(); A0_guess=4000
 #func=Ni_58Co(); A0_guess=[5000, 1000]
@@ -76,7 +78,7 @@ selected_names = ['B_0_D_0']
 
 index = find_index(names, 'B_+2_D_+4,25')   #the one used so far. 
 #index = find_index(names, 'B_+1_D_+2')
-print(files[index])
+#print(files[index])
 #RZ = Run_Ziegler(files, names)
 
 
@@ -87,7 +89,7 @@ BC = BeamCurrent(files[index])
 #BC.calling_parameters_to_weightedaverage_func('Cu', 'Cu_63Zn')
 #BC.calling_parameters_to_weightedaverage_func('Cu', 'Cu_65Zn')
 #BC.calling_parameters_to_weightedaverage_func('Ni', 'Ni_61Cu')
-BC.calling_parameters_to_weightedaverage_func('Ni', 'Ni_56Co')   ### prob 
+#BC.calling_parameters_to_weightedaverage_func('Ni', 'Ni_56Co')   ### prob 
 #BC.calling_parameters_to_weightedaverage_func('Ni', 'Ni_58Co')
 #BC.calling_parameters_to_weightedaverage_func('Fe', 'Fe_56Co')
 
@@ -259,19 +261,23 @@ CS.mon_CS_test(Cu_65Zn(), 'Cu', 'Cu_65Zn.csv', 10, 'Cu_65Zn', names[index], csv_
 #CS.make_CS(Ir_187W(), 'Ir', 'Ir_187W.csv', 10, 'Ir_187W', csv_filename, '74', '187')   
 #CS.make_CS(Ir_188Pt(), 'Ir', 'Ir_188Pt.csv', 10, 'Ir_188Pt', csv_filename, '78', '188')   
 #CS.make_CS(Ir_188Ir(), 'Ir', 'Ir_188Ir.csv', 10, 'Ir_188Ir', csv_filename, '77', '188')   
-CS.make_CS(Ir_188Re(), 'Ir', 'Ir_188Re.csv', 10, 'Ir_188Re', csv_filename, '75', '188') # not working
+#CS.make_CS(Ir_188Re(), 'Ir', 'Ir_188Re.csv', 10, 'Ir_188Re', csv_filename, '75', '188') # not working
 #CS.make_CS(Ir_188mRe(), 'Ir', 'Ir_188mRe.csv', 10, 'Ir_188mRe', csv_filename, '75', '188')   not working      
-#CS.make_CS(Ir_193mPt(), 'Ir', 'Ir_193mPt.csv', 10, 'Ir_193mPt', csv_filename, '78', '193')   
+
 
 #CS.make_CS(Ir_189Pt(), 'Ir', 'Ir_189Pt.csv', 10, 'Ir_189Pt', csv_filename, '78', '189')    # 
 #CS.make_CS(Ir_189Ir(), 'Ir', 'Ir_189Ir.csv', 10, 'Ir_189Ir', csv_filename, '77', '189')    # need work on activity 
 #CS.make_CS(Ir_189Re(), 'Ir', 'Ir_189Re.csv', 10, 'Ir_189Re', csv_filename, '75', '189')     # needs work
 
 #CS.make_CS(Ir_190Ir(), 'Ir', 'Ir_190Ir.csv', 10, 'Ir_190Ir', csv_filename, '77', '190')   
-#CS.make_CS(Ir_191Pt(), 'Ir', 'Ir_191Pt.csv', 10, 'Ir_191Pt', csv_filename, '78', '191')   
+CS.make_CS(Ir_191Pt(), 'Ir', 'Ir_191Pt.csv', 10, 'Ir_191Pt', csv_filename, '78', '191')   
 #CS.make_CS(Ir_192Ir(), 'Ir', 'Ir_192Ir.csv', 10, 'Ir_192Ir', csv_filename, '77', '192')    
-#CS.make_CS(Ir_194Ir(), 'Ir', 'Ir_194Ir.csv', 10, 'Ir_194Ir', csv_filename, '77', '194')    
+#CS.make_CS(Ir_193mPt(), 'Ir', 'Ir_193mPt.csv', 10, 'Ir_193mPt', csv_filename, '78', '193', file_ending='.L05')   
+#CS.make_CS(Ir_194Ir(), 'Ir', 'Ir_194Ir.csv', 10, 'Ir_194Ir', csv_filename, '77', '194', file_ending='.L00')    
 #CS.make_CS(Ir_194m2Ir(), 'Ir', 'Ir_194m2Ir.csv', 10, 'Ir_194m2Ir', csv_filename, '77', '194')    
+
+
+
 
 #get_vals(Cu_64Cu(), 'Cu', 'Cu_64Cu.csv', 10, 'Cu_64Cu', csv_filename)
 
@@ -298,3 +304,5 @@ CS.make_CS(Ir_188Re(), 'Ir', 'Ir_188Re.csv', 10, 'Ir_188Re', csv_filename, '75',
 
 if __name__ == "__main__":
     print(__name__)
+else:
+	print(main.py)

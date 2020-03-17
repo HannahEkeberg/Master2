@@ -205,8 +205,8 @@ rows_Ir_194m2Ir = [36,43,55,61,65,74]; %check
 
 % Select rows to plot
 % varToStr = @(x) inputname(1);
-rows = rows_Ir_189Pt;
-outName = '../csv/Ir_189Pt';
+rows = rows_Ir_186Re;
+outName = '../csv/Ir_186Re';
 % rows = 12;
 % Find rows for the desired decay product
 selected_rows = data(rows,:);

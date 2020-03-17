@@ -147,7 +147,7 @@ class CrossSections:
     """
 
 
-    def make_CS(self, react_func, foil, filename, n ,reaction, BC_csv_filename, Z, A):
+    def make_CS(self, react_func, foil, filename, n ,reaction, BC_csv_filename, Z, A, file_ending='.tot'):
         lamb, mass_density, sigma_mass_density, E, dE, A0, dA0 = self.get_var(react_func, foil, filename, n, reaction)
         #lamb, mass_density, sigma_mass_density, E, dE, A0, sigma_A0 = self.get_var(react_func, foil, filename, n, reaction)
 
@@ -166,7 +166,7 @@ class CrossSections:
         ### The weighted average beam current  - made by Andrew
 
         I = np.genfromtxt(BC_csv_filename, delimiter=',', usecols=[1])
-        print(I)
+        #print(I)
         #weighted_average_beam = weighted_average_beam[::-1]
         dI = np.genfromtxt(BC_csv_filename, delimiter=',', usecols=[2])
 
@@ -175,16 +175,21 @@ class CrossSections:
         #print("I_Ni after", I_Ni)
         #I = self.I; dI = self.sigma_I_est
         CS, dCS= self.cross_section_calc(n, A0, dA0, mass_density, sigma_mass_density, I, dI, lamb, reaction)
+        
+        self.modelling('Tendl', foil, Z, A, reaction, file_ending)
+        self.modelling('Talys', foil, Z, A, reaction, file_ending)
+        self.modelling('Exfor', foil, Z, A, reaction, file_ending)
         #models = SimCrossSectionData(reaction)
         #E_talys, CS_talys = models.TALYS(foil, )
-        try:
-            E_talys, CS_talys = self.modelling('Talys', foil, Z, A, reaction)
+        #try:
+        #    E_talys, CS_talys = self.modelling('Talys', foil, Z, A, reaction)
+        #    
             #print("E_talys  ", "    CS_talys    " )
             #print(np.vstack((E_talys,CS_talys)).T)
-        except:
-            print("talys file does not exist for {} ".format(reaction))
-            pass
-        E_EXFOR, dE_EXFOR, CS_EXFOR, dCS_EXFOR, author = self.modelling('Exfor', foil, Z, A, reaction)
+        #except:
+        #    print("talys file does not exist for {} ".format(reaction))
+        #    pass
+        #E_EXFOR, dE_EXFOR, CS_EXFOR, dCS_EXFOR, author = self.modelling('Exfor', foil, Z, A, reaction)
         #print(E_EXFOR, "testing exfor")
 
         #CS, dCS = self.cross_section_calc(n, A0, sigma_A0, mass_density, sigma_mass_density, I_Fe, sigma_I, lamb, reaction)
@@ -229,11 +234,22 @@ class CrossSections:
 
         #self.setting_plotvalues(tab_E, tab_dE, tab_CS, tab_dCS, label='exfor')
         #self.setting_plotvalues(E, dE, CS, dCS, label='this work')
-        plt.errorbar(E, CS, marker='P', linewidth=0.0001, xerr=dE, yerr=dCS, elinewidth=1.0, capthick=1.0, capsize=3.0, label='this data')
+
+        #def zero_to_nan(values):
+        """Replace every 0 with 'nan' and return a copy."""
+        #return [float('nan') if x==0 else x for x in values]
+        
+
+
+        CS = [float('nan') if x==0 else x for x in CS]
+        plt.errorbar(E, CS, marker='P', color='darkred',linewidth=0.0001, xerr=dE, yerr=dCS, elinewidth=1.0, capthick=1.0, capsize=3.0, label='this data')
+        
+
+
         #self.setting_plotvalues(E, dE, CS, dCS, label='this work')
-        if E_EXFOR != 0:
-            self.setting_plotvalues(E_EXFOR, dE_EXFOR, CS_EXFOR, dCS_EXFOR, author[0])
-        plt.plot(E_talys, CS_talys, label='TALYS')
+        #if E_EXFOR != 0:
+        #    self.setting_plotvalues(E_EXFOR, dE_EXFOR, CS_EXFOR, dCS_EXFOR, author[0])
+        #plt.plot(E_talys, CS_talys, label='TALYS')
         #plt.plot(E_talys, CS_talys, label='TALYS')
         #CS, dCS = self.cross_section_calc(n, A0, dA0, mass_density, sigma_mass_density, I_Ir, sigma_I, lamb, reaction)
         #self.setting_plotvalues(E, dE, CS, dCS, label='this work using I')
@@ -253,31 +269,77 @@ class CrossSections:
         return E, dE, CS, dCS
 
 
-    def modelling(self, model, foil, Z, A, reaction):
+    def modelling(self, model, foil, Z, A, reaction, file_ending):
+        #print("modelling:", model, foil )
         SimCS = SimCrossSectionData(reaction)
+        if len(Z)==2: 
+            Z = '0'+Z
+        if len(A)==2: 
+            A = '0'+A
         if model== 'Talys':
-            if len(Z)==2: 
-                Z = '0'+Z
-            if len(A)==2: 
-                A = '0'+A
-            print(Z, A)
-            E, CS = SimCS.TALYS(foil, Z, A)
-            print(E)
-            return E, CS
+            #print(Z, A)
+            try:
+                E, CS = SimCS.TALYS(foil, Z, A)
+                plt.plot(E, CS, label='Talys', linestyle='-.', color='orange')
+                #return E, CS
+            except:
+                print("no talys file found")
         elif model == 'Exfor':
-             E_EXFOR, dE_EXFOR, CS_EXFOR, dCS_EXFOR, author_EXFOR =  SimCS.EXFOR(reaction)
-             return E_EXFOR, dE_EXFOR, CS_EXFOR, dCS_EXFOR, author_EXFOR
+            try:
+                E, dE, CS, dCS, author =  SimCS.EXFOR(reaction)
+                unique_author = [] 
+                for auth in author: 
+                    if auth not in unique_author:
+                        unique_author.append(auth)
+
+
+                colors = ['mediumpurple', 'cyan', 'palevioletred', 'darkorange', 'forestgreen', 'orchid', 'dodgerblue', 'lime', 'crimson', 'indianred']
+                for i in range(len(E)):
+                    for j in range(len(unique_author)):
+                        if author[i]==unique_author[j]:
+                            plt.errorbar(E[i], CS[i], marker='.', color=colors[j], markersize=1, linewidth=0.0001, xerr=dE[i], yerr=dCS[i], elinewidth=0.25, capthick=0.25, capsize=3.0, label=unique_author[j])
+    
+
+            except:
+                print("No exfor file found")
+                pass
+
+            #for i in author:
+            #   print(i)
+            #plt.errorbar(E, CS, marker='.', markersize=1, linewidth=0.0001, xerr=dE, yerr=dCS, elinewidth=0.25, capthick=0.25, capsize=3.0 )
+             
+
+             #plt.errorbar(E_EXFOR, CS_EXFOR, marker='.', markersize=1, linewidth=0.0001, xerr=dE_EXFOR, yerr=dCS_EXFOR, elinewidth=0.25, capthick=0.25, capsize=3.0, label=author_EXFOR[0] )
+             #return E_EXFOR, dE_EXFOR, CS_EXFOR, dCS_EXFOR, author_EXFOR
              #PLOT IN HERE WITH CORRECT AUTHOR.
         elif model == 'Alice': 
             pass
         elif model == 'Tendl':
-            pass 
+            try:
+                E, CS = SimCS.Tendl(foil, A, Z, file_ending)
+                print("tendl")
+                print(E)
+                plt.plot(E, CS, label='Tendl', linestyle='--', color='blue')
+            except: 
+                print("Tendl files not found. Check file ending or fileproblem")
+                pass
+            #print(E)
+            #print(E[40])
+            #index = E.index()
+            #print(E)
+            #plt.plot(E[:39], CS[:39], label='Tendl', linestyle='--')
+            #plt.show()
+            #print(E, "tendl energies")
+            #plt.show()
+
+            #print("tendl")
+
         elif model == 'Empire':
             pass 
         elif model == 'Coh':
             pass
         else:
-            print("provide model")
+            print("need to provide a model")
         #return E, CS
 
 
@@ -487,15 +549,37 @@ class CrossSections:
 
         #plt.plot(E_mon, Cs_mon, label='monitor data')
         #plt.plot(E, CS, 'o', label='this data')
+        #fig, ax = plt.subplots()
         plt.xlabel('Energy (MeV)')
         plt.ylabel('Cross section (mb)')
+
+
         plt.title('Cross section for reaction {}'.format(reaction))
         path_to_cs_figs = os.getcwd() + '/CrossSections/CrossSections_curves/'
         #plt.savefig(path_to_cs_figs + reaction +'{}.png'.format(scaling_parameter), dpi=300)
-        plt.legend()
+        #handles, labels = ax.get_legend_handles_labels()
+        #unique = [(h, l) for i, (h, l) in enumerate(zip(handles, labels)) if l not in labels[:i]]
+        #ax.legend(*zip(*unique))
+        #plt.legend()
+
+        from collections import OrderedDict
+        #import matplotlib.pyplot as plt
+
+        handles, labels = plt.gca().get_legend_handles_labels()
+        by_label = OrderedDict(zip(labels, handles))
+        plt.legend(by_label.values(), by_label.keys())
+
+        plt.gca().set_xlim(left=0, right=50)
         plt.savefig(path_to_cs_figs + reaction+'.png', dpi=300)
         plt.show()
 
+
+
+
+if __name__ == '__main__':
+    print("main")
+else:
+    print("jan20_CrossSections.py")
 
 
 """

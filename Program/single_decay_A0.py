@@ -619,7 +619,7 @@ np.savetxt("{}.csv".format(save_results_to +  'Ni_56Co'), np.array((A0, sigma_A0
 #single_decay_data(Ir_188Ir(), "Ir_188Ir", 10, Save_csv=True)    #USED
 
 #single_decay_data(Ir_188mRe(), "Ir_188mRe", 10, Save_csv=True)    #WEIRD, prob not produced?
-single_decay_data(Ir_188Re(), "Ir_188Re", 10, Save_csv=True)    #ok
+#single_decay_data(Ir_188Re(), "Ir_188Re", 10, Save_csv=True)    #ok
 
 
 
@@ -642,7 +642,7 @@ single_decay_data(Ir_188Re(), "Ir_188Re", 10, Save_csv=True)    #ok
 #single_decay_data(Ir_191Pt(), "Ir_191Pt", 10, Save_csv=True)    #two gamma lines, does not agree
 #single_decay_data(Ir_192Ir(), "Ir_192Ir", 10, Save_csv=True)    #must go through false peaks
 
-###  single_decay_data(Ir_193mPt(), "Ir_193mPt", 10, Save_csv=True)   
+###    single_decay_data(Ir_193mPt(), "Ir_193mPt", 10, Save_csv=True)   
 #single_decay_data(Ir_194m2Ir(), "Ir_194m2Ir", 10, Save_csv=True)    #ok, must go through false peaks
 #two_step_kp_data(Ir_194m2Ir(), Ir_194Ir(), "Ir_194Ir", 10, Save_csv= True)  
 
