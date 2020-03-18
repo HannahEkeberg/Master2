@@ -179,30 +179,8 @@ class CrossSections:
         self.modelling('Tendl', foil, Z, A, reaction, file_ending)
         self.modelling('Talys', foil, Z, A, reaction, file_ending)
         self.modelling('Exfor', foil, Z, A, reaction, file_ending)
-        #models = SimCrossSectionData(reaction)
-        #E_talys, CS_talys = models.TALYS(foil, )
-        #try:
-        #    E_talys, CS_talys = self.modelling('Talys', foil, Z, A, reaction)
-        #    
-            #print("E_talys  ", "    CS_talys    " )
-            #print(np.vstack((E_talys,CS_talys)).T)
-        #except:
-        #    print("talys file does not exist for {} ".format(reaction))
-        #    pass
-        #E_EXFOR, dE_EXFOR, CS_EXFOR, dCS_EXFOR, author = self.modelling('Exfor', foil, Z, A, reaction)
-        #print(E_EXFOR, "testing exfor")
+        #self.modelling('Alice', foil, Z, A, reaction, file_ending)
 
-        #CS, dCS = self.cross_section_calc(n, A0, sigma_A0, mass_density, sigma_mass_density, I_Fe, sigma_I, lamb, reaction)
-
-        #print("Cs", CS )
-
-        #CS, dCS= self.cross_section_calc(n, A0, dA0, mass_density, sigma_mass_density, I_Ni, sigma_I, lamb, reaction)
-
-        #print("Cs using Ni", CS )
-
-        #print(type(self.E_Ir), type(Cross_section))
-        #print(Cross_section, "OOOOOOOOOOO")
-        # E, dE, Cs, dCS, reaction
         if foil=='Ir':
             E = self.E_Ir; dE = self.dE_Ir
         elif foil=='Cu':
@@ -212,74 +190,42 @@ class CrossSections:
         elif foil=='Fe':
             E = self.E_Fe; dE = self.dE_Fe
 
-        #self.plot_CrossSections(E, dE, CS, dCS, reaction)
-        #plt.plot(E, CS,'o', label='now')
-        #self.mon_CS_test(react_func, foil, filename, n, reaction)
-        #return #E, CS
-
-        #plt.plot(E,CS,'.')
-        #plt.errorbar(E, CS, color='green', linewidth=0.001, xerr=dE,  yerr=dCS, elinewidth=0.5, ecolor='k', capthick=0.5 )
-        #plt.show()
 
         print("     E     ", "    CS    " )
         print(np.vstack((E,CS)).T)
 
+        dE_tot = dE[0]+dE[1]
+        csv_save_array = np.vstack((E, dE_tot, CS, dCS)).T
+        #print(csv_save_array)
+        path_to_cs_csv = os.getcwd() + '/CrossSections/CrossSections_csv/'
 
-        #tab_Cu_64Cu
-        #tab_E  = [7.38, 10.43, 13.89, 16.35,18.75,20.71,25.51,26.78,30.11 ]
-        #tab_dE = [0.32, 0.60, 0.37, 0.52,0.34, 0.43,0.65,0.62,0.59 ]
-        #tab_dCS = [26.7, 20.8, 15.8,13.2, 11.4, 13.9,18.3,18.6,21.1 ]
-        #tab_CS = [225.8, 174.0, 133.3, 110.1,97.4,99.0, 123.9, 137.3,158.1]
-
-
-        #self.setting_plotvalues(tab_E, tab_dE, tab_CS, tab_dCS, label='exfor')
-        #self.setting_plotvalues(E, dE, CS, dCS, label='this work')
-
-        #def zero_to_nan(values):
-        """Replace every 0 with 'nan' and return a copy."""
-        #return [float('nan') if x==0 else x for x in values]
+        np.savetxt(path_to_cs_csv  + reaction, csv_save_array, delimiter=',', header='E, dE, CS, dCS', fmt="%s"  )#, %.6f, %.6f")
         
-
 
         CS = [float('nan') if x==0 else x for x in CS]
         plt.errorbar(E, CS, marker='P', color='darkred',linewidth=0.0001, xerr=dE, yerr=dCS, elinewidth=1.0, capthick=1.0, capsize=3.0, label='this data')
         
-
-
-        #self.setting_plotvalues(E, dE, CS, dCS, label='this work')
-        #if E_EXFOR != 0:
-        #    self.setting_plotvalues(E_EXFOR, dE_EXFOR, CS_EXFOR, dCS_EXFOR, author[0])
-        #plt.plot(E_talys, CS_talys, label='TALYS')
-        #plt.plot(E_talys, CS_talys, label='TALYS')
-        #CS, dCS = self.cross_section_calc(n, A0, dA0, mass_density, sigma_mass_density, I_Ir, sigma_I, lamb, reaction)
-        #self.setting_plotvalues(E, dE, CS, dCS, label='this work using I')
-
-        #self.mon_CS_test(react_func, foil, filename, n, reaction, 'uu')
-
-
-        self.plot_CrossSections(reaction)
-
-
-
-        #plt.errorbar(E, CS, marker='cross', linewidth=0.001, xerr=dE, yerr=dCS, elinewidth=0.5, capthick=0.5, capsize=3.0, label=label )
-
-        #self.setting_plotvalues(E, dE, CS, dCS, label='this work')
-
+        self.plot_CrossSections(reaction, A, foil)
 
         return E, dE, CS, dCS
 
 
     def modelling(self, model, foil, Z, A, reaction, file_ending):
         #print("modelling:", model, foil )
-        SimCS = SimCrossSectionData(reaction)
+        SimCS = SimCrossSectionData(reaction) 
+        if model == 'Alice':    # needs to come before chaning Z and A, since using the inputvalues
+            try:
+                E, CS = SimCS.ALICE(foil, A, Z)
+                plt.plot(E, CS, label='Alice', color='green', linestyle=':')
+            except:
+                print("no Alice file found")
         if len(Z)==2: 
             Z = '0'+Z
         if len(A)==2: 
             A = '0'+A
         if model== 'Talys':
-            #print(Z, A)
             try:
-                E, CS = SimCS.TALYS(foil, Z, A)
+                E, CS = SimCS.TALYS(foil, Z, A, file_ending)
                 plt.plot(E, CS, label='Talys', linestyle='-.', color='orange')
                 #return E, CS
             except:
@@ -304,36 +250,15 @@ class CrossSections:
                 print("No exfor file found")
                 pass
 
-            #for i in author:
-            #   print(i)
-            #plt.errorbar(E, CS, marker='.', markersize=1, linewidth=0.0001, xerr=dE, yerr=dCS, elinewidth=0.25, capthick=0.25, capsize=3.0 )
-             
-
-             #plt.errorbar(E_EXFOR, CS_EXFOR, marker='.', markersize=1, linewidth=0.0001, xerr=dE_EXFOR, yerr=dCS_EXFOR, elinewidth=0.25, capthick=0.25, capsize=3.0, label=author_EXFOR[0] )
-             #return E_EXFOR, dE_EXFOR, CS_EXFOR, dCS_EXFOR, author_EXFOR
-             #PLOT IN HERE WITH CORRECT AUTHOR.
-        elif model == 'Alice': 
-            pass
         elif model == 'Tendl':
+            #E, CS = SimCS.Tendl(foil, A, Z, file_ending)
             try:
                 E, CS = SimCS.Tendl(foil, A, Z, file_ending)
-                print("tendl")
-                print(E)
-                plt.plot(E, CS, label='Tendl', linestyle='--', color='blue')
+                if E is not 0:
+                    plt.plot(E, CS, label='Tendl', linestyle='--', color='blue')
             except: 
                 print("Tendl files not found. Check file ending or fileproblem")
                 pass
-            #print(E)
-            #print(E[40])
-            #index = E.index()
-            #print(E)
-            #plt.plot(E[:39], CS[:39], label='Tendl', linestyle='--')
-            #plt.show()
-            #print(E, "tendl energies")
-            #plt.show()
-
-            #print("tendl")
-
         elif model == 'Empire':
             pass 
         elif model == 'Coh':
@@ -545,7 +470,7 @@ class CrossSections:
 
 
 
-    def plot_CrossSections(self,  reaction):
+    def plot_CrossSections(self,  reaction, A=1, foil='foil'):
 
         #plt.plot(E_mon, Cs_mon, label='monitor data')
         #plt.plot(E, CS, 'o', label='this data')
@@ -553,7 +478,8 @@ class CrossSections:
         plt.xlabel('Energy (MeV)')
         plt.ylabel('Cross section (mb)')
 
-
+    
+        #title_name = r'$^\text{nat}' + foil + '(d,x)' + r'$^{}$'.format(A)
         plt.title('Cross section for reaction {}'.format(reaction))
         path_to_cs_figs = os.getcwd() + '/CrossSections/CrossSections_curves/'
         #plt.savefig(path_to_cs_figs + reaction +'{}.png'.format(scaling_parameter), dpi=300)
@@ -567,7 +493,7 @@ class CrossSections:
 
         handles, labels = plt.gca().get_legend_handles_labels()
         by_label = OrderedDict(zip(labels, handles))
-        plt.legend(by_label.values(), by_label.keys())
+        plt.legend(by_label.values(), by_label.keys(), loc='best')
 
         plt.gca().set_xlim(left=0, right=50)
         plt.savefig(path_to_cs_figs + reaction+'.png', dpi=300)
