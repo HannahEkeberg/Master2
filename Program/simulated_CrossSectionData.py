@@ -13,10 +13,8 @@ path = os.getcwd()
 
 class SimCrossSectionData:
 
-	def __init__(self, reaction):
+	def __init__(self):
 		# reaction = Ir_193mPt for instance 
-
-		self.reaction = reaction
 		self.path = os.getcwd() 
 		#self.ziegler_file = self.path +'/cleaned_zieglerfiles/ziegler_B_+2_D_+4,25_fluxes.csv'
 		#print(self.ziegler_file)
@@ -156,7 +154,95 @@ class SimCrossSectionData:
 
 			#E = E_191Ir*abund_191Ir + E_193Ir*abund_193Ir
 			#CS = CS_191Ir*abund_191Ir + CS_193Ir*abund_193Ir
+		elif foil == 'Cu':
+			abund_63Cu = 0.6915 ; abund_65Cu = 0.3085
+
+			f_63Cu = self.path + '/../Tendl/' + foil + '/rp029063_' + Z + A + file_ending + '.txt'
+			f_65Cu = self.path + '/../Tendl/' + foil + '/rp029065_' + Z + A + file_ending + '.txt'
+			print(f_63Cu)
+			if os.path.isfile(f_63Cu): 
+				#print("Ir 191 file: ",f_191Ir)
+				print("f_63Cu exists")
+				CS_63Cu = np.genfromtxt(f_63Cu, delimiter=' ', usecols=[1],skip_header=5)
+				E_63Cu = np.genfromtxt(f_63Cu, delimiter=' ', usecols=[0],skip_header=5)
+			else: 
+				print("Cu 63 file does not exist")
+				CS_63Cu = 0
+				E_63Cu =  0 #np.genfromtxt(f_191Ir, delimiter=' ', usecols=[0],skip_header=5)
+
+			if os.path.isfile(f_65Cu): 
+				#print("Ir 191 file: ",f_191Ir)
+				print("f_65Cu exists")
+				CS_65Cu = np.genfromtxt(f_65Cu, delimiter=' ', usecols=[1],skip_header=5)
+				E_65Cu = np.genfromtxt(f_65Cu, delimiter=' ', usecols=[0],skip_header=5)
+			else: 
+				print("Cu 65 file does not exist")
+				CS_65Cu = 0
+				E_65Cu =  0 #np.genfromtxt(f_191Ir, delimiter=' ', usecols=[0],skip_header=5)
+
+
+			E = E_63Cu*abund_63Cu + E_65Cu*abund_65Cu
+			CS = CS_63Cu*abund_63Cu + CS_65Cu*abund_65Cu
+			#plt.plot(E,CS)
+			#plt.show()
+
+		elif foil == 'Fe':
+			abund_54Fe=0.0545; abund_56Fe=0.91754; abund_57Fe=0.02119; abund_58Fe=0.00282
+			f_54Fe = self.path + '/../Tendl/' + foil + '/rp026054_' + Z + A + file_ending + '.txt'
+			f_56Fe = self.path + '/../Tendl/' + foil + '/rp026056_' + Z + A + file_ending + '.txt'
+			f_57Fe = self.path + '/../Tendl/' + foil + '/rp026057_' + Z + A + file_ending + '.txt'
+			f_58Fe = self.path + '/../Tendl/' + foil + '/rp026058_' + Z + A + file_ending + '.txt'
+
 			
+			if os.path.isfile(f_54Fe): 
+				#print("Ir 191 file: ",f_191Ir)
+				#print("f_54Fe exists")
+				CS_54Fe = np.genfromtxt(f_54Fe, delimiter=' ', usecols=[1],skip_header=5)
+				E_54Fe = np.genfromtxt(f_54Fe, delimiter=' ', usecols=[0],skip_header=5)
+			else: 
+				print("Fe 54 file does not exist")
+				CS_54Fe = 0
+				E_54Fe =  0 #np.genfromtxt(f_191Ir, delimiter=' ', usecols=[0],skip_header=5)
+
+			if os.path.isfile(f_56Fe): 
+				#print("Ir 191 file: ",f_191Ir)
+				#print("f_54Fe exists")
+				CS_56Fe = np.genfromtxt(f_56Fe, delimiter=' ', usecols=[1],skip_header=5)
+				E_56Fe = np.genfromtxt(f_56Fe, delimiter=' ', usecols=[0],skip_header=5)
+			else: 
+				print("Fe 56 file does not exist")
+				CS_56Fe = 0
+				E_56Fe =  0 #np.genfromtxt(f_191Ir, delimiter=' ', usecols=[0],skip_header=5)
+
+			if os.path.isfile(f_57Fe): 
+				#print("Ir 191 file: ",f_191Ir)
+				#print("f_54Fe exists")
+				CS_57Fe = np.genfromtxt(f_57Fe, delimiter=' ', usecols=[1],skip_header=5)
+				E_57Fe = np.genfromtxt(f_57Fe, delimiter=' ', usecols=[0],skip_header=5)
+			else: 
+				print("Fe 57 file does not exist")
+				CS_57Fe = 0
+				E_57Fe =  0 #np.genfromtxt(f_191Ir, delimiter=' ', usecols=[0],skip_header=5)
+
+			if os.path.isfile(f_58Fe): 
+				#print("Ir 191 file: ",f_191Ir)
+				#print("f_54Fe exists")
+				CS_58Fe = np.genfromtxt(f_58Fe, delimiter=' ', usecols=[1],skip_header=5)
+				E_58Fe = np.genfromtxt(f_58Fe, delimiter=' ', usecols=[0],skip_header=5)
+			else: 
+				print("Fe 58 file does not exist")
+				CS_58Fe = 0
+				E_58Fe =  0 #np.genfromtxt(f_191Ir, delimiter=' ', usecols=[0],skip_header=5)
+
+			E = E_54Fe*abund_54Fe + E_56Fe*abund_56Fe + E_57Fe*abund_57Fe + E_58Fe*abund_58Fe 
+			CS = CS_54Fe*abund_54Fe + CS_56Fe*abund_56Fe + CS_57Fe*abund_57Fe + CS_58Fe*abund_58Fe 
+			if E_54Fe == 0 and E_56Fe==0 and E_57Fe == 0:
+				E = E_58Fe
+			#print(E)
+			#E  = np.linspace(0,max(E_58Fe), len(CS))
+			#print(E)
+			#print(E_58Fe)
+
 		elif foil == 'Ni':
 			abund_58Ni = 0.68077; abund_60Ni = 0.26233; abund_61Ni = 0.011399; abund_62Ni = 0.036346; abund_64Ni = 0.009255;
 
@@ -257,8 +343,17 @@ class SimCrossSectionData:
 			#CS_193Ir = np.genfromtxt(f_193Ir, delimiter=' ', usecols=[1],skip_header=5)
 			#E_193Ir = np.genfromtxt(f_193Ir, delimiter=' ', usecols=[0],skip_header=5)
 			
-			E = E_58Ni*abund_58Ni + E_60Ni*abund_60Ni + E_61Ni*abund_61Ni + E_62Ni*abund_62Ni + E_64Ni*abund_64Ni
+			
+		
+			#E = E_59Fe
+			#print(E)
+
+
 			CS = CS_58Ni*abund_58Ni + CS_60Ni*abund_60Ni + CS_61Ni*abund_61Ni + CS_62Ni*abund_62Ni + CS_64Ni*abund_64Ni
+			E = E_58Ni*abund_58Ni + E_60Ni*abund_60Ni + E_61Ni*abund_61Ni + E_62Ni*abund_62Ni + E_64Ni*abund_64Ni
+			
+
+
 			#CS = CS_191Ir*abund_191Ir + CS_193Ir*abund_193Ir
 			
 			#plt.plot(E_60Ni,CS_60Ni, label='60Ni', linewidth=0.5)
@@ -274,6 +369,10 @@ class SimCrossSectionData:
 
 			#plt.legend()
 			#plt.show()
+
+		#print(E*1000)
+		#plt.plot(E*1000, CS)
+		#plt.show()
 
 		return E, CS 
 
@@ -553,9 +652,9 @@ class SimCrossSectionData:
 #print(path)
 
 
-#SimCS = SimCrossSectionData('Ir_194Pt')
+SimCS = SimCrossSectionData()
 
-
+SimCS.Tendl('Fe', '059', '026')
 #SimCS.EXFOR('Ir_192Ir')
 #SimCS.Tendl('Ir', '192', '077', file_ending='.L00')
 #SimCS.ALICE('Ir', '191', '77')
@@ -579,7 +678,7 @@ class SimCrossSectionData:
 #SimCS.multiple_reactions()
 #SimCS.Tendl('Ir', '193', '078', file_ending='.L05')
 #SimCS.Tendl('Ir', '191', '078', file_ending='.tot')
-#SimCS.Tendl('Ni', '052', '025')
+
 #SimCS.Tendl('Ni', '060', '027')
 
 

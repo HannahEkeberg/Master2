@@ -184,7 +184,10 @@ rows_Ir_189Ir = [3,21, 100, 102]; %check
 rows_Ir_189Pt = [2,6,22,35,75]; %check
 %rows_Ir_189Re = [13,14,16,62]; %check
 %rows_Ir_189Re = [13,14,62]; %check
-rows_Ir_189Re = [62]; %check
+%rows_Ir_189Re = [62]; %check
+rows_Ir_189Re = [62, 103, 104, 105]; %check
+%rows_Ir_189Re = [62];
+
 rows_Ir_189W = [24,47,80]; %check
 %rows_Ir_190Ir = [27,29,41,44,49,76,84]; %check
 rows_Ir_190Ir = [29,41,84]; %check
@@ -205,8 +208,8 @@ rows_Ir_194m2Ir = [36,43,55,61,65,74]; %check
 
 % Select rows to plot
 % varToStr = @(x) inputname(1);
-rows = rows_Ir_186Re;
-outName = '../csv/Ir_186Re';
+rows = rows_Ir_190mRe;
+outName = '../csv/Ir_190mRe';
 % rows = 12;
 % Find rows for the desired decay product
 selected_rows = data(rows,:);
@@ -220,9 +223,9 @@ selected_rows = data(rows,:);
 % for energy = 128:100:1028   % Just Nickel
 % for energy = 129:100:1029   % Just Copper
 % for energy = 126:100:326   % Just Iron
-% for energy = 177:100:1077   % Just Iridium
+for energy = 177:100:1077   % Just Iridium
 % 
- for energy = 377   % debug mode
+%  for energy = 177   % debug mode
     if energy==0
         % Return all rows for plotting
         gammas = selected_rows;
@@ -277,5 +280,5 @@ selected_rows = data(rows,:);
     
     %     Dump to csv for python / gnuplot
     %     Turn this line on to write files out!
-%     csvwrite([outName '_' num2str(energy) '.dat'],outfile);  %Saving the csv file 
+    csvwrite([outName '_' num2str(energy) '.dat'],outfile);  %Saving the csv file 
 end
