@@ -271,8 +271,10 @@ CS = CrossSections(files[index])
 #CS.make_CS(Ir_189Re(), 'Ir', 'Ir_189Re.csv', 10, 'Ir_189Re', csv_filename, '75', '189')     # needs work
 #CS.make_CS(Ir_190mRe(), 'Ir', 'Ir_90mReRe.csv', 10, 'Ir_190mRe', csv_filename, '75', '190')     # needs work
 
+
 #CS.make_CS(Ir_190Ir(), 'Ir', 'Ir_190Ir.csv', 10, 'Ir_190Ir', csv_filename, '77', '190')   
-#CS.make_CS(Ir_191Pt(), 'Ir', 'Ir_191Pt.csv', 10, 'Ir_191Pt', csv_filename, '78', '191')   
+#CS.make_CS(Ir_191Pt(), 'Ir', 'Ir_191Pt.csv', 10, 'Ir_191Pt', csv_filename, '78', '191') 
+CS.make_CS(Ir_191Os(), 'Ir', 'Ir_191Os.csv', 10, 'Ir_191Os', csv_filename, '76', '191', file_ending='.tot')     
 #CS.make_CS(Ir_192Ir(), 'Ir', 'Ir_192Ir.csv', 10, 'Ir_192Ir', csv_filename, '77', '192', file_ending='.L00')    
 #CS.make_CS(Ir_193mPt(), 'Ir', 'Ir_193mPt.csv', 10, 'Ir_193mPt', csv_filename, '78', '193', file_ending='.L05')   
 #CS.make_CS(Ir_194Ir(), 'Ir', 'Ir_194Ir.csv', 10, 'Ir_194Ir', csv_filename, '77', '194', file_ending='.L00')    

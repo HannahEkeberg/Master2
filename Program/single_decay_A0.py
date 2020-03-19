@@ -635,12 +635,13 @@ np.savetxt("{}.csv".format(save_results_to +  'Ni_56Co'), np.array((A0, sigma_A0
 
 #single_decay_data(Ir_189W(), "Ir_189W", 10, Save_csv=True)    #Prob not oberved
 #single_decay_data(Ir_189Re(), "Ir_189Re", 10, Save_csv=True)    #two gamma lines, does not agree
-single_decay_data(Ir_190mRe(), "Ir_190mRe", 10, Save_csv=True)    #prob not observed?
+#single_decay_data(Ir_190mRe(), "Ir_190mRe", 10, Save_csv=True)    #prob not observed?
 #single_decay_data(Ir_190Re(), "Ir_190Re", 10, Save_csv=True)    #must go through false peaks
 
 #single_decay_data(Ir_190Ir(), "Ir_190Ir", 10, Save_csv=True)  
 #single_decay_data(Ir_191Pt(), "Ir_191Pt", 10, Save_csv=True)    #two gamma lines, does not agree
 #single_decay_data(Ir_192Ir(), "Ir_192Ir", 10, Save_csv=True)    #must go through false peaks
+single_decay_data(Ir_191Os(), "Ir_191Os", 10, Save_csv=True)    
 
 ###    single_decay_data(Ir_193mPt(), "Ir_193mPt", 10, Save_csv=True)   
 #single_decay_data(Ir_194m2Ir(), "Ir_194m2Ir", 10, Save_csv=True)    #ok, must go through false peaks

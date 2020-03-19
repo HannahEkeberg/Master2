@@ -225,7 +225,7 @@ class CrossSections:
             A = '0'+A
         if model== 'Talys':
             try:
-                E, CS = SimCS.TALYS(foil, Z, A, file_ending)
+                E, CS = SimCS.TALYS(foil, A, Z, file_ending)
                 plt.plot(E, CS, label='Talys', linestyle='-.', color='orange')
                 #return E, CS
             except:

@@ -962,6 +962,21 @@ def Ir_191Pt():   #single decay
     lambda_ = np.log(2)/(2.83*d)
     return list, lambda_
 
+def Ir_191Os():   #single decay
+    foil1 = path + 'Ir_191Os_177.dat'
+    foil2 = path + 'Ir_191Os_277.dat'
+    foil3 = path + 'Ir_191Os_377.dat'
+    foil4 = path + 'Ir_191Os_477.dat'
+    foil5 = path + 'Ir_191Os_577.dat'
+    foil6 = path + 'Ir_191Os_677.dat'
+    foil7 = path + 'Ir_191Os_777.dat'
+    foil8 = path + 'Ir_191Os_877.dat'
+    foil9 = path + 'Ir_191Os_977.dat'
+    foil10 = path + 'Ir_191Os_1077.dat'
+    list = [foil1, foil2, foil3, foil4, foil5, foil6, foil7, foil8, foil9, foil10]
+    lambda_ = np.log(2)/(15.4*d)
+    return list, lambda_
+
 
 def Ir_192Ir():  #single decay, too short and long half life of isomers
     foil1 = path + 'Ir_192Ir_177.dat'

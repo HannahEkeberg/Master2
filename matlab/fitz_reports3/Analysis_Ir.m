@@ -163,21 +163,21 @@ rows_Fe_59Fe = [29,36]; %check
 
 
 % % 33MeV Iridium foils:
-% rows_Ir_183Ta = [23,38]; %check
-%rows_Ir_183Ta = [38]; %check
+rows_Ir_183Ta = [23,38]; %check
+% rows_Ir_183Ta = [38]; %check
 % rows_Ir_186Re = [8,12]; %check
 rows_Ir_186Re = [12]; %check
 % rows_Ir_186Ta = [20,58]; %check
 % rows_Ir_186Ta = [20]; %check
 % rows_Ir_187W = [54,68,73,9]; %check
-% rows_Ir_187W = [54,73]; %check
+rows_Ir_187W = [54,73]; %check
 % rows_Ir_188Ir = [78,89,92,93,94]; %check
 rows_Ir_188Ir = [89,92,93]; %check
 rows_Ir_188mRe = [1,5]; %check
 % rows_Ir_188Pt = [17,42,48,53]; %check
 rows_Ir_188Pt = [17,42]; %check
-%rows_Ir_188Re = [77,82]; %check
-rows_Ir_188Re = [77]; %check
+rows_Ir_188Re = [77,82]; %check
+%rows_Ir_188Re = [77, 106]; %check
 %rows_Ir_189Ir = [3,21, 100, 101, 102]; %check
 rows_Ir_189Ir = [3,21, 100, 102]; %check
 %rows_Ir_189Pt = [2,6,22,31,35,60,75]; %check
@@ -203,13 +203,14 @@ rows_Ir_193mPt = [10,98]; %check
 %rows_Ir_194Ir = [28,32,64,69,71,83,86,87,91];%check
 rows_Ir_194Ir = [28,32,64,83,86,91];%check
 rows_Ir_194m2Ir = [36,43,55,61,65,74]; %check
+rows_Ir_191Os = [107]; %check
 
 
 
 % Select rows to plot
 % varToStr = @(x) inputname(1);
-rows = rows_Ir_190mRe;
-outName = '../csv/Ir_190mRe';
+rows = rows_Ir_191Os;
+outName = '../csv/Ir_191Os';
 % rows = 12;
 % Find rows for the desired decay product
 selected_rows = data(rows,:);
