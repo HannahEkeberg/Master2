@@ -113,7 +113,8 @@ class SimCrossSectionData:
 				#print("Ir 191 file: ",f_191Ir)
 				#print("f_191Ir exists")
 				CS_191Ir = np.genfromtxt(f_191Ir, delimiter=' ', usecols=[1],skip_header=5)
-				E_191Ir = np.genfromtxt(f_191Ir, delimiter=' ', usecols=[0],skip_header=5)
+				E = np.genfromtxt(f_191Ir, delimiter=' ', usecols=[0],skip_header=5)
+				
 			else: 
 				#print("Ir 191 file does not exist")
 				CS_191Ir = 0
@@ -122,14 +123,19 @@ class SimCrossSectionData:
 			if os.path.isfile(f_193Ir):
 				#print("f_193Ir exists")
 				CS_193Ir = np.genfromtxt(f_193Ir, delimiter=' ', usecols=[1],skip_header=5)
-				E_193Ir = np.genfromtxt(f_193Ir, delimiter=' ', usecols=[0],skip_header=5)
+				E = np.genfromtxt(f_193Ir, delimiter=' ', usecols=[0],skip_header=5)
+				
 				
 			else: 
 				#print("Ir 193 file does not exist")
 				CS_193Ir = 0
 				E_193Ir = 0#np.genfromtxt(f_193Ir, delimiter=' ', usecols=[0],skip_header=5)
 			
-			E = E_191Ir*abund_191Ir + E_193Ir*abund_193Ir
+			#E = E_191Ir*abund_191Ir + E_193Ir*abund_193Ir
+			#if E_191Ir != 0:
+			#	E = E_191Ir
+			#else:
+			#	E = E_193Ir
 			CS = CS_191Ir*abund_191Ir + CS_193Ir*abund_193Ir
 
 		elif foil == 'Cu':
@@ -142,7 +148,7 @@ class SimCrossSectionData:
 				#print("Ir 191 file: ",f_191Ir)
 				print("f_63Cu exists")
 				CS_63Cu = np.genfromtxt(f_63Cu, delimiter=' ', usecols=[1],skip_header=5)
-				E_63Cu = np.genfromtxt(f_63Cu, delimiter=' ', usecols=[0],skip_header=5)
+				E = np.genfromtxt(f_63Cu, delimiter=' ', usecols=[0],skip_header=5)
 			else: 
 				print("Cu 63 file does not exist")
 				CS_63Cu = 0
@@ -152,14 +158,14 @@ class SimCrossSectionData:
 				#print("Ir 191 file: ",f_191Ir)
 				print("f_65Cu exists")
 				CS_65Cu = np.genfromtxt(f_65Cu, delimiter=' ', usecols=[1],skip_header=5)
-				E_65Cu = np.genfromtxt(f_65Cu, delimiter=' ', usecols=[0],skip_header=5)
+				E = np.genfromtxt(f_65Cu, delimiter=' ', usecols=[0],skip_header=5)
 			else: 
 				print("Cu 65 file does not exist")
 				CS_65Cu = 0
 				E_65Cu =  0 #np.genfromtxt(f_191Ir, delimiter=' ', usecols=[0],skip_header=5)
 
 
-			E = E_63Cu*abund_63Cu + E_65Cu*abund_65Cu
+			#E = E_63Cu*abund_63Cu + E_65Cu*abund_65Cu
 			CS = CS_63Cu*abund_63Cu + CS_65Cu*abund_65Cu
 			#plt.plot(E,CS)
 			#plt.show()
@@ -176,7 +182,7 @@ class SimCrossSectionData:
 				#print("Ir 191 file: ",f_191Ir)
 				#print("f_54Fe exists")
 				CS_54Fe = np.genfromtxt(f_54Fe, delimiter=' ', usecols=[1],skip_header=5)
-				E_54Fe = np.genfromtxt(f_54Fe, delimiter=' ', usecols=[0],skip_header=5)
+				E = np.genfromtxt(f_54Fe, delimiter=' ', usecols=[0],skip_header=5)
 			else: 
 				print("Fe 54 file does not exist")
 				CS_54Fe = 0
@@ -186,7 +192,7 @@ class SimCrossSectionData:
 				#print("Ir 191 file: ",f_191Ir)
 				#print("f_54Fe exists")
 				CS_56Fe = np.genfromtxt(f_56Fe, delimiter=' ', usecols=[1],skip_header=5)
-				E_56Fe = np.genfromtxt(f_56Fe, delimiter=' ', usecols=[0],skip_header=5)
+				E = np.genfromtxt(f_56Fe, delimiter=' ', usecols=[0],skip_header=5)
 			else: 
 				print("Fe 56 file does not exist")
 				CS_56Fe = 0
@@ -196,7 +202,7 @@ class SimCrossSectionData:
 				#print("Ir 191 file: ",f_191Ir)
 				#print("f_54Fe exists")
 				CS_57Fe = np.genfromtxt(f_57Fe, delimiter=' ', usecols=[1],skip_header=5)
-				E_57Fe = np.genfromtxt(f_57Fe, delimiter=' ', usecols=[0],skip_header=5)
+				E = np.genfromtxt(f_57Fe, delimiter=' ', usecols=[0],skip_header=5)
 			else: 
 				print("Fe 57 file does not exist")
 				CS_57Fe = 0
@@ -206,13 +212,13 @@ class SimCrossSectionData:
 				#print("Ir 191 file: ",f_191Ir)
 				#print("f_54Fe exists")
 				CS_58Fe = np.genfromtxt(f_58Fe, delimiter=' ', usecols=[1],skip_header=5)
-				E_58Fe = np.genfromtxt(f_58Fe, delimiter=' ', usecols=[0],skip_header=5)
+				E = np.genfromtxt(f_58Fe, delimiter=' ', usecols=[0],skip_header=5)
 			else: 
 				print("Fe 58 file does not exist")
 				CS_58Fe = 0
 				E_58Fe =  0 #np.genfromtxt(f_191Ir, delimiter=' ', usecols=[0],skip_header=5)
 
-			E = E_54Fe*abund_54Fe + E_56Fe*abund_56Fe + E_57Fe*abund_57Fe + E_58Fe*abund_58Fe 
+			#E = E_54Fe*abund_54Fe + E_56Fe*abund_56Fe + E_57Fe*abund_57Fe + E_58Fe*abund_58Fe 
 			CS = CS_54Fe*abund_54Fe + CS_56Fe*abund_56Fe + CS_57Fe*abund_57Fe + CS_58Fe*abund_58Fe 
 			if E_54Fe == 0 and E_56Fe==0 and E_57Fe == 0:
 				E = E_58Fe
@@ -233,6 +239,7 @@ class SimCrossSectionData:
 				print("f_58Ni exists")
 				CS_58Ni = np.genfromtxt(f_58Ni, delimiter=' ', usecols=[1],skip_header=5)
 				E_58Ni = np.genfromtxt(f_58Ni, delimiter=' ', usecols=[0],skip_header=5)
+				E = E_58Ni
 			else: 
 				print("Ni 58 file does not exist")
 				CS_58Ni = 0
@@ -243,6 +250,7 @@ class SimCrossSectionData:
 				print("f_60Ni exists")
 				CS_60Ni = np.genfromtxt(f_60Ni, delimiter=' ', usecols=[1],skip_header=5)
 				E_60Ni = np.genfromtxt(f_60Ni, delimiter=' ', usecols=[0],skip_header=5)
+				E = E_60Ni
 			else: 
 				print("Ni 60 file does not exist")
 				CS_60Ni = 0
@@ -252,6 +260,7 @@ class SimCrossSectionData:
 				print("f_61Ni exists")
 				CS_61Ni = np.genfromtxt(f_61Ni, delimiter=' ', usecols=[1],skip_header=5)
 				E_61Ni = np.genfromtxt(f_61Ni, delimiter=' ', usecols=[0],skip_header=5)
+				E = E_61Ni
 			else: 
 				print("Ni 61 file does not exist")
 				CS_61Ni = 0
@@ -261,6 +270,7 @@ class SimCrossSectionData:
 				print("f_62Ni exists")
 				CS_62Ni = np.genfromtxt(f_62Ni, delimiter=' ', usecols=[1],skip_header=5)
 				E_62Ni = np.genfromtxt(f_62Ni, delimiter=' ', usecols=[0],skip_header=5)
+				E = E_62Ni
 			else: 
 				print("Ni 62 file does not exist")
 				CS_62Ni = 0
@@ -270,6 +280,7 @@ class SimCrossSectionData:
 				print("f_64Ni exists")
 				CS_64Ni = np.genfromtxt(f_64Ni, delimiter=' ', usecols=[1],skip_header=5)
 				E_64Ni = np.genfromtxt(f_64Ni, delimiter=' ', usecols=[0],skip_header=5)
+				E = E_64Ni
 			else: 
 				print("Ni 64 file does not exist")
 				CS_64Ni = 0
@@ -278,7 +289,7 @@ class SimCrossSectionData:
 
 
 			CS = CS_58Ni*abund_58Ni + CS_60Ni*abund_60Ni + CS_61Ni*abund_61Ni + CS_62Ni*abund_62Ni + CS_64Ni*abund_64Ni
-			E = E_58Ni*abund_58Ni + E_60Ni*abund_60Ni + E_61Ni*abund_61Ni + E_62Ni*abund_62Ni + E_64Ni*abund_64Ni
+			#E = E_58Ni*abund_58Ni + E_60Ni*abund_60Ni + E_61Ni*abund_61Ni + E_62Ni*abund_62Ni + E_64Ni*abund_64Ni
 			
 		#plt.plot(E, CS)
 		#plt.show()
@@ -373,6 +384,12 @@ foil = 'Ir'; A = '188'; Z = '075' # 188Re
 #E_tendl, CS_tendl = SimCS.Tendl(foil, A, Z)
 
 E_talys, CS_talys= SimCS.TALYS(foil, A, Z)
+
+
+
+
+
+
 #plt.plot(E_tendl, CS_tendl, label='tendl')
 
 #plt.plot(E_talys, CS_talys, label='talys')

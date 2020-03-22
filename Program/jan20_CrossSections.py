@@ -147,7 +147,7 @@ class CrossSections:
     """
 
 
-    def make_CS(self, react_func, foil, filename, n ,reaction, BC_csv_filename, Z, A, file_ending='.tot'):
+    def make_CS(self, react_func, foil, filename, n ,reaction, BC_csv_filename, Z, A, file_ending='.tot', independent=True, ylimit=None):
         lamb, mass_density, sigma_mass_density, E, dE, A0, dA0 = self.get_var(react_func, foil, filename, n, reaction)
         #lamb, mass_density, sigma_mass_density, E, dE, A0, sigma_A0 = self.get_var(react_func, foil, filename, n, reaction)
 
@@ -175,7 +175,7 @@ class CrossSections:
         #print("I_Ni after", I_Ni)
         #I = self.I; dI = self.sigma_I_est
         CS, dCS= self.cross_section_calc(n, A0, dA0, mass_density, sigma_mass_density, I, dI, lamb, reaction)
-        
+            
         self.modelling('Tendl', foil, Z, A, reaction, file_ending)
         self.modelling('Talys', foil, Z, A, reaction, file_ending)
         self.modelling('Exfor', foil, Z, A, reaction, file_ending)
@@ -202,13 +202,38 @@ class CrossSections:
         np.savetxt(path_to_cs_csv  + reaction, csv_save_array, delimiter=',', header='E, dE, CS, dCS', fmt="%s"  )#, %.6f, %.6f")
         
 
-        CS = [float('nan') if x==0 else x for x in CS]
-        plt.errorbar(E, CS, marker='P', color='darkred',linewidth=0.0001, xerr=dE, yerr=dCS, elinewidth=1.0, capthick=1.0, capsize=3.0, label='this data')
-        
-        self.plot_CrossSections(reaction, A, foil)
 
+
+        CS = [float('nan') if x==0 else x for x in CS]
+        #print(type(A))
+        plt.errorbar(E, CS, marker='P', color='darkred',linewidth=0.0001, xerr=dE, yerr=dCS, elinewidth=1.0, capthick=1.0, capsize=3.0, label='this data')
+        if independent==True: 
+
+            title = r'$^{nat}$' + foil + '(d,x)' + r'$^{{ {} }}$'.format(A) + reaction[-2:]  + ' - Independent' 
+        else: 
+            title = r'$^{nat}$' + foil + '(d,x)' + r'$^{{ {} }}$'.format(A) + reaction[-2:]  + ' - Cumulative' 
+
+
+        self.plot_CrossSections(reaction, title, A, foil, ylimit)
+
+        print("ylimit:", ylimit)
         return E, dE, CS, dCS
 
+
+    def make_CS_Cumulative(self, foil, n, BC_csv_filename, react_func_parent, reaction_parent, filename_parent, Z_parent, A_parent, react_func_daughter, reaction_daughter, filename_daughter, Z_daughter, A_daughter, file_ending='.tot'):  # Necessary when subtracting
+        
+        file_ending='.tot'
+        independent=False 
+        CS_parent, dCS_parent = self.make_CS(react_func_parent, foil, filename_parent, n, reaction_parent, csv_filename, Z_parent, A_parent)[-2:]
+        CS_daughter_cum, dCS_daughter_cum = self.make_CS(react_func_daughter, foil, filename_daughter, n, reaction_daughter, csv_filename, Z_daughter, A_daughter)[-2:]
+        
+
+        CS_daughter = CS_daughter_cum - CS_parent
+
+
+
+
+#CS.make_CS(Ir_189Ir(), 'Ir', 'Ir_189Ir.csv', 10, 'Ir_189Ir', csv_filename, '77', '189')    # need work on activity 
 
     def modelling(self, model, foil, Z, A, reaction, file_ending):
         #print("modelling:", model, foil )
@@ -244,8 +269,6 @@ class CrossSections:
                     for j in range(len(unique_author)):
                         if author[i]==unique_author[j]:
                             plt.errorbar(E[i], CS[i], marker='.', color=colors[j], markersize=1, linewidth=0.0001, xerr=dE[i], yerr=dCS[i], elinewidth=0.25, capthick=0.25, capsize=3.0, label=unique_author[j])
-    
-
             except:
                 print("No exfor file found")
                 pass
@@ -364,7 +387,8 @@ class CrossSections:
             E_mon = np.loadtxt(filename, usecols=[0], skiprows=6)
             Cs_mon = np.loadtxt(filename, usecols=[1], skiprows=6)
 
-            self.modelling('Exfor', 'Fe', '26', '27', 'Fe_56Co', '.tot')
+            self.modelling('Exfor', 'Fe', '26', '56', 'Fe_56Co', '.tot')
+            A = '56'; foil='Fe'; title = r'$^{nat}$' + foil + '(d,x)' + r'$^{{ {} }}$'.format(A) + reaction[-2:]  + ' - Independent' 
 
             #sigma_Cs = np.loadtxt(filename, usecols=[2], skiprows=6)
         if reaction=='Ni_61Cu':
@@ -375,6 +399,7 @@ class CrossSections:
             Cs_mon = np.loadtxt(filename, usecols=[1], skiprows=6)
 
             self.modelling('Exfor', 'Ni', '28', '61', 'Ni_61Cu', '.tot')
+            A = '61'; foil='Ni'; title = r'$^{nat}$' + foil + '(d,x)' + r'$^{{ {} }}$'.format(A) + reaction[-2:]  + ' - Independent' 
 
         if reaction=='Ni_56Co':
             CS_56Co, dCS_56Co = self.cross_section_calc(n, A0, sigma_A0, mass_density, sigma_mass_density, I_Ni, sigma_I, lamb, reaction)
@@ -392,6 +417,7 @@ class CrossSections:
 
             E_mon = np.loadtxt(filename, usecols=[0], skiprows=6)
             Cs_mon = np.loadtxt(filename, usecols=[1], skiprows=6)
+            A = '56'; foil='Ni'; title = r'$^{nat}$' + foil + '(d,x)' + r'$^{{ {} }}$'.format(A) + reaction[-2:]  + ' - Cumulative' 
             #print("     56Ni     ", "    56Co   " )
             #print(np.vstack((CS_56Ni,CS_56Co)).T)
 
@@ -410,8 +436,9 @@ class CrossSections:
             dCS = CS*np.sqrt( (dCS_58Co/CS_58Co)**2 + (dCS_58mCo/CS_58mCo)**2)
             E_mon = np.loadtxt(filename, usecols=[0], skiprows=6)
             Cs_mon = np.loadtxt(filename, usecols=[1], skiprows=6)
-            print("     58Co     ", "    58mCo   " )
-            print(np.vstack((CS_58Co,CS_58mCo)).T)
+            A = '58'; foil='Ni'; title = r'$^{nat}$' + foil + '(d,x)' + r'$^{{ {} }}$'.format(A) + reaction[-2:]  + ' - Cumulative' 
+            #print("     58Co     ", "    58mCo   " )
+            #print(np.vstack((CS_58Co,CS_58mCo)).T)
         if reaction=='Cu_62Zn':
             CS, dCS = self.cross_section_calc(n, A0, sigma_A0, mass_density, sigma_mass_density, I_Cu, sigma_I, lamb, reaction)
             E = self.E_Cu;dE = self.dE_Cu
@@ -419,6 +446,7 @@ class CrossSections:
             E_mon = np.loadtxt(filename, usecols=[0], skiprows=6)
             Cs_mon = np.loadtxt(filename, usecols=[1], skiprows=6)
             self.modelling('Exfor', 'Cu', '29', '62', 'Cu_62Zn', '.tot')
+            A = '62'; foil='Zn'; title = r'$^{nat}$' + foil + '(d,x)' + r'$^{{ {} }}$'.format(A) + reaction[-2:]  + ' - Cumulative' 
         if reaction=='Cu_63Zn':
             CS, dCS = self.cross_section_calc(n, A0, sigma_A0, mass_density, sigma_mass_density, I_Cu, sigma_I, lamb, reaction)
             E = self.E_Cu;dE = self.dE_Cu
@@ -426,6 +454,7 @@ class CrossSections:
             E_mon = np.loadtxt(filename, usecols=[0], skiprows=6)
             Cs_mon = np.loadtxt(filename, usecols=[1], skiprows=6)
             self.modelling('Exfor', 'Cu', '29', '63', 'Cu_63Zn', '.tot')
+            A = '63'; foil='Zn'; title = r'$^{nat}$' + foil + '(d,x)' + r'$^{{ {} }}$'.format(A) + reaction[-2:]  + ' - Cumulative' 
         if reaction=='Cu_65Zn':
             CS, dCS = self.cross_section_calc(n, A0, sigma_A0, mass_density, sigma_mass_density, I_Cu, sigma_I, lamb, reaction)
             E = self.E_Cu;dE = self.dE_Cu
@@ -433,6 +462,7 @@ class CrossSections:
             E_mon = np.loadtxt(filename, usecols=[0], skiprows=6)
             Cs_mon = np.loadtxt(filename, usecols=[1], skiprows=6)
             self.modelling('Exfor', 'Cu', '29', '65', 'Cu_65Zn', '.tot')
+            A = '65'; foil='Zn'; title = r'$^{nat}$' + foil + '(d,x)' + r'$^{{ {} }}$'.format(A) + reaction[-2:]  + ' - Cumulative' 
 
 
         #print(len(CS))
@@ -443,7 +473,7 @@ class CrossSections:
 
 
         #self.setting_plotvalues(E_mon, 0, Cs_mon, 0, label='monitor data', )
-        print(scaling_parameter)
+        #print(scaling_parameter)
 
         #if reaction == 'Ni_56Co' or reaction=='Ni_58Co':
 
@@ -451,10 +481,10 @@ class CrossSections:
             label = 'monitor data (cumulative)'
         else:
             label = 'monitor data'
-        plt.plot(E_mon, Cs_mon, label=label)
+        plt.plot(E_mon, Cs_mon, label='Recommended')
         #self.setting_plotvalues(E, dE, CS, dCS, 'this data')
         plt.errorbar(E, CS, marker='P', markersize=4, color='red', linewidth=0.0001, xerr=dE, yerr=dCS, elinewidth=0.5, capthick=0.25, capsize=3.0, label=label )
-        self.plot_CrossSections(reaction)
+        self.plot_CrossSections(reaction, title, A=1, foil='foil')
 
         #plt.plot(E_mon, Cs_mon, label='monitor data')
         #plt.plot(E, CS, 'o', label='this data')
@@ -481,17 +511,19 @@ class CrossSections:
 
 
 
-    def plot_CrossSections(self,  reaction, A=1, foil='foil'):
+    def plot_CrossSections(self, reaction, title, A=1, foil='foil', max_CS=None):
 
         #plt.plot(E_mon, Cs_mon, label='monitor data')
         #plt.plot(E, CS, 'o', label='this data')
         #fig, ax = plt.subplots()
-        plt.xlabel('Energy (MeV)')
-        plt.ylabel('Cross section (mb)')
+        print("max CS: ", max_CS)
+        plt.xlabel('Deuteron Energy (MeV)')
+        plt.ylabel('Cross Section (mb)')
 
     
         #title_name = r'$^\text{nat}' + foil + '(d,x)' + r'$^{}$'.format(A)
-        plt.title('Cross section for reaction {}'.format(reaction))
+        #plt.title('Cross section for reaction {}'.format(reaction))
+        plt.title(title)
         path_to_cs_figs = os.getcwd() + '/CrossSections/CrossSections_curves/'
         #plt.savefig(path_to_cs_figs + reaction +'{}.png'.format(scaling_parameter), dpi=300)
         #handles, labels = ax.get_legend_handles_labels()
@@ -506,7 +538,12 @@ class CrossSections:
         by_label = OrderedDict(zip(labels, handles))
         plt.legend(by_label.values(), by_label.keys(),fontsize='small')
 
-        plt.gca().set_xlim(left=0, right=50)
+        plt.gca().set_xlim(left=0, right=40)
+        if max_CS==None:
+            plt.gca().set_ylim(bottom=0)
+        else: 
+            plt.gca().set_ylim(bottom=0, top=max_CS)
+
         plt.savefig(path_to_cs_figs + reaction+'.png', dpi=300)
         plt.show()
 
