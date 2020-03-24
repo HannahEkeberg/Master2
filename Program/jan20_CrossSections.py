@@ -544,7 +544,7 @@ class CrossSections:
         else: 
             plt.gca().set_ylim(bottom=0, top=max_CS)
 
-        plt.savefig(path_to_cs_figs + reaction+'.png', dpi=300)
+        #plt.savefig(path_to_cs_figs + reaction+'.png', dpi=300)
         plt.show()
 
 

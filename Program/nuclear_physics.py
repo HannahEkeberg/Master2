@@ -2,6 +2,7 @@
 
 from scipy.constants import m_e, e, epsilon_0, pi, hbar
 import numpy as np 
+import matplotlib.pyplot as plt
 
 class Calculations:
 
@@ -10,63 +11,186 @@ class Calculations:
 		self.A = A                 # eg Compound 193Pt or 195Pt
 		self.Z = Z                 # eg Z number of Pt = 78
 
+		#if self.Z == 26:
+
+		#if isinstance(self.A, list):
+		#	print("yes")
+		#else:
+		#		print("no")
+
+
+
 		self.E = np.linspace(0,33, 100)
 		if self.particle == 'alpha': # 2p 2n
-			self.Z_p = 2; self.A_p = 2; self.mass = 3727.3794066 #MeV
+			self.Z_p = 2; self.A_p = 2; self.l=0.0; self.mass = 3727.379 #MeV
 		elif self.particle == 'p':   # 1p 0n
-			self.Z_p = 1; self.A_p = 1; self.mass = 1
+			self.Z_p = 1; self.A_p = 1; self.l = 0.5; self.mass = 938.28
 		elif self.particle == 'n':	 # 0p 1n
-			self.Z_p = 0; self.A_p = 1; self.mass = 1
+			self.Z_p = 0; self.A_p = 1; self.l = 0.5; self.mass = 939.57
 		elif self.particle == 'd':	 # 1p 1n	
-			self.Z_p = 1; self.A_p = 2; self.mass = 1
+			self.Z_p = 1; self.A_p = 2; self.l = 1; self.mass = 1875.6 
 		elif self.particle == '3He': # 2p 1n
-			self.Z_p = 2; self.A_p = 3; self.mass = 1
+			self.Z_p = 2; self.A_p = 3; self.l= 0.5; self.mass=3.0160293*931.5 # from u to MeV, multiply by 931.5 MeV
 		elif self.particle == 't':   # 1p 2n
-			self.Z_p = 1; self.A_p = 3; self.mass = 1
+			self.Z_p = 1; self.A_p = 3; self.l = 0.5; self.mass = 2808.921
 
 
 	def Coulomb_barrier(self):
-		K = (4*pi*epsilon_0)**(-1)
-		#print(type(K))
-		#print(type(self.Z))
 
-		U = K* (self.Z * self.Z_p * e** 2) / (self.A**(1/3) + self.A_p**(1/3))
+		print("Coulomb barrier for {}".format(self.particle))
+		e = 1.44 #MeV fm
+		conversion_to_MeV =6.24150913*1e12
+		K = 1.2 #fm
+		if isinstance(self.A, list):
+			U0 = []
+			for i in self.A:
+				U = K* (self.Z * self.Z_p * e ** 2) / (i**(1/3) + self.A_p**(1/3))
+				#print(U)
+				#U = K* (self.Z * self.Z_p * e** 2) / (i**(1/3) + self.A_p**(1/3))
+				U0.append(U)
+			print("For Z={} and A={}, Coulomb barrier is: ".format(self.Z, self.A), U0)
+			print("Mean value Coulomb barrier: ", np.mean(U0))
+			#l = len(self.A)
+			#U0 = np.sum
+			U0 = np.mean(U0)
+		else:
+			U0 = K* (self.Z * self.Z_p * e** 2) / (self.A**(1/3) + self.A_p**(1/3))
+			print("For Z={} and A={}, Coulomb barrier is: ".format(self.Z, self.A), U0)
+
+		#U0 = K* (self.Z * self.Z_p * e** 2) / (self.A**(1/3) + self.A_p**(1/3))
 		
-		print(U)
+		print("--------------------------------------------------------------")
+		return U0
 
-		return U
+
 
 
 		
 
 
 	def Centrifugal_barrier(self):
-		pas
+		if isinstance(self.A, list):
+			U0 = []
+			for i in self.A:
+				U = self.l*(self.l+1)/(i**(1/3)+self.A_p**(1/3))
+				
+				#U = K* (self.Z * self.Z_p * e** 2) / (i**(1/3) + self.A_p**(1/3))
+				U0.append(U)
+				print("For Z={} and A={}, Centrifugal barrier is: ".format(self.Z, self.A), U0)
+			#print("Mean value Coulomb barrier: ", np.mean(U0))
+			#l = len(self.A)
+			#U0 = np.sum
+			U0 = np.mean(U0)
+		else:
+			U0 = self.l*(self.l+1)/(self.A**(1/3)+self.A_p**(1/3))
+		print(U0)
+		return U0
 
-	def tunneling_prob(self, Coulomb=False, Centrifugal=False, Total=False):
+		#U = self.l*(self.l+1)/(self.A**(1/3)+self.A_p**(1/3))
+
+
+	def tunneling_prob(self, Coulomb=False, Centrifugal=False, Total=False, label=None, style=None):
 		if Coulomb:
 			U = self.Coulomb_barrier()
+			
 		if Centrifugal:
 			U = self.Centrifugal_barrier()
 		if Total:
-			U = self.Coulomb_barrier() + self.Centrifugal_barrier()
+			U_c = self.Coulomb_barrier()
+			U_s = self.Centrifugal_barrier()
+			U = U_c+ U_s
 
 		alpha = np.sqrt(2* self.mass * self.E / hbar**2)
-		L = self.A**(1/3)     # L is the width of the square potential
+		if isinstance(self.A, list):
+			L=self.A[0]**(1/3)
+		else:
+			L = self.A**(1/3)     # L is the width of the square potential
 
 
 		T = (1+ 0.25*(U**2 / (self.E*(U-self.E))))#*np.sinh(alpha*L)**2)**(-1) 
-		print(T)
 		
 
+		if label is not None:
+			plt.plot(self.E, T, label=label, linestyle=style, linewidth=1.5)
+
+		else:
+			plt.plot(self.E, T)
+		
+		
+#A= [193, 195]; Z=78
+#A = [58+2, 60+2, 61+2, 62+2, 64+2]; Z=29
+#A = [63, 65]; Z=30
+#A = [54, 56, 57, 58; Z=27
+p = Calculations('p', A, Z)
+a = Calculations('alpha', A, Z)
+n = Calculations('n', A, Z)
+t = Calculations('t', A, Z)
+d = Calculations('d', A, Z)
+h = Calculations('3He', A, Z)
 
 
-					
+
+"""
+a.tunneling_prob(Coulomb=True)
+
+plt.axis([0,35,0,100])
+plt.legend()
+plt.xlabel('Deuteron energy (MeV)')
+plt.ylabel('Transmission probability')
+plt.show()
+"""
 
 
-Calculations('alpha', 195, 78).Coulomb_barrier()
-Calculations('p', 195, 78).Coulomb_barrier()
-Calculations('n', 195, 78).Coulomb_barrier()
-Calculations('t', 195, 78).Coulomb_barrier()
-Calculations('3He', 195, 78).Coulomb_barrier()
-#Calculations('alpha', 64, 29).tunneling_prob(Coulomb=True)
+
+
+#Calculations('p', [193,195], 78).Centrifugal_barrier()
+#Calculations('p', [193,195], 78).tunneling_prob(Total=True, label=r'p', style='--')
+#Calculations('n', [193,195], 78).tunneling_prob(Total=True, label=r'p', style='--')
+
+"""
+Calculations('p', [193,195], 78).tunneling_prob(Coulomb=True, label=r'p', style='--')
+Calculations('alpha', [193,195], 78).tunneling_prob(Coulomb=True, label=r'$\alpha$', style=':')
+Calculations('t', [193,195], 78).tunneling_prob(Coulomb=True, label=r't', style='-.')
+Calculations('d', [193,195], 78).tunneling_prob(Coulomb=True, label=r'd', style='--')
+Calculations('3He', [193,195], 78).tunneling_prob(Coulomb=True, label=r'$^3$He', style='-.')
+plt.title(r'Emission probability $^{193*}$Pt and $^{195*}$Pt')
+"""
+"""
+Calculations('p', [58, 60, 61, 62, 64], 29).tunneling_prob(Coulomb=True, label=r'p', style='--')
+Calculations('alpha', [58, 60, 61, 62, 64], 29).tunneling_prob(Coulomb=True, label=r'$\alpha$', style=':')
+Calculations('t', [58, 60, 61, 62, 64], 29).tunneling_prob(Coulomb=True, label=r't', style='-.')
+Calculations('d', [58, 60, 61, 62, 64], 29).tunneling_prob(Coulomb=True, label=r'd', style='--')
+Calculations('3He', [58, 60, 61, 62, 64], 29).tunneling_prob(Coulomb=True, label=r'$^3$He', style='-.')
+plt.title(r'Emission probability $^{58,60,61,62,64*}$Cu')
+"""
+
+"""
+Calculations('p', [58, 60, 61, 62, 64], 29).tunneling_prob(Coulomb=True, label=r'p', style='--')
+Calculations('alpha', [58, 60, 61, 62, 64], 29).tunneling_prob(Coulomb=True, label=r'$\alpha$', style=':')
+Calculations('t', [58, 60, 61, 62, 64], 29).tunneling_prob(Coulomb=True, label=r't', style='-.')
+Calculations('d', [58, 60, 61, 62, 64], 29).tunneling_prob(Coulomb=True, label=r'd', style='--')
+Calculations('3He', [58, 60, 61, 62, 64], 29).tunneling_prob(Coulomb=True, label=r'$^3$He', style='-.')
+plt.title(r'Emission probability $^{58,60,61,62,64*}$Cu')
+"""
+
+"""
+Calculations('p', [63,65], 30).tunneling_prob(Coulomb=True, label=r'p', style='--')
+Calculations('alpha', [63,65], 30).tunneling_prob(Coulomb=True, label=r'$\alpha$', style=':')
+Calculations('t', [63,65], 30).tunneling_prob(Coulomb=True, label=r't', style='-.')
+Calculations('d', [63,65], 30).tunneling_prob(Coulomb=True, label=r'd', style='--')
+Calculations('3He', [63,65], 30).tunneling_prob(Coulomb=True, label=r'$^3$He', style='-.')
+plt.title(r'Emission probability $^{63,65*}$Cu')
+"""
+
+"""
+Calculations('p', [54,56, 57, 58], 27).tunneling_prob(Coulomb=True, label=r'p', style='--')
+Calculations('alpha', [63,65], 30).tunneling_prob(Coulomb=True, label=r'$\alpha$', style=':')
+Calculations('t', [63,65], 30).tunneling_prob(Coulomb=True, label=r't', style='-.')
+Calculations('d', [63,65], 30).tunneling_prob(Coulomb=True, label=r'd', style='--')
+Calculations('3He', [63,65], 30).tunneling_prob(Coulomb=True, label=r'$^3$He', style='-.')
+plt.title(r'Emission probability $^{54,56, 57, 58*}$Co')
+"""
+
+
+
+

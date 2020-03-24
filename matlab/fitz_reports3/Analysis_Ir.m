@@ -49,13 +49,13 @@ unc_fe_rhodrs = [0.110,0.034,0.114];
 clc;
 
 % Choose files for analysis
-fitzpeaks_reports = ir_fn;
-key_energies = ir_key_energies;
-glines = ir_glines;
+fitzpeaks_reports = ni_fn;
+key_energies = ni_key_energies;
+glines = ni_glines;
 EoB_Time = '26-Feb-2019 00:32:00'
-rhodrs = ir_rhodrs;
-mu_attenuation = load('ir_xcom.txt');
-unc_rhodrs = unc_ir_rhodrs;
+rhodrs = ni_rhodrs;
+mu_attenuation = load('ni_xcom.txt');
+unc_rhodrs = unc_ni_rhodrs;
 
 
 % Test new fitzpeaks_parser wrapper function
@@ -108,7 +108,7 @@ rows_Ni_56Mn = [ 106,107,108];  %check
 %rows_Ni_56Ni = [7,8,16,28,32,74];  %check
 rows_Ni_56Ni = [7,16,28,32,74];  %check
 rows_Ni_57Co = [4,6,26]; %check
-rows_Ni_57Ni = [26,12,25,40,49,58,68,80,81,86,87,95,103]; %check
+rows_Ni_57Ni = [12,25,40,49,58,68,80,81,86,87,95,103]; %check
 rows_Ni_58Co = [31,38,77];   %check
 rows_Ni_59Fe = [61];%check
 % rows_Ni_60Cu = [14,17,23,36,43,44,48,52,62,83,85,88,89,93,96,99,101,102]; %check
@@ -209,8 +209,8 @@ rows_Ir_191Os = [107]; %check
 
 % Select rows to plot
 % varToStr = @(x) inputname(1);
-rows = rows_Ir_191Os;
-outName = '../csv/Ir_191Os';
+rows = rows_Ni_61Cu;
+outName = '../csv/Ni_61Cu';
 % rows = 12;
 % Find rows for the desired decay product
 selected_rows = data(rows,:);
@@ -281,5 +281,5 @@ for energy = 177:100:1077   % Just Iridium
     
     %     Dump to csv for python / gnuplot
     %     Turn this line on to write files out!
-    csvwrite([outName '_' num2str(energy) '.dat'],outfile);  %Saving the csv file 
+%     csvwrite([outName '_' num2str(energy) '.dat'],outfile);  %Saving the csv file 
 end

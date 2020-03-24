@@ -213,7 +213,7 @@ CS = CrossSections(files[index])
 
 ### Ni reactions
 
-#CS.make_CS(Ni_52Mn(), 'Ni', 'Ni_52Mn.csv', 10, 'Ni_52Mn', csv_filename, '25', '52', independent=False)
+CS.make_CS(Ni_52Mn(), 'Ni', 'Ni_52Mn.csv', 10, 'Ni_52Mn', csv_filename, '25', '52', independent=False, ylimit=4)
 #CS.make_CS(Ni_54Mn(), 'Ni', 'Ni_54Mn.csv', 10, 'Ni_54Mn', csv_filename, '25', '54')
 #CS.make_CS(Ni_59Fe(), 'Ni', 'Ni_59Fe.csv', 10, 'Ni_59Fe', csv_filename, '26', '59')
 #CS.make_CS(Ni_60Cu(), 'Ni', 'Ni_60Cu.csv', 10, 'Ni_60Cu', csv_filename, '29', '60')
@@ -228,7 +228,7 @@ CS = CrossSections(files[index])
 
 ### Cu reactions
 #CS.make_CS(Cu_64Cu(), 'Cu', 'Cu_64Cu.csv', 10, 'Cu_64Cu', csv_filename, '29', '64')
-CS.make_CS(Cu_65Ni(), 'Cu', 'Cu_65Ni.csv', 10, 'Cu_65Ni', csv_filename, '28', '65')
+#CS.make_CS(Cu_65Ni(), 'Cu', 'Cu_65Ni.csv', 10, 'Cu_65Ni', csv_filename, '28', '65')
 #CS.make_CS(Cu_52Mn(), 'Cu', 'Cu_52Mn.csv', 10, 'Cu_52Mn', csv_filename, '25', '52')   #Most likely false. Not in talys or exfor. 
 #CS.make_CS(Cu_56Co(), 'Cu', 'Cu_56Co.csv', 10, 'Cu_56Co', csv_filename, '27', '56')   #Most likely false. In talys but no match, not in exfor. 
 #CS.make_CS(Cu_57Ni(), 'Cu', 'Cu_57Ni.csv', 10, 'Cu_57Ni', csv_filename, '28', '57')    #Most likely false too, Qval is too low at these energies. 
