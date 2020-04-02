@@ -166,7 +166,7 @@ class BeamCurrent:
             self.get_sigmaE(self.E_Ni, self.F_Ni, foil, makePlot=True)
             #print('way')
         path_to_folder = self.path + '/BeamCurrent/beam_fluxes/'
-        plt.title('Energy distribution for {}-foils - '.format(foil) + name)
+        plt.title('Energy distribution for {}-foils - '.format(foil))
         plt.savefig(path_to_folder + foil + '_flux_distribution_'+name+'.png', dpi=300)
         #plt.close()
         plt.show()
@@ -585,7 +585,7 @@ class BeamCurrent:
             plt.plot(E, I_pred, label='test')
             plt.show()
 
-    def CurrentPlot(self, name,SaveFig=False):
+    def CurrentPlot(self, name,SaveFig=False, title=None):
         I_Fe_56Co, I_Ni_61Cu, I_Ni_56Co, I_Ni_58Co, I_Cu_62Zn, I_Cu_63Zn, I_Cu_65Zn = self.specified_currents()
         dI_Fe_56Co, dI_Ni_61Cu, dI_Ni_56Co, dI_Ni_58Co, dI_Cu_62Zn, dI_Cu_63Zn, dI_Cu_65Zn = self.specified_currents(uncertainty=True)
         WE_Fe, WE_Ni, WE_Cu, WE_Ir = self.specified_energies()
@@ -623,7 +623,10 @@ class BeamCurrent:
         #plt.plot(WE_Fe,I_Fe_56Co, '.', label=r'$^{nat}$Fe(d,x)$^{56}$Co')
         plt.errorbar(WE_Fe, I_Fe_56Co, color='darkorange', marker='.',  linewidth=0.001, xerr=sigma_WE_Fe, yerr=dI_Fe_56Co, elinewidth=0.5, capthick=0.5, capsize=3.0,  label=r'$^{nat}$Fe(d,x)$^{56}$Co' )
 
-        plt.title('Beam current monitor foils - {}'.format(name))
+        if title==None:
+            plt.title('Beam current monitor foils - {}'.format(name))
+        else:
+            plt.title(title)
         plt.xlabel('Energy, MeV')
         plt.ylabel('Measured deuteron beam current, nA')
         plt.ylim(-5,350)
@@ -644,7 +647,7 @@ class BeamCurrent:
             #plt.savefig(path+'/BeamCurrent/' + name +'.png', dpi=300)
             plt.show()
 
-    def CurrentPlot_compartment(self, name, WABC = 'averaged_currents.csv'):
+    def CurrentPlot_compartment(self, name, WABC = 'averaged_currents.csv', title=None):
         compartment = [3,7,9]
         WE_Ir, sigma_WE_Ir = self.WABE('Ir')
         #WABC = 'averaged_currents.csv' ## weighted average beam current filename
@@ -661,7 +664,12 @@ class BeamCurrent:
             #plt.errorbar(WE_Ni, weighted_average_beam, color='black', marker='o', linewidth=0.001, xerr=sigma_weighted_average_beam, yerr=dI_Ni_61Cu, elinewidth=0.5, capthick=0.5, capsize=3.0,label=r'$^{nat}$Ni(d,x)$^{61}$Cu' )
         #plt.legend()
         #plt.show()
-        self.CurrentPlot(name)
+
+        if title!=None:
+            print(title)
+            self.CurrentPlot(name, title=title)
+        else:
+            self.CurrentPlot(name)
         #self.variance_minimization(compartment, name, MakePlot=True)
         #plt.legend()
         #WABC = 'averaged_currents.csv' ## weighted average beam current filename
@@ -671,7 +679,7 @@ class BeamCurrent:
         #sigma_weighted_average_beam = sigma_weighted_average_beam[::-1]
         plt.errorbar(WE_Ir, weighted_average_beam, color='black', marker='P', linewidth=0.001, xerr=sigma_WE_Ir, yerr=sigma_weighted_average_beam, elinewidth=0.5, capthick=0.5, capsize=3.0,label='weighted average beam current' )
         plt.legend(fontsize='x-small')
-        plt.savefig('BeamCurrent/compartment_compare/comp_compared_{}.png'.format(name), dpi=300)
+        #plt.savefig('BeamCurrent/compartment_compare/comp_compared_{}.png'.format(name), dpi=300)
         plt.show()
         #plt.close()
         #plt.title('')

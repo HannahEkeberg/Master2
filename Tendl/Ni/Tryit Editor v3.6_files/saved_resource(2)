@@ -1,0 +1,9 @@
+Adform=window.Adform||{};
+Adform.host="https://track.adform.net";
+Adform.shost="https://s1.adform.net";
+Adform.scriptBase=Adform.shost+"/banners/scripts/";
+Adform.cache="620";
+Adform.ADFBannerData={"URL":"https://track.adform.net/adfserve/?bn=32460975;click=https://fra1-ib.adnxs.com/click?Y_CFId_ZAEB5oHta4aL4PwAAAIA9ChpAl4ga-XpG_D9IaMu5FFcDQIV0dQ6USf4-F7Zgkfn-QlKwO4JeAAAAABmq7wAiIgAABx0AAAIAAABG-rcKXCkcAAAAAABVU0QAVVNEANgCWgD_sAAAAAADAQUCAAAAAMYAvSSwsgAAAAA./bcr=AAAAAAAA8D8=/cnd=%21oRLz5QjY-NUREMb031UY3NJwIAAoADEAAAAAAAAAADoJRlJBMTozOTEyQLsdSe58PzVeuuw_UQAAAAAAAAAAWQAAAAAAAAAAYQAAAAAAAAAAaQAAAAAAAAAAcQAAAAAAAAAAeAA./cca=NzQzMSNGUkExOjM5MTI=/bn=89090/clickenc=;ord=921592552","CREFURL":"https%3a%2f%2ffra1-ib.adnxs.com%2fif%3fan_audit%3d0%26referrer%3dhttps%253A%252F%252Fwww.w3schools.com%252Fhowto%252Ftryit.asp%253Ffilename%253Dtryhow_css_images_side_by_side%26e%3dwqT_3QLtDPD9bQYAAAMA1gAFAQiw94j0BRCF6dXzwLKS_z4Yl-yCi5nfv6FSKjYJY_CFId_ZAEAReaB7WuGi-D8ZAAAAgD0KGkAhl4ga-XpG_D8pSGjLuRRXA0AxAAAAwPUo8D8wmdS-BziiRECHOkgCUMb031VY3NJwYABo_-GOAXiCuAWAAQGKAQNVU0SSAQNVU0SYAdgFoAFaqAEBsAEAuAE","BN":32460975};
+if(!Adform.ADFBannerParams)Adform.ADFBannerParams=[];
+Adform.ADFBannerParams.push(Adform.ADFBannerData);
+typeof Adform.ADFUtilInstance=="undefined"?document.write('<scr'+'ipt type="text/javascript" src="https://s1.adform.net/stoat/620/s1.adform.net/bootstrap.js"></scr'+'ipt>'):new Adform.ADFBanner();

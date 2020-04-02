@@ -913,6 +913,21 @@ def Ir_190Ir():   #Difficult, because lacking isomer gamma lines.... for 2 state
     list = [foil1, foil2, foil3, foil4, foil5, foil6, foil7, foil8, foil9, foil10]
     return list, lambda_
 
+def Ir_190m2Ir():   #Difficult, because lacking isomer gamma lines.... for 2 states (3-step)
+    foil1 = path + 'Ir_190m2Ir_177.dat'
+    foil2 = path + 'Ir_190m2Ir_277.dat'
+    foil3 = path + 'Ir_190m2Ir_377.dat'
+    foil4 = path + 'Ir_190m2Ir_477.dat'
+    foil5 = path + 'Ir_190m2Ir_577.dat'
+    foil6 = path + 'Ir_190m2Ir_677.dat'
+    foil7 = path + 'Ir_190m2Ir_777.dat'
+    foil8 = path + 'Ir_190m2Ir_877.dat'
+    foil9 = path + 'Ir_190m2Ir_977.dat'
+    foil10 = path + 'Ir_190m2Ir_1077.dat'  
+    lambda_ = np.log(2)/(3.087*h)
+    list = [foil1, foil2, foil3, foil4, foil5, foil6, foil7, foil8, foil9, foil10]
+    return list, lambda_
+
 def Ir_190mRe():   #single decay
     foil1 = path + 'Ir_190mRe_177.dat'
     foil2 = path + 'Ir_190mRe_277.dat'

@@ -1,12 +1,13 @@
 
+
 import os 
 import numpy as np 
 import matplotlib.pyplot as plt
+from scipy import interpolate
 
 
 #from jan20_CrossSections import CrossSections 
 from foil_info import * 
-
 path = os.getcwd() 
 
 
@@ -19,19 +20,239 @@ class SimCrossSectionData:
 		#self.ziegler_file = self.path +'/cleaned_zieglerfiles/ziegler_B_+2_D_+4,25_fluxes.csv'
 		#print(self.ziegler_file)
 
-	def data(self, react_func, foil, filename, n, reaction, BC_csv_filename='B_+2_D_+4,25.csv'): 
-		#CS_class = CrossSections(self.ziegler_file)
-		#E, dE, CS, dCS = CS_class.make_CS(react_func, foil, filename, n ,reaction, BC_csv_filename)
-		#print(E)
-		pass
+	def extract_from_alicefiles(self, filename, A, Z, CS_colonne):
+		with open(filename) as f:
+			content = f.readlines()
+			for s in content:
+				#line = ' '.join(s).split()
+				line = " ".join(s.split())
+				#print(line)
+
+			#print(content)
+			E_all = np.genfromtxt(filename, delimiter=' ', usecols=[0])
+			CS_all = np.genfromtxt(filename, delimiter=' ', usecols=[CS_colonne])
+			Z_ = np.genfromtxt(filename, delimiter=' ', usecols=[2])
+			A_ = np.genfromtxt(filename, delimiter=' ', usecols=[3])
+			
+			E = []; CS = [] 
+			#print(A, Z)
+			Z = ' ' + Z + ' ' # must change to this so that it doesnt get mixed up by other line
+			A = ' ' + A + ' '
+			for lines in range(len(content)):
+				if (A in content[lines]) and (Z in content[lines]):
+					#print(content[lines])
+					#print("line: ", lines)
+					#print("A: ", A_[lines])
+					#print("Z: ", Z_[lines])
+
+					E.append(E_all[lines])
+					CS.append(CS_all[lines])
+				#else:
+				#	print("nothing")
+				#print("**")
+
+			E_typ = np.linspace(0,39, 40)  # this we want to return, but want to add CS=0 to these values
+			CS_typ = np.zeros((40))
+			for i in range(len(E_typ)):
+				for j in range(len(E)):
+					if E_typ[i]==E[j]:
+						CS_typ[i]=CS[j]
+
+			print("old:")
+			print("E: ", E)
+			print("CS: ", CS)
+			print("new:")
+			print("E: ", E_typ)
+			print("CS: ", CS_typ)
+
+			#print(E_typ)
+			#print(CS_typ)
+			#print(len(E_typ), len(CS_typ))
+			#print("**")
+
+
+
+			#print(E_)
+			#print("new")
+			#print(E_typ, CS_typ)
+			#print("old")
+			#print(E, CS)
+			return E_typ, CS_typ
+
 		
-		#pass
+		"""
 
-		#class = CrossSections(func, Cu_64Cu(), 'Cu', 'Cu_64Cu.csv', 10, 'Cu_64Cu', csv_filename)
-		#class.
+		with open(filename) as f:
+
+			#begin =   'Ebeam  Z   A   Total    grnd st  isomer1 isomer2  isomer1  isomer2  didl nolevs'
+			begin = '(MeV)           cs.      cs.      cs.     cs.     to total to total'
+			end   =   'Ebeam =  '
+			content_full = f.readlines()
+			ind_begin = [line for line in range(len(content_full)) if begin in content_full[line]][0]+2  # only one element but want it as integer
+			ind_end   = [line for line in range(len(content_full)) if end   in content_full[line]][0]-1  # list of different, only want the first element
+			content = content_full[ind_begin:ind_end]
+			print(content)
+
+			#print("ind_begin: ", ind_begin)
+			#print("ind_end: ", ind_end)
+
+			E  = np.genfromtxt(filename, delimiter=' ', usecols=[0],skip_header=56, skip_footer=(len(content_full)-len(content)))   
+			#Z_  = np.genfromtxt(filename, delimiter=' ', usecols=[1], skip_header=56, skip_footer=(len(content_full)-len(content)))
+			#A_  = np.genfromtxt(filename, delimiter=' ', usecols=[2], skip_header=56, skip_footer=(len(content_full)-len(content)))
+
+			CS = np.genfromtxt(filename, delimiter=' ', usecols=[5], skip_header=56, skip_footer=(len(content_full)-len(content)))
+			E_new = []; CS_new = []
+			Z = ' ' + Z + ' '
+			A = ' ' + A + ' '
+			for lines in range(len(content)):
+				#print(lines)
+				if Z in content[lines] and A in content[lines]:
+					#print(Z,A)
+					E_new.append(E[lines])
+					CS_new.append(CS[lines])
+					#print(Z, A)
 
 
-	def ALICE(self, foil, A, Z):
+			f.close()
+		return np.array((E_new)), np.array((CS_new))
+		"""
+	def interpolation(self, x,y):	
+		#print(x)
+		tck = interpolate.splrep(x, y, s=0)
+		x_new = np.linspace(1, 40, 1000)
+		#for i in range(len(x_new)):
+			#y_new = interpolate.splev(x_new[i], tck, der=0)
+		y_new = interpolate.splev(x_new, tck, der=0)
+
+		return x_new, y_new
+        
+
+	def ALICE(self, foil, A, Z, CS_colonne=4):
+		#print("Alice")
+		if foil == 'Ir': 
+			abund_191Ir = 0.373 ; abund_193Ir = 0.627
+
+			f_191Ir = self.path + '/../Alice/plot_{}'.format('191Ir')
+			f_193Ir = self.path + '/../Alice/plot_{}'.format('193Ir')
+
+			E_191Ir, CS_191Ir = self.extract_from_alicefiles(f_191Ir, A, Z, CS_colonne)
+			E_193Ir, CS_193Ir = self.extract_from_alicefiles(f_193Ir, A, Z, CS_colonne)
+
+			CS = CS_191Ir*abund_191Ir + CS_193Ir*abund_193Ir
+			E  = E_193Ir
+			
+			E_new, CS_new = self.interpolation(E, CS)
+			return E_new, CS_new
+			"""
+			plt.plot(E_new, CS_new, label='interpol')
+			plt.plot(E_191Ir, CS_191Ir, label='191Ir')
+			plt.plot(E_193Ir, CS_193Ir, label='193Ir')
+			plt.plot(E, CS, label='tot')
+			plt.legend()
+			plt.show()
+			"""
+		elif foil=='Cu':
+			abund_63Cu = 0.6915 ; abund_65Cu = 0.3085
+
+			f_63Cu = self.path + '/../Alice/plot_{}'.format('63Cu')
+			f_65Cu = self.path + '/../Alice/plot_{}'.format('65Cu')
+
+			E_63Cu, CS_63Cu = self.extract_from_alicefiles(f_63Cu, A, Z, CS_colonne)
+			E_65Cu, CS_65Cu = self.extract_from_alicefiles(f_65Cu, A, Z, CS_colonne)
+
+			CS = CS_63Cu*abund_63Cu + CS_65Cu*abund_65Cu
+			E  = E_65Cu
+			#return E, CS
+			
+			E_new, CS_new = self.interpolation(E, CS)
+			return E_new, CS_new
+
+		elif foil=='Ni':
+			#abund_63Cu = 0.6915 ; abund_65Cu = 0.3085
+			
+			#abund_54Fe=0.0545; abund_56Fe=0.91754; abund_57Fe=0.02119; abund_58Fe=0.00282
+
+			abund_58Ni = 0.68077; abund_60Ni = 0.26233; abund_61Ni = 0.011399; abund_62Ni = 0.036346; abund_64Ni = 0.009255;
+			
+
+			f_58Ni = self.path + '/../Alice/plot_{}'.format('58Ni')
+			f_60Ni = self.path + '/../Alice/plot_{}'.format('60Ni')
+			f_61Ni = self.path + '/../Alice/plot_{}'.format('61Ni')
+			f_62Ni = self.path + '/../Alice/plot_{}'.format('62Ni')
+			f_64Ni = self.path + '/../Alice/plot_{}'.format('64Ni')
+
+			E_58Ni, CS_58Ni = self.extract_from_alicefiles(f_58Ni, A, Z, CS_colonne)
+			E_60Ni, CS_60Ni = self.extract_from_alicefiles(f_60Ni, A, Z, CS_colonne)
+			E_61Ni, CS_61Ni = self.extract_from_alicefiles(f_61Ni, A, Z, CS_colonne)
+			E_62Ni, CS_62Ni = self.extract_from_alicefiles(f_62Ni, A, Z, CS_colonne)
+			E_64Ni, CS_64Ni = self.extract_from_alicefiles(f_64Ni, A, Z, CS_colonne)
+
+			CS = CS_58Ni*abund_58Ni + CS_60Ni*abund_60Ni+ CS_61Ni*abund_61Ni + CS_62Ni*abund_62Ni+ CS_64Ni*abund_64Ni
+			E  = E_64Ni
+			#return E, CS
+			
+			E_new, CS_new = self.interpolation(E, CS)
+			return E_new, CS_new	
+
+		elif foil == 'Fe':
+			abund_54Fe=0.0545; abund_56Fe=0.91754; abund_57Fe=0.02119; abund_58Fe=0.00282
+
+
+			f_54Fe = self.path + '/../Alice/plot_{}'.format('54Fe')
+			f_56Fe = self.path + '/../Alice/plot_{}'.format('56Fe')
+			f_57Fe = self.path + '/../Alice/plot_{}'.format('56Fe')
+			f_58Fe = self.path + '/../Alice/plot_{}'.format('58Fe')
+
+
+			E_54Fe, CS_54Fe = self.extract_from_alicefiles(f_54Fe, A, Z, CS_colonne)
+			E_56Fe, CS_56Fe = self.extract_from_alicefiles(f_56Fe, A, Z, CS_colonne)
+			E_57Fe, CS_57Fe = self.extract_from_alicefiles(f_57Fe, A, Z, CS_colonne)
+			E_58Fe, CS_58Fe = self.extract_from_alicefiles(f_58Fe, A, Z, CS_colonne)
+	
+
+			CS = CS_54Fe*abund_53Fe + CS_56Fe*abund_56Fe+ CS_57Fe*abund_57Fe + CS_58Fe*abund_58Fe
+			E  = E_58Fe
+			#return E, CS
+			
+			E_new, CS_new = self.interpolation(E, CS)
+			return E_new, CS_new		
+		
+
+		else:
+			print("give a proper ALICE-foil")
+
+	
+
+
+
+
+			#try:
+			#E_191Ir, CS_191Ir = self.extract_from_alicefiles(f_191Ir, A, Z)
+			#if len(E_191Ir) > 0:
+			#	E_new_191Ir, CS_new_191Ir = self.interpolation(E_191Ir, CS_191Ir)
+			#	print(E_new_191Ir)
+			#E_193Ir, CS_193Ir = self.extract_from_alicefiles(f_193Ir, A, Z)
+			
+			#print(E_193Ir)
+			#if len(E_193Ir) > 0:
+				#E_new_193Ir, CS_new_193Ir = self.interpolation(E_193Ir, CS_193Ir)
+		#plt.plot(E_193Ir, CS_193Ir, label='ALICE', linestyle=':')
+		#plt.legend()
+		#plt.show()
+		#print(E_191Ir)
+		#print(E_193Ir)
+
+
+
+		#if os.path.isfile(f_191Ir):
+		#		print("f_191Ir")
+		#else:
+		#	print("NOT  BUT ", f_193Ir)
+		#if os.path.isfile(f_193Ir):
+		#	print("f_193Ir")
+
+
+		"""
 		filename = self.path + '/../Alice/plot_{}'.format(foil)
 
 		with open(filename) as f:
@@ -60,22 +281,23 @@ class SimCrossSectionData:
 					#print(Z,A)
 					E_new.append(E[lines])
 					CS_new.append(CS[lines])
-					print(Z, A)
-					print(content[lines])
+					#print(Z, A)
+					#print(content[lines])
 
 
 			f.close()
 
+
+		
 		#print("E: ",E_new)
 		#print("CS: ", CS_new)
 
 
 		
-		#plt.plot(E_new, CS_new, label='ALICE', linestyle=':')
-		#plt.legend()
-		#plt.show()
+
 		
 		return E_new, CS_new
+		"""
 
 	def TALYS(self,foil, A, Z, file_ending='.tot'):
 		# Z = 0XX, A=0XX
@@ -91,7 +313,8 @@ class SimCrossSectionData:
 
 		#plt.plot(E,CS)
 		#plt.show()
-		return E, CS
+		E_new, CS_new = self.interpolation(E, CS)
+		return E_new, CS_new 
 		
 
 	def Tendl(self, foil, A, Z, file_ending='.tot'):  
@@ -124,8 +347,6 @@ class SimCrossSectionData:
 				#print("f_193Ir exists")
 				CS_193Ir = np.genfromtxt(f_193Ir, delimiter=' ', usecols=[1],skip_header=5)
 				E = np.genfromtxt(f_193Ir, delimiter=' ', usecols=[0],skip_header=5)
-				
-				
 			else: 
 				#print("Ir 193 file does not exist")
 				CS_193Ir = 0
@@ -167,7 +388,10 @@ class SimCrossSectionData:
 
 			#E = E_63Cu*abund_63Cu + E_65Cu*abund_65Cu
 			CS = CS_63Cu*abund_63Cu + CS_65Cu*abund_65Cu
+			
+			#E_new, CS_new = self.interpolation(E, CS)
 			#plt.plot(E,CS)
+			#plt.plot(E_new, CS_new)
 			#plt.show()
 
 		elif foil == 'Fe':
@@ -220,8 +444,8 @@ class SimCrossSectionData:
 
 			#E = E_54Fe*abund_54Fe + E_56Fe*abund_56Fe + E_57Fe*abund_57Fe + E_58Fe*abund_58Fe 
 			CS = CS_54Fe*abund_54Fe + CS_56Fe*abund_56Fe + CS_57Fe*abund_57Fe + CS_58Fe*abund_58Fe 
-			if E_54Fe == 0 and E_56Fe==0 and E_57Fe == 0:
-				E = E_58Fe
+			#if E_54Fe == 0 and E_56Fe==0 and E_57Fe == 0:
+				#E = E_58Fe
 
 
 		elif foil == 'Ni':
@@ -295,7 +519,8 @@ class SimCrossSectionData:
 		#plt.show()
 		#print(E, CS)
 
-		return E, CS 
+		E_new, CS_new = self.interpolation(E, CS)
+		return E_new, CS_new 
 
 	def EMPIRE(self):
 		pass 
@@ -310,6 +535,7 @@ class SimCrossSectionData:
 
 		#if os.
 		if os.path.isfile(filename): 
+
 			#print("file exists")
 
 			with open(filename) as f:
@@ -326,16 +552,22 @@ class SimCrossSectionData:
 				#print(content_full[ind_end])
 				content = content_full[ind_begin:ind_end]
 				#print(content)
+				#print(content)
+
+				#print(content)
 
 				#str1 = content[0]
 
 				#x = str1.lstrip()
 				#print(x.split())
 				E = []; dE=[]; CS = []; dCS=[]; author=[]
-
+				#print(len(content))
 				for ind in range(len(content)):
 					string= content[ind]
+					#print(string)
 					string = (string.lstrip()).split()
+					#print(string[0])
+					#print(ind)
 					E.append(float(string[0]))
 					dE.append(float(string[1]))
 					CS.append(float(string[2])*1e3) # in mb
@@ -376,15 +608,24 @@ class SimCrossSectionData:
 
 
 SimCS = SimCrossSectionData()
-#foil = 'Ir'; A = '183'; Z = '073' # 183Ta
+foil = 'Ir'; A = '190'; Z = '77' # 183Ta
+#foil = 'Cu'; A = '60'; Z = '27' # 183Ta
+
+SimCS.ALICE(foil, A, Z, CS_colonne=4)
+#A='060'; Z='027'; foil='Cu'
+#SimCS.Tendl(foil, A, Z)
 #foil = 'Ir'; A = '186'; Z = '075' # 186Re
 #foil = 'Ir'; A = '187'; Z = '074' # 187W
 #foil = 'Ir'; A = '183'; Z = '076' # 186Ta
-foil = 'Ir'; A = '188'; Z = '075' # 188Re
+#foil = 'Ir'; A = '194'; Z = '077' # 188Re
+#foil = 'Fe'; A = '048'; Z = '023' # 188Re
 #E_tendl, CS_tendl = SimCS.Tendl(foil, A, Z)
 
-E_talys, CS_talys= SimCS.TALYS(foil, A, Z)
-
+#E_talys, CS_talys= SimCS.TALYS(foil, A, Z)
+#SimCS.EXFOR("Ir_194Ir")
+#E, dE, CS, dCS, author=SimCS.EXFOR("Ir_190m2Ir")
+#plt.plot(E, CS, '.')
+#plt.show()
 
 
 

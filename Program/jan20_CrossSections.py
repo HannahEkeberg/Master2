@@ -147,7 +147,7 @@ class CrossSections:
     """
 
 
-    def make_CS(self, react_func, foil, filename, n ,reaction, BC_csv_filename, Z, A, file_ending='.tot', independent=True, ylimit=None):
+    def make_CS(self, react_func, foil, filename, n ,reaction, BC_csv_filename, Z, A, file_ending='.tot', save_text=True, independent=True, ylimit=None, isomer_state=None, CS_colonne_ALICE=4):
         lamb, mass_density, sigma_mass_density, E, dE, A0, dA0 = self.get_var(react_func, foil, filename, n, reaction)
         #lamb, mass_density, sigma_mass_density, E, dE, A0, sigma_A0 = self.get_var(react_func, foil, filename, n, reaction)
 
@@ -176,9 +176,9 @@ class CrossSections:
         #I = self.I; dI = self.sigma_I_est
         CS, dCS= self.cross_section_calc(n, A0, dA0, mass_density, sigma_mass_density, I, dI, lamb, reaction)
             
-        self.modelling('Tendl', foil, Z, A, reaction, file_ending)
-        self.modelling('Talys', foil, Z, A, reaction, file_ending)
-        self.modelling('Exfor', foil, Z, A, reaction, file_ending)
+        #self.modelling('Tendl', foil, Z, A, reaction, file_ending)
+        #self.modelling('Talys', foil, Z, A, reaction, file_ending)
+        #self.modelling('Exfor', foil, Z, A, reaction, file_ending)
         #self.modelling('Alice', foil, Z, A, reaction, file_ending)
 
         if foil=='Ir':
@@ -199,48 +199,149 @@ class CrossSections:
         #print(csv_save_array)
         path_to_cs_csv = os.getcwd() + '/CrossSections/CrossSections_csv/'
 
-        np.savetxt(path_to_cs_csv  + reaction, csv_save_array, delimiter=',', header='E, dE, CS, dCS', fmt="%s"  )#, %.6f, %.6f")
+        if independent==False:
+
+            type_CS='_cumulative'
+        else:
+            type_CS='_independent'
+
+        if save_text==True:
+            np.savetxt(path_to_cs_csv  + reaction + type_CS, csv_save_array, delimiter=',', header='E, dE, CS, dCS', fmt="%s"  )#, %.6f, %.6f")
         
 
 
 
         CS = [float('nan') if x==0 else x for x in CS]
         #print(type(A))
-        plt.errorbar(E, CS, marker='P', color='darkred',linewidth=0.0001, xerr=dE, yerr=dCS, elinewidth=1.0, capthick=1.0, capsize=3.0, label='this data')
+        #plt.errorbar(E, CS, marker='P', color='darkred',linewidth=0.0001, xerr=dE, yerr=dCS, elinewidth=1.0, capthick=1.0, capsize=3.0, label='this data')
+        
+
+
+        if isomer_state==None:
+            state='g'
+        else:
+            state=isomer_state
+
         if independent==True: 
-
-            title = r'$^{nat}$' + foil + '(d,x)' + r'$^{{ {} }}$'.format(A) + reaction[-2:]  + ' - Independent' 
+            nucl = reaction[-2]
+            numbs = ['1', '2', '3', '4', '5', '6', '7', '8','9']
+            if nucl in numbs:
+                title = r'$^{nat}$' + foil + '(d,x)' + r'$^{{ {} }}$'.format(A+state) + reaction[-1:]  + ' - Independent' 
+            else:
+                title = r'$^{nat}$' + foil + '(d,x)' + r'$^{{ {} }}$'.format(A+state) + reaction[-2:]  + ' - Independent' 
         else: 
-            title = r'$^{nat}$' + foil + '(d,x)' + r'$^{{ {} }}$'.format(A) + reaction[-2:]  + ' - Cumulative' 
+            title = r'$^{nat}$' + foil + '(d,x)' + r'$^{{ {} }}$'.format(A+state) + reaction[-2:]  + ' - Cumulative' 
 
 
-        self.plot_CrossSections(reaction, title, A, foil, ylimit)
-
-        print("ylimit:", ylimit)
+        
+        if save_text==True:
+            plt.errorbar(E, CS, marker='P', color='darkred',linewidth=0.0001, xerr=dE, yerr=dCS, elinewidth=1.0, capthick=1.0, capsize=3.0, label='this data')
+            self.modelling('Tendl', foil, Z, A, reaction, file_ending)
+            self.modelling('Talys', foil, Z, A, reaction, file_ending)
+            self.modelling('Exfor', foil, Z, A, reaction, file_ending)
+            self.modelling('Alice', foil, Z, A, reaction, file_ending, CS_colonne=CS_colonne_ALICE)
+            self.plot_CrossSections(reaction, title, A, foil, ylimit)
+        #print(E)
         return E, dE, CS, dCS
 
 
-    def make_CS_Cumulative(self, foil, n, BC_csv_filename, react_func_parent, reaction_parent, filename_parent, Z_parent, A_parent, react_func_daughter, reaction_daughter, filename_daughter, Z_daughter, A_daughter, file_ending='.tot'):  # Necessary when subtracting
+    def make_CS_subtraction(self, end_reaction, foil, n, csv_filename, react_func_parent, reaction_parent, filename_parent, Z_parent, A_parent, react_func_daughter, reaction_daughter, filename_daughter, Z_daughter, A_daughter, ylimit, BR_daughter=1.0, isomer_state=None, independent=False, file_ending='.tot', CS_colonne_ALICE=4, save_text=True):  # Necessary when subtracting
         
-        file_ending='.tot'
-        independent=False 
-        CS_parent, dCS_parent = self.make_CS(react_func_parent, foil, filename_parent, n, reaction_parent, csv_filename, Z_parent, A_parent)[-2:]
-        CS_daughter_cum, dCS_daughter_cum = self.make_CS(react_func_daughter, foil, filename_daughter, n, reaction_daughter, csv_filename, Z_daughter, A_daughter)[-2:]
+        E, dE, CS_parent, dCS_parent = self.make_CS(react_func_parent, foil, filename_parent, n, reaction_parent, csv_filename, Z_parent, A_parent, save_text=False)
+        E, dE, CS_daughter, dCS_daughter = self.make_CS(react_func_daughter, foil, filename_daughter, n, reaction_daughter, csv_filename, Z_daughter, A_daughter,  save_text=False)
+
+        #print(CS_parent)
+        #print(CS_daughter)
+        new_CS = []; new_dCS=[]
+        for i in range(len(CS_parent)):
+            #new_CS.append(CS_parent[i]-CS_daughter[i]*BR_daughter)
+            #new_dCS.append(dCS_parent[i]-dCS_daughter[i]*BR_daughter)
+            new_CS.append(CS_daughter[i]-CS_parent[i]*BR_daughter)        
+            new_dCS.append(dCS_daughter[i]-dCS_parent[i]*BR_daughter)        
+
+        if end_reaction == 'daughter':
+            reaction = reaction_daughter
+            Z = Z_daughter; A= A_daughter
+        elif end_reaction == 'parent':
+            reaction = reaction_parent
+            Z = Z_parent; A= A_parent
+
+        if isomer_state==None:
+            state='g'
+        else:
+            state=isomer_state
+
+        if independent==False:
+            type_CS='_cumulative'
+        elif independent==True:
+            type_CS='_independent'
+        elif isinstance(independent, str):
+            type_CS = independent
+
+        nucl = reaction[-2]
+        numbs = ['1', '2', '3', '4', '5', '6', '7', '8','9']
+        if nucl in numbs:
+            title = r'$^{nat}$' + foil + '(d,x)' + r'$^{{ {} }}$'.format(A+state) + reaction[-1:]  + ' - Independent' 
+        else:
+            title = r'$^{nat}$' + foil + '(d,x)' + r'$^{{ {} }}$'.format(A+state) + reaction[-2:]  + ' - Independent' 
+        
+        """    
+        #plt.errorbar(E, CS_parent, marker='.', color='blue',linewidth=0.0001, xerr=dE, yerr=dCS_parent, elinewidth=1.0, capthick=1.0, capsize=3.0, label='Parent')
+        plt.errorbar(E, CS_daughter, marker='.', color='green',linewidth=0.0001, xerr=dE, yerr=dCS_daughter, elinewidth=1.0, capthick=1.0, capsize=3.0, label='Cumulative')    
+        plt.errorbar(E, new_CS, marker='P', color='darkred',linewidth=0.0001, xerr=dE, yerr=new_dCS, elinewidth=1.0, capthick=1.0, capsize=3.0, label='Independent')
+
+        self.modelling('Tendl', foil, Z, A, reaction, file_ending)
+        self.modelling('ALICE', foil, Z, A, reaction, file_ending, CS_colonne=CS_colonne_ALICE)
+        self.modelling('Talys', foil, Z, A, reaction, file_ending)
+        #self.modelling('Exfor', foil, Z_parent, A_parent, reaction_parent, file_ending)
+        #self.modelling('Exfor', foil, Z_daughter, A_daughter, reaction_daughter, file_ending)
+        plt.legend()
+        plt.title(title)
+        #self.modelling('Alice', foil, Z, A, reaction, file_ending)
+        plt.show()
+        """
+        #self.plot_CrossSections(reaction, title, A, foil, ylimit)  
+
+        dE_tot = dE[0]+dE[1]
+        csv_save_array = np.vstack((E, dE_tot, new_CS, new_dCS)).T
+        #print(csv_save_array)
+        path_to_cs_csv = os.getcwd() + '/CrossSections/CrossSections_csv/'
+
+
+        if save_text==True:
+            np.savetxt(path_to_cs_csv  + reaction + type_CS, csv_save_array, delimiter=',', header='E, dE, CS, dCS', fmt="%s"  )#, %.6f, %.6f")
+            plt.errorbar(E, CS_daughter, marker='.', color='green',linewidth=0.0001, xerr=dE, yerr=dCS_daughter, elinewidth=1.0, capthick=1.0, capsize=3.0, label='Cumulative')    
+            plt.errorbar(E, new_CS, marker='P', color='darkred',linewidth=0.0001, xerr=dE, yerr=new_dCS, elinewidth=1.0, capthick=1.0, capsize=3.0, label='Independent')
+
+            self.modelling('Tendl', foil, Z, A, reaction, file_ending)
+            self.modelling('ALICE', foil, Z, A, reaction, file_ending, CS_colonne=CS_colonne_ALICE)
+            self.modelling('Talys', foil, Z, A, reaction, file_ending)
+
+            self.plot_CrossSections(reaction, title, A, foil, ylimit, subtract='yes')
+
+
+
+            #np.savetxt(path_to_cs_csv  + reaction + '', csv_save_array, delimiter=',', header='E, dE, CS, dCS', fmt="%s"  )#, %.6f, %.6f")
+        #print(CS_daughter)
+        #file_ending='.tot'
+        #independent=False 
+        #CS_parent, dCS_parent = self.make_CS(react_func_parent, foil, filename_parent, n, reaction_parent, csv_filename, Z_parent, A_parent)[-2:]
+        #CS_daughter_cum, dCS_daughter_cum = self.make_CS(react_func_daughter, foil, filename_daughter, n, reaction_daughter, csv_filename, Z_daughter, A_daughter)[-2:]
         
 
-        CS_daughter = CS_daughter_cum - CS_parent
+        #CS_daughter = CS_daughter_cum - CS_parent
 
 
 
 
 #CS.make_CS(Ir_189Ir(), 'Ir', 'Ir_189Ir.csv', 10, 'Ir_189Ir', csv_filename, '77', '189')    # need work on activity 
 
-    def modelling(self, model, foil, Z, A, reaction, file_ending):
+    def modelling(self, model, foil, Z, A, reaction, file_ending, CS_colonne=4):
         #print("modelling:", model, foil )
         SimCS = SimCrossSectionData() 
         if model == 'Alice':    # needs to come before chaning Z and A, since using the inputvalues
             try:
-                E, CS = SimCS.ALICE(foil, A, Z)
+                E, CS = SimCS.ALICE(foil, A, Z, CS_colonne)
                 plt.plot(E, CS, label='Alice', color='green', linestyle=':')
             except:
                 print("no Alice file found")
@@ -256,8 +357,11 @@ class CrossSections:
             except:
                 print("no talys file found")
         elif model == 'Exfor':
+            #print("exfor function")
             try:
+                #print("exfor function 2")
                 E, dE, CS, dCS, author =  SimCS.EXFOR(reaction)
+                #print(E)
                 unique_author = [] 
                 for auth in author: 
                     if auth not in unique_author:
@@ -274,9 +378,11 @@ class CrossSections:
                 pass
 
         elif model == 'Tendl':
+            print("tendl")
             #E, CS = SimCS.Tendl(foil, A, Z, file_ending)
             try:
                 E, CS = SimCS.Tendl(foil, A, Z, file_ending)
+                #print(E)
                 if E is not 0:
                     plt.plot(E, CS, label='Tendl', linestyle='--', color='blue')
             except: 
@@ -371,6 +477,7 @@ class CrossSections:
         #I_Cu = I
 
         Cumulative_flag=False
+        yscale=None
 
 
         #sigma_I /= unit_factor
@@ -388,6 +495,8 @@ class CrossSections:
             Cs_mon = np.loadtxt(filename, usecols=[1], skiprows=6)
 
             self.modelling('Exfor', 'Fe', '26', '56', 'Fe_56Co', '.tot')
+            #self.modelling('Talys', 'Fe', '26', '56', 'Fe_56Co', '.tot')
+            #self.modelling('Tendl', 'Fe', '26', '56', 'Fe_56Co', '.tot')
             A = '56'; foil='Fe'; title = r'$^{nat}$' + foil + '(d,x)' + r'$^{{ {} }}$'.format(A) + reaction[-2:]  + ' - Independent' 
 
             #sigma_Cs = np.loadtxt(filename, usecols=[2], skiprows=6)
@@ -412,6 +521,7 @@ class CrossSections:
             CS = CS_56Co +  CS_56Ni
 
             Cumulative_flag = True
+            yscale=100
 
             dCS = CS*np.sqrt( (dCS_56Co/CS_56Co)**2 + (dCS_56Ni/CS_56Ni)**2)
 
@@ -440,6 +550,7 @@ class CrossSections:
             #print("     58Co     ", "    58mCo   " )
             #print(np.vstack((CS_58Co,CS_58mCo)).T)
         if reaction=='Cu_62Zn':
+            yscale=40
             CS, dCS = self.cross_section_calc(n, A0, sigma_A0, mass_density, sigma_mass_density, I_Cu, sigma_I, lamb, reaction)
             E = self.E_Cu;dE = self.dE_Cu
             filename =  path_to_monitor_data+'cud62znt/cud62znt.txt'
@@ -481,10 +592,17 @@ class CrossSections:
             label = 'monitor data (cumulative)'
         else:
             label = 'monitor data'
-        plt.plot(E_mon, Cs_mon, label='Recommended')
+
+        CS = [float('nan') if x==0 else x for x in CS]
+        plt.plot(E_mon, Cs_mon, label='Recommended CS (IAEA)')
         #self.setting_plotvalues(E, dE, CS, dCS, 'this data')
         plt.errorbar(E, CS, marker='P', markersize=4, color='red', linewidth=0.0001, xerr=dE, yerr=dCS, elinewidth=0.5, capthick=0.25, capsize=3.0, label=label )
-        self.plot_CrossSections(reaction, title, A=1, foil='foil')
+        
+        if yscale!=None:
+            self.plot_CrossSections(reaction, title, A=1, foil='foil', max_CS=yscale)
+        else:
+            self.plot_CrossSections(reaction, title, A=1, foil='foil')
+
 
         #plt.plot(E_mon, Cs_mon, label='monitor data')
         #plt.plot(E, CS, 'o', label='this data')
@@ -511,7 +629,7 @@ class CrossSections:
 
 
 
-    def plot_CrossSections(self, reaction, title, A=1, foil='foil', max_CS=None):
+    def plot_CrossSections(self, reaction, title, A=1, foil='foil', max_CS=None, subtract=None):
 
         #plt.plot(E_mon, Cs_mon, label='monitor data')
         #plt.plot(E, CS, 'o', label='this data')
@@ -544,7 +662,13 @@ class CrossSections:
         else: 
             plt.gca().set_ylim(bottom=0, top=max_CS)
 
-        #plt.savefig(path_to_cs_figs + reaction+'.png', dpi=300)
+        if subtract!= None:
+
+            plt.savefig(path_to_cs_figs + reaction+'_subtracted.png', dpi=300)
+        else:
+            plt.savefig(path_to_cs_figs + reaction+'.png', dpi=300)
+        
+
         plt.show()
 
 

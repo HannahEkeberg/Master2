@@ -49,13 +49,13 @@ unc_fe_rhodrs = [0.110,0.034,0.114];
 clc;
 
 % Choose files for analysis
-fitzpeaks_reports = ni_fn;
-key_energies = ni_key_energies;
-glines = ni_glines;
+fitzpeaks_reports = ir_fn;
+key_energies = ir_key_energies;
+glines = ir_glines;
 EoB_Time = '26-Feb-2019 00:32:00'
-rhodrs = ni_rhodrs;
-mu_attenuation = load('ni_xcom.txt');
-unc_rhodrs = unc_ni_rhodrs;
+rhodrs = ir_rhodrs;
+mu_attenuation = load('ir_xcom.txt');
+unc_rhodrs = unc_ir_rhodrs;
 
 
 % Test new fitzpeaks_parser wrapper function
@@ -202,15 +202,19 @@ rows_Ir_193mPt = [10,98]; %check
 % rows_Ir_193mPt = [10]; %check
 %rows_Ir_194Ir = [28,32,64,69,71,83,86,87,91];%check
 rows_Ir_194Ir = [28,32,64,83,86,91];%check
-rows_Ir_194m2Ir = [36,43,55,61,65,74]; %check
+%rows_Ir_194m2Ir = [36,43,55,61,65,74]; %check
+rows_Ir_194m2Ir = [43]; %check
+% rows_Ir_194m2Ir = [61,74]; %check
 rows_Ir_191Os = [107]; %check
+%rows_Ir_190m2Ir = [108, 109, 110, 111]; %check
+rows_Ir_190m2Ir = [109,110, 111]; %check
 
 
 
 % Select rows to plot
 % varToStr = @(x) inputname(1);
-rows = rows_Ni_61Cu;
-outName = '../csv/Ni_61Cu';
+rows = rows_Ir_194Ir;
+outName = '../csv/Ir_194Ir';
 % rows = 12;
 % Find rows for the desired decay product
 selected_rows = data(rows,:);

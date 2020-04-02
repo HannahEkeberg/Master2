@@ -41,6 +41,15 @@ files = np.genfromtxt(f_list_FilesNames, dtype="str", delimiter='|', usecols=[0]
 names = np.genfromtxt(f_list_FilesNames, dtype="str", delimiter='|', usecols=[1])
 files = list(files)
 names = list(names)
+
+good_beamcurrents = ['B_+10_D_-2', 'B_+0,75_D_-3,25', 'B_+1_D_-1,75', 'B_+0,75_D_-2,75', 'B_+0,75_D_-3', 'B_+0,5_D_-4,25',
+					'B_+0,5_D_-3,75', 'B_+0,25_D_-4,75', 'B_+0,5_D_-4', 'B_+0,25_D_-5', 'B_-2,5_D_+4', 'B_+1_D_+1,25', 'B_+1,25_D_+2',
+					'B_+1,5_D_+2,5', 'B_+1,5_D_+2,75', 'B_+2,25_D_+5', 'B_+2_D_+3,75', 'B_+1,75_D_+3,25', 'B_+2,5_D_+4,5', 'B_+2,25_D_+4,75',
+					'B_+0,5_D_+1,25', 'B_+1,5_D_+3', 'B_+2,5_D_+7,5', 'B_+1,75_D_+3,5', 'B_+2_D_+4,25', 'B_+10_D_+3', 'B_-2,25_D_-1,75', 'B_+10_D_+2,5',
+					'B_+1_D_+2', 'B_+1_D_+2', 'B_+1_D_+2']
+
+
+
 #files, names = ziegler()
 #print(names[8])
 #print(type(files))
@@ -75,14 +84,27 @@ selected_names = [#'B_-2,5_D_+4','B_+0,25_D_-5',  'B_+0,5_D_-4','B_+0,25_D_-4,75
 selected_names = ['B_0_D_0']
 """
 
-
-index = find_index(names, 'B_+2_D_+4,25')   #the one used so far. 
-#index = find_index(names, 'B_+1_D_+2')
+scaling='B_+2_D_+4,25'
+#scaling='B_+0,5_D_+1,25'
+#scaling = 'B_+1,25_D_+2,75'
+#scaling='B_+1,75_D_+3,75'
+index = find_index(names, scaling); title= 'Beam current - Energy increase 2%, density increase 4.25%' #the one used so far. 
+#index = find_index(names, scaling); title= 'Beam current - Energy increase 0.5%, density increase 1.25%'
+#index = find_index(names, scaling); title= 'Beam current - Energy increase 1.25%, density increase 2.75%'
+#index = find_index(names, scaling); title= 'Beam current - Energy increase 1.75%, density increase 3.75%'
 #print(files[index])
 #RZ = Run_Ziegler(files, names)
+csv_filename = './' + files[index] 
+
+#BC = BeamCurrent(files[index])
+#BC.CurrentPlot_compartment(names[index], title=title)
+#BC.plot_distribution('Ir', scaling)
+#BC.plot_distribution('Cu', scaling)
+#BC.plot_distribution('Ni', scaling)
+#BC.plot_distribution('Fe', scaling)
 
 
-BC = BeamCurrent(files[index])
+
 #BC.calculate_beam_current('Ni', 'Ni_56Co', print_terms=True)
 #BC.calculate_beam_current('Ni', 'Ni_58Co', print_terms=True)
 #BC.calling_parameters_to_weightedaverage_func('Cu', 'Cu_62Zn')
@@ -171,7 +193,9 @@ CS.mon_CS_test(Cu_65Zn(), 'Cu', 'Cu_65Zn.csv', 10, 'Cu_65Zn', names[index], csv_
 #CS.exfordata_npat()
 
 #BC = BeamCurrent(files[index])
-#BC.CurrentPlot_compartment(names[index])
+
+
+#BC.CurrentPlot_compartment(names[index], title='Beam current - Energy increase 10%, density increase 4.25%')
 #BC.variance_minimization(9, names[index], MakePlot=True )
 #BC.CurrentPlot(names[index])
 #BC.current_for_CS()
@@ -185,8 +209,10 @@ CS.mon_CS_test(Cu_65Zn(), 'Cu', 'Cu_65Zn.csv', 10, 'Cu_65Zn', names[index], csv_
 #two_step_kp_data(Ni_56Ni(), Ni_56Co(), "Ni_56Co", 10, Save_csv= True)
 
 
+#index = find_index(names, 'B_+2_D_+4,25')   #the one used so far. 
+#csv_filename = './' + files[index] 
+#print(csv_filename)
 
-csv_filename = './' + files[index] 
 #csv_filename = './' + names[index] + '.csv'
 #print(csv_filename)
 #I = np.genfromtxt(csv_filename, delimiter=',', usecols=[1])  #### NOT RIGHT   
@@ -201,9 +227,13 @@ csv_filename = './' + files[index]
 CS = CrossSections(files[index]) 
 
 
+
 ### Monitor reactions
-#CS.mon_CS_test(Fe_56Co(), 'Fe', 'Fe_56Co.csv', 3, 'Fe_56Co', names[index], csv_filename)
-#CS.mon_CS_test(Ni_61Cu(), 'Ni', 'Ni_61Cu.csv', 10, 'Ni_61Cu', names[index], csv_filename)
+
+# In general: good looking, but I have some problems with finding the correct authors on EXFOR. last step. 
+
+#CS.mon_CS_test(Fe_56Co(), 'Fe', 'Fe_56Co.csv', 3, 'Fe_56Co', names[index], csv_filename)   #Finished. but lacking authors: Zavorka 2012
+#CS.mon_CS_test(Ni_61Cu(), 'Ni', 'Ni_61Cu.csv', 10, 'Ni_61Cu', names[index], csv_filename)  # lacking authors: haddad 2013. Ask Andrew how to download the data. 
 #CS.mon_CS_test(Ni_56Co(), 'Ni', 'Ni_56Co.csv', 10, 'Ni_56Co', names[index], csv_filename)
 #CS.mon_CS_test(Ni_58Co(), 'Ni', 'Ni_58Co.csv', 10, 'Ni_58Co', names[index], csv_filename)
 #CS.mon_CS_test(Cu_62Zn(), 'Cu', 'Cu_62Zn.csv', 10, 'Cu_62Zn', names[index], csv_filename)
@@ -211,74 +241,94 @@ CS = CrossSections(files[index])
 #CS.mon_CS_test(Cu_65Zn(), 'Cu', 'Cu_65Zn.csv', 10, 'Cu_65Zn', names[index], csv_filename)
 
 
-### Ni reactions
+### Ni reactions FINISHED
 
-CS.make_CS(Ni_52Mn(), 'Ni', 'Ni_52Mn.csv', 10, 'Ni_52Mn', csv_filename, '25', '52', independent=False, ylimit=4)
-#CS.make_CS(Ni_54Mn(), 'Ni', 'Ni_54Mn.csv', 10, 'Ni_54Mn', csv_filename, '25', '54')
-#CS.make_CS(Ni_59Fe(), 'Ni', 'Ni_59Fe.csv', 10, 'Ni_59Fe', csv_filename, '26', '59')
+#CS.make_CS(Ni_52Mn(), 'Ni', 'Ni_52Mn.csv', 10, 'Ni_52Mn', csv_filename, '25', '52', independent=False, ylimit=4)
+#CS.make_CS(Ni_54Mn(), 'Ni', 'Ni_54Mn.csv', 10, 'Ni_54Mn', csv_filename, '25', '54', ylimit=40)
+#CS.make_CS(Ni_59Fe(), 'Ni', 'Ni_59Fe.csv', 10, 'Ni_59Fe', csv_filename, '26', '59', independent=False)   # first in decay chain
 #CS.make_CS(Ni_60Cu(), 'Ni', 'Ni_60Cu.csv', 10, 'Ni_60Cu', csv_filename, '29', '60')
 #CS.make_CS(Ni_64Cu(), 'Ni', 'Ni_64Cu.csv', 10, 'Ni_64Cu', csv_filename, '29', '64')
-#CS.make_CS(Ni_60Co(), 'Ni', 'Ni_60Co.csv', 10, 'Ni_60Co', csv_filename, '27', '60', ylimit=60)
-#CS.make_CS(Ni_65Ni(), 'Ni', 'Ni_65Ni.csv', 10, 'Ni_65Ni', csv_filename, '28', '65')
-#CS.make_CS(Ni_56Ni(), 'Ni', 'Ni_56Ni.csv', 10, 'Ni_56Ni', csv_filename, '28', '56', ylimit=4)
-#CS.make_CS(Ni_55Co(), 'Ni', 'Ni_55Co.csv', 10, 'Ni_55Co', csv_filename, '27', '55', ylimit=35)
-#CS.make_CS(Ni_56Mn(), 'Ni', 'Ni_56Mn.csv', 10, 'Ni_56Mn', csv_filename, '25', '56')   #BAD
-#CS.make_CS(Ni_57Ni(), 'Ni', 'Ni_57Ni.csv', 10, 'Ni_57Ni', csv_filename, '28', '57')
+#CS.make_CS(Ni_60Co(), 'Ni', 'Ni_60Co.csv', 10, 'Ni_60Co', csv_filename, '27', '60', ylimit=55, independent=False) # first in decay chain
+#CS.make_CS(Ni_65Ni(), 'Ni', 'Ni_65Ni.csv', 10, 'Ni_65Ni', csv_filename, '28', '65', independent=False) # first in decay chain
+#CS.make_CS(Ni_56Ni(), 'Ni', 'Ni_56Ni.csv', 10, 'Ni_56Ni', csv_filename, '28', '56', ylimit=4, independent=False) # first in decay chain)
+#CS.make_CS(Ni_55Co(), 'Ni', 'Ni_55Co.csv', 10, 'Ni_55Co', csv_filename, '27', '55', ylimit=30,independent=False) # first in decay chain
+#CS.make_CS(Ni_57Ni(), 'Ni', 'Ni_57Ni.csv', 10, 'Ni_57Ni', csv_filename, '28', '57', independent=False) # first in decay chain)
+
+CS.make_CS_subtraction('daughter', 'Ni', 10, csv_filename, Ni_56Ni(), 'Ir_56Ni', 'Ir_190m2Ir.csv', '77', '190',  Ir_194Ir(), 'Ir_190Ir', 'Ir_190Ir.csv', '77', '190', BR_daughter=0.0860, ylimit=None, isomer_state='m1+g', independent='_cumulative_190m1+190Ir', file_ending='.tot')  # Necessary when subtracting
 
 
 ### Cu reactions
+
 #CS.make_CS(Cu_64Cu(), 'Cu', 'Cu_64Cu.csv', 10, 'Cu_64Cu', csv_filename, '29', '64')
 #CS.make_CS(Cu_65Ni(), 'Cu', 'Cu_65Ni.csv', 10, 'Cu_65Ni', csv_filename, '28', '65')
-#CS.make_CS(Cu_52Mn(), 'Cu', 'Cu_52Mn.csv', 10, 'Cu_52Mn', csv_filename, '25', '52')   #Most likely false. Not in talys or exfor. 
-#CS.make_CS(Cu_56Co(), 'Cu', 'Cu_56Co.csv', 10, 'Cu_56Co', csv_filename, '27', '56')   #Most likely false. In talys but no match, not in exfor. 
-#CS.make_CS(Cu_57Ni(), 'Cu', 'Cu_57Ni.csv', 10, 'Cu_57Ni', csv_filename, '28', '57')    #Most likely false too, Qval is too low at these energies. 
-#CS.make_CS(Cu_57Co(), 'Cu', 'Cu_57Co.csv', 10, 'Cu_57Co', csv_filename, '27', '57')    #Most likely false too, Qval is too low at these energies. 
-#CS.make_CS(Cu_59Fe(), 'Cu', 'Cu_59Fe.csv', 10, 'Cu_59Fe', csv_filename, '26', '59')
-#CS.make_CS(Cu_60Co(), 'Cu', 'Cu_60Co.csv', 10, 'Cu_60Co', csv_filename, '27', '60')   
-#CS.make_CS(Cu_61Co(), 'Cu', 'Cu_61Co.csv', 10, 'Cu_61Co', csv_filename, '27', '61')  
-#CS.make_CS(Cu_61Cu(), 'Cu', 'Cu_61Cu.csv', 10, 'Cu_61Cu', csv_filename, '29', '61')       #Not a good measurement? 
+#CS.make_CS(Cu_59Fe(), 'Cu', 'Cu_59Fe.csv', 10, 'Cu_59Fe', csv_filename, '26', '59', ylimit=1, independent=False) # first in decay chain
+#CS.make_CS(Cu_60Co(), 'Cu', 'Cu_60Co.csv', 10, 'Cu_60Co', csv_filename, '27', '60', ylimit=25, independent=False) # first in decay chain)   
+#CS.make_CS(Cu_61Co(), 'Cu', 'Cu_61Co.csv', 10, 'Cu_61Co', csv_filename, '27', '61', ylimit=4, independent=False) # first in decay chain)  
+#CS.make_CS(Cu_61Cu(), 'Cu', 'Cu_61Cu.csv', 10, 'Cu_61Cu', csv_filename, '29', '61', ylimit=110, independent=False) # first in decay chain)   
 #CS.make_CS(Cu_64Cu(), 'Cu', 'Cu_64Cu.csv', 10, 'Cu_64Cu', csv_filename, '29', '64')
-#CS.make_CS(Cu_65Ni(), 'Cu', 'Cu_65Ni.csv', 10, 'Cu_65Ni', csv_filename, '28', '65')     # Plot looks very weird. 
+
 
 ### Fe reactions
-#CS.make_CS(Fe_48V(), 'Fe', 'Fe_48V.csv', 3, 'Fe_48V', csv_filename, '23', '48')   
-#CS.make_CS(Fe_51Cr(), 'Fe', 'Fe_51Cr.csv', 3, 'Fe_51Cr', csv_filename, '24', '51')   
-#CS.make_CS(Fe_52Mn(), 'Fe', 'Fe_52Mn.csv', 3, 'Fe_52Mn', csv_filename, '25', '52')   
-#CS.make_CS(Fe_53Fe(), 'Fe', 'Fe_53Fe.csv', 3, 'Fe_53Fe', csv_filename, '26', '53')   
-#CS.make_CS(Fe_54Mn(), 'Fe', 'Fe_54Mn.csv', 3, 'Fe_54Mn', csv_filename, '25', '54')   
-#CS.make_CS(Fe_55Co(), 'Fe', 'Fe_55Co.csv', 3, 'Fe_55Co', csv_filename, '27', '55')   
-#CS.make_CS(Fe_56Co(), 'Fe', 'Fe_56Co.csv', 3, 'Fe_56Co', csv_filename, '27', '56')   # Monitor
-#CS.make_CS(Fe_57Co(), 'Fe', 'Fe_57Co.csv', 3, 'Fe_57Co', csv_filename, '27', '57')   
-#CS.make_CS(Fe_58Co(), 'Fe', 'Fe_58Co.csv', 3, 'Fe_58Co', csv_filename, '27', '58')   
-#CS.make_CS(Fe_59Fe(), 'Fe', 'Fe_59Fe.csv', 3, 'Fe_59Fe', csv_filename, '26', '59')   # only produced via 58Fe(d,n). abundance is low so had to redo energy. Ask Andrew about energy. 
+#CS.make_CS(Fe_48V(), 'Fe', 'Fe_48V.csv', 3, 'Fe_48V', csv_filename, '23', '48', independent=True, file_ending='.tot', ylimit=0.176)   
+#CS.make_CS(Fe_51Cr(), 'Fe', 'Fe_51Cr.csv', 3, 'Fe_51Cr', csv_filename, '24', '51', independent=True, ylimit=20)   
+#CS.make_CS(Fe_52Mn(), 'Fe', 'Fe_52Mn.csv', 3, 'Fe_52Mn', csv_filename, '25', '52', ylimit=50, independent=False)   
+#CS.make_CS(Fe_53Fe(), 'Fe', 'Fe_53Fe.csv', 3, 'Fe_53Fe', csv_filename, '26', '53', independent=False)   
+#CS.make_CS(Fe_54Mn(), 'Fe', 'Fe_54Mn.csv', 3, 'Fe_54Mn', csv_filename, '25', '54', independent=True, ylimit=125)   
+#CS.make_CS(Fe_55Co(), 'Fe', 'Fe_55Co.csv', 3, 'Fe_55Co', csv_filename, '27', '55', independent=True)   
+#CS.make_CS(Fe_57Co(), 'Fe', 'Fe_57Co.csv', 3, 'Fe_57Co', csv_filename, '27', '57', independent=True)   
+#CS.make_CS(Fe_58Co(), 'Fe', 'Fe_58Co.csv', 3, 'Fe_58Co', csv_filename, '27', '58', independent=False)   
+#CS.make_CS(Fe_59Fe(), 'Fe', 'Fe_59Fe.csv', 3, 'Fe_59Fe', csv_filename, '26', '59', independent=True)   # only produced via 58Fe(d,n). abundance is low so had to redo energy. Ask Andrew about energy. 
+
+
+### Ir reactions 
+
+
+#CS.make_CS(Ir_188Pt(), 'Ir', 'Ir_188Pt.csv', 10, 'Ir_188Pt', csv_filename, '78', '188', ylimit=300, independent=True)   
+#CS.make_CS(Ir_188Ir(), 'Ir', 'Ir_188Ir.csv', 10, 'Ir_188Ir', csv_filename, '77', '188', ylimit=15, independent=False)
+
+###Independent of 188Ir, subtraction of 188Ir_cum - 188Pt_ind = 188Ir_ind
+#CS.make_CS_subtraction('daughter', 'Ir', 10, csv_filename, Ir_188Pt(), 'Ir_188Pt', 'Ir_188Pt.csv', '78', '188',  Ir_188Ir(), 'Ir_188Ir', 'Ir_188Ir.csv', '77', '188', ylimit=15, independent=True, file_ending='.tot')  # Necessary when subtracting
+
+
+# make 188 Ir independent by subtracting 188Ir cumulative-188Pt
+
+#CS.make_CS(Ir_189Pt(), 'Ir', 'Ir_189Pt.csv', 10, 'Ir_189Pt', csv_filename, '78', '189', ylimit=520, independent=True)    # 
+#CS.make_CS(Ir_189Ir(), 'Ir', 'Ir_189Ir.csv', 10, 'Ir_189Ir', csv_filename, '77', '189', independent=False)    # need work on activity 
+
+#CS.make_CS(Ir_190Ir(), 'Ir', 'Ir_190Ir.csv', 10, 'Ir_190Ir', csv_filename, '77', '190', independent=False, CS_colonne_ALICE=4)     # file_ending=.tot because of decay from m1 m2 isomer. 
+#CS.make_CS(Ir_190m2Ir(), 'Ir', 'Ir_190m2Ir.csv', 10, 'Ir_190m2Ir', csv_filename, '77', '190', file_ending='.L37', isomer_state='m2', independent=False, CS_colonne_ALICE=6)   
+#CS.make_CS_subtraction('daughter', 'Ir', 10, csv_filename, Ir_190m2Ir(), 'Ir_190m2Ir', 'Ir_190m2Ir.csv', '77', '190',  Ir_194Ir(), 'Ir_190Ir', 'Ir_190Ir.csv', '77', '190', BR_daughter=0.0860, ylimit=None, isomer_state='m1+g', independent='_cumulative_190m1+190Ir', file_ending='.tot')  # Necessary when subtracting
+
+
+#CS.make_CS(Ir_191Pt(), 'Ir', 'Ir_191Pt.csv', 10, 'Ir_191Pt', csv_filename, '78', '191', independent=True) 
+
+#CS.make_CS(Ir_192Ir(), 'Ir', 'Ir_192Ir.csv', 10, 'Ir_192Ir', csv_filename, '77', '192', file_ending='.L00', independent=True)    
+#CS.make_CS(Ir_193mPt(), 'Ir', 'Ir_193mPt.csv', 10, 'Ir_193mPt', csv_filename, '78', '193', file_ending='.L05', independent=True, CS_colonne_ALICE=6)   
+
+
+#CS.make_CS(Ir_194Ir(), 'Ir', 'Ir_194Ir.csv', 10, 'Ir_194Ir', csv_filename, '77', '194', file_ending='.L00', independent=False)    
+#CS.make_CS(Ir_194m2Ir(), 'Ir', 'Ir_194m2Ir.csv', 10, 'Ir_194m2Ir', csv_filename, '77', '194', file_ending='not', isomer_state='m2', independent=True)     #talys=.L34
 
 
 
-### Ir reactions  
-#CS.make_CS(Ir_183Ta(), 'Ir', 'Ir_183Ta.csv', 10, 'Ir_183Ta', csv_filename, '73', '183')   
+
+#CS.make_CS(Ir_191Os(), 'Ir', 'Ir_191Os.csv', 10, 'Ir_191Os', csv_filename, '76', '191', file_ending='.tot', independent=True)     
+
+
+#FALSE PEAKS 
+#CS.make_CS(Ni_56Mn(), 'Ni', 'Ni_56Mn.csv', 10, 'Ni_56Mn', csv_filename, '25', '56')   #BAD
+#CS.make_CS(Cu_52Mn(), 'Cu', 'Cu_52Mn.csv', 10, 'Cu_52Mn', csv_filename, '25', '52')   #Most likely false. Not in talys or exfor. 
+##CS.make_CS(Cu_56Co(), 'Cu', 'Cu_56Co.csv', 10, 'Cu_56Co', csv_filename, '27', '56')   #Most likely false. In talys but no match, not in exfor. 
+##CS.make_CS(Cu_57Ni(), 'Cu', 'Cu_57Ni.csv', 10, 'Cu_57Ni', csv_filename, '28', '57')    #Most likely false too, Qval is too low at these energies. 
+##CS.make_CS(Cu_57Co(), 'Cu', 'Cu_57Co.csv', 10, 'Cu_57Co', csv_filename, '27', '57')    #Most likely false too, Qval is too low at these energies. 
+#CS.make_CS(Ir_189Re(), 'Ir', 'Ir_189Re.csv', 10, 'Ir_189Re', csv_filename, '75', '189')     # needs work
+#CS.make_CS(Ir_190mRe(), 'Ir', 'Ir_90mReRe.csv', 10, 'Ir_190mRe', csv_filename, '75', '190')     # needs work
+#CS.make_CS(Ir_188Re(), 'Ir', 'Ir_188Re.csv', 10, 'Ir_188Re', csv_filename, '75', '188') # not working
+#CS.make_CS(Ir_188mRe(), 'Ir', 'Ir_188mRe.csv', 10, 'Ir_188mRe', csv_filename, '75', '188')   not working      
+##CS.make_CS(Ir_183Ta(), 'Ir', 'Ir_183Ta.csv', 10, 'Ir_183Ta', csv_filename, '73', '183')   
 #CS.make_CS(Ir_186Re(), 'Ir', 'Ir_186Re.csv', 10, 'Ir_186Re', csv_filename, '75', '186')   
 #CS.make_CS(Ir_186Ta(), 'Ir', 'Ir_186Ta.csv', 10, 'Ir_186Ta', csv_filename, '73', '186')   
 #CS.make_CS(Ir_187W(), 'Ir', 'Ir_187W.csv', 10, 'Ir_187W', csv_filename, '74', '187')   
-#CS.make_CS(Ir_188Pt(), 'Ir', 'Ir_188Pt.csv', 10, 'Ir_188Pt', csv_filename, '78', '188')   
-#CS.make_CS(Ir_188Ir(), 'Ir', 'Ir_188Ir.csv', 10, 'Ir_188Ir', csv_filename, '77', '188')   
-#CS.make_CS(Ir_188Re(), 'Ir', 'Ir_188Re.csv', 10, 'Ir_188Re', csv_filename, '75', '188') # not working
-#CS.make_CS(Ir_188mRe(), 'Ir', 'Ir_188mRe.csv', 10, 'Ir_188mRe', csv_filename, '75', '188')   not working      
-
-
-#CS.make_CS(Ir_189Pt(), 'Ir', 'Ir_189Pt.csv', 10, 'Ir_189Pt', csv_filename, '78', '189')    # 
-#CS.make_CS(Ir_189Ir(), 'Ir', 'Ir_189Ir.csv', 10, 'Ir_189Ir', csv_filename, '77', '189')    # need work on activity 
-#CS.make_CS(Ir_189Re(), 'Ir', 'Ir_189Re.csv', 10, 'Ir_189Re', csv_filename, '75', '189')     # needs work
-#CS.make_CS(Ir_190mRe(), 'Ir', 'Ir_90mReRe.csv', 10, 'Ir_190mRe', csv_filename, '75', '190')     # needs work
-
-
-#CS.make_CS(Ir_190Ir(), 'Ir', 'Ir_190Ir.csv', 10, 'Ir_190Ir', csv_filename, '77', '190')   
-#CS.make_CS(Ir_191Pt(), 'Ir', 'Ir_191Pt.csv', 10, 'Ir_191Pt', csv_filename, '78', '191') 
-#CS.make_CS(Ir_191Os(), 'Ir', 'Ir_191Os.csv', 10, 'Ir_191Os', csv_filename, '76', '191', file_ending='.tot')     
-#CS.make_CS(Ir_192Ir(), 'Ir', 'Ir_192Ir.csv', 10, 'Ir_192Ir', csv_filename, '77', '192', file_ending='.L00')    
-#CS.make_CS(Ir_193mPt(), 'Ir', 'Ir_193mPt.csv', 10, 'Ir_193mPt', csv_filename, '78', '193', file_ending='.L05')   
-#CS.make_CS(Ir_194Ir(), 'Ir', 'Ir_194Ir.csv', 10, 'Ir_194Ir', csv_filename, '77', '194', file_ending='.L00')    
-#CS.make_CS(Ir_194m2Ir(), 'Ir', 'Ir_194m2Ir.csv', 10, 'Ir_194m2Ir', csv_filename, '77', '194', file_ending='not')    
-
 
 
 
