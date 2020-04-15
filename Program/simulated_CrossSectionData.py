@@ -50,9 +50,10 @@ class SimCrossSectionData:
 				#else:
 				#	print("nothing")
 				#print("**")
-
-			E_typ = np.linspace(0,39, 40)  # this we want to return, but want to add CS=0 to these values
-			CS_typ = np.zeros((40))
+			#n=20
+			n=40
+			E_typ = np.linspace(0,39, n)  # this we want to return, but want to add CS=0 to these values
+			CS_typ = np.zeros((n))
 			for i in range(len(E_typ)):
 				for j in range(len(E)):
 					if E_typ[i]==E[j]:
@@ -648,14 +649,20 @@ class SimCrossSectionData:
 
 	def multiple_reactions(self):
 		E_193Pt, CS_193Pt = self.Tendl('Ir', '193', '078', file_ending='.L05')
+		#E_193Pt, CS_193Pt = self.TALYS('Ir', '193', '078', file_ending='.L05')
 		E_191Pt, CS_191Pt = self.Tendl('Ir', '191', '078', file_ending='.tot')
+		#E_191Pt, CS_191Pt = self.TALYS('Ir', '191', '078', file_ending='.tot')
 		E_189Pt, CS_189Pt = self.Tendl('Ir', '189', '078', file_ending='.tot')
+		#E_189Pt, CS_189Pt = self.TALYS('Ir', '189', '078', file_ending='.tot')
 		E_188Pt, CS_188Pt = self.Tendl('Ir', '188', '078', file_ending='.tot')
+		#E_188Pt, CS_188Pt = self.TALYS('Ir', '188', '078', file_ending='.tot')
 
 		plt.plot(E_188Pt, CS_188Pt, label=r'$^{188}$Pt')
+
 		plt.plot(E_189Pt, CS_189Pt, label=r'$^{189}$Pt')
 		plt.plot(E_191Pt, CS_191Pt, label=r'$^{191}$Pt')
 		plt.plot(E_193Pt, CS_193Pt, label=r'$^{193m}$Pt')
+		#plt.plot(E_193Pt2, CS_193Pt2, label=r'$^{193m}$Pt talys')
 
 		plt.title('Tendl cross sections for deuterions on natural iridium')
 		plt.xlabel('Energy, MeV')
@@ -675,10 +682,11 @@ class SimCrossSectionData:
 
 
 SimCS = SimCrossSectionData()
-foil = 'Ir'; A = '190'; Z = '77' # 183Ta
+#SimCS.multiple_reactions()
+#foil = 'Ir'; A = '190'; Z = '77' # 183Ta
 #foil = 'Cu'; A = '60'; Z = '27' # 183Ta
 
-SimCS.ALICE(foil, A, Z, CS_colonne=4)
+#SimCS.ALICE(foil, A, Z, CS_colonne=4)
 #A='060'; Z='027'; foil='Cu'
 #SimCS.Tendl(foil, A, Z)
 #foil = 'Ir'; A = '186'; Z = '075' # 186Re

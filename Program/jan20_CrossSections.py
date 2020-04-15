@@ -220,7 +220,7 @@ class CrossSections:
 
 
         if isomer_state==None:
-            state='g'
+            state=''
         else:
             state=isomer_state
 
@@ -379,7 +379,7 @@ class CrossSections:
         E, dE, CS_cum, dCS_cum = self.make_CS(react_func_cumulative, foil, filename_cumulative, n, reaction_cumulative, csv_filename, Z, A, save_text=False)
         E, dE, CS_gs, dCS_gs = self.make_CS(react_func_groundstate, foil, filename_groundstate, n, reaction_groundstate, csv_filename, Z, A,  save_text=False)
         print("***")
-        
+        #print(type(CS_cum))
 
         new_CS = []; new_dCS=[]
         if independent==True:
@@ -390,10 +390,11 @@ class CrossSections:
                     new_CS.append(0)
                     new_dCS.append(0)
                 else:
-                    new_CS.append(CS_gs[i]-CS_cum[i]*BR)       #here daughter is cumulative. Want independent CS
-                    new_dCS.append(dCS_gs[i]-dCS_cum[i]*BR)
-                    #new_CS.append(CS_cum[i]-CS_gs[i]*BR)
-                    #new_dCS.append(dCS_cum[i]-dCS_gs[i]*BR)
+                    #new_CS.append(CS_gs[i]-CS_cum[i]*BR)       #here daughter is cumulative. Want independent CS
+                    #new_dCS.append(dCS_gs[i]-dCS_cum[i]*BR)
+                    
+                    new_CS.append(CS_cum[i]-CS_gs[i]*(1-BR))
+                    new_dCS.append(dCS_cum[i]-dCS_gs[i]*(1-BR))
                     #print(CS_daughter[i], CS_parent[i]*BR_daughter) 
                     #print(CS_daughter[i]-CS_parent[i]*BR_daughter)
         elif independent==False:  
@@ -430,6 +431,10 @@ class CrossSections:
         dE_tot = dE[0]+dE[1]
         csv_save_array = np.vstack((E, dE_tot, new_CS, new_dCS)).T
         path_to_cs_csv = os.getcwd() + '/CrossSections/CrossSections_csv/'
+        print("     E     ", "    CS    " )
+        print(np.vstack((E,new_CS)).T)
+
+        #CS_cum = [i * BR for i in CS_cum]; dCS_cum = [i * BR for i in dCS_cum]
 
         if save_text==True:
             CS_gs = [float('nan') if x==0 else x for x in CS_gs]
@@ -835,9 +840,11 @@ class CrossSections:
 
         if subtract!= None:
 
-            plt.savefig(path_to_cs_figs + reaction+'_subtracted.png', dpi=300)
+            pass
+            #plt.savefig(path_to_cs_figs + reaction+'_subtracted.png', dpi=300)
         else:
-            plt.savefig(path_to_cs_figs + reaction+'.png', dpi=300)
+            pass
+            #plt.savefig(path_to_cs_figs + reaction+'.png', dpi=300)
         
 
         plt.show()
