@@ -29,10 +29,10 @@ class SimCrossSectionData:
 				#print(line)
 
 			#print(content)
-			E_all = np.genfromtxt(filename, delimiter=' ', usecols=[0])
-			CS_all = np.genfromtxt(filename, delimiter=' ', usecols=[CS_colonne])
-			Z_ = np.genfromtxt(filename, delimiter=' ', usecols=[2])
-			A_ = np.genfromtxt(filename, delimiter=' ', usecols=[3])
+			E_all = np.genfromtxt(filename, delimiter=' ', usecols=[0])#, skip_header=2)
+			CS_all = np.genfromtxt(filename, delimiter=' ', usecols=[CS_colonne])#, skip_header=2)
+			Z_ = np.genfromtxt(filename, delimiter=' ', usecols=[2])#, skip_header=2)
+			A_ = np.genfromtxt(filename, delimiter=' ', usecols=[3])#, skip_header=2)
 			
 			E = []; CS = [] 
 			#print(A, Z)
@@ -57,6 +57,22 @@ class SimCrossSectionData:
 				for j in range(len(E)):
 					if E_typ[i]==E[j]:
 						CS_typ[i]=CS[j]
+					#else:
+						#CS_typ[i]=CS_typ[i-1]
+
+			"""
+			Andrew, how to deal with energies which lacks where the cs!=0,
+			how to solve this? because it is not zero.... 
+			"""
+
+			#rom math import isnan
+			#for i in range(len(CS_typ)):
+	
+				#if CS_typ[i]==0:
+			#CS_typ[CS_typ == 0] = 'nan'
+					#CS_typ[i]=isnan(CS_typ[i])
+
+
 
 			print("old:")
 			print("E: ", E)
@@ -128,6 +144,8 @@ class SimCrossSectionData:
         
 
 	def ALICE(self, foil, A, Z, CS_colonne=4):
+		print("ALICE IN SIM")
+		print(foil, A, Z, CS_colonne)
 		#print("Alice")
 		if foil == 'Ir': 
 			abund_191Ir = 0.373 ; abund_193Ir = 0.627
@@ -142,6 +160,9 @@ class SimCrossSectionData:
 			E  = E_193Ir
 			
 			E_new, CS_new = self.interpolation(E, CS)
+
+			#print(E_new)
+			#print(CS_new)
 			return E_new, CS_new
 			"""
 			plt.plot(E_new, CS_new, label='interpol')
@@ -161,6 +182,8 @@ class SimCrossSectionData:
 			E_65Cu, CS_65Cu = self.extract_from_alicefiles(f_65Cu, A, Z, CS_colonne)
 
 			CS = CS_63Cu*abund_63Cu + CS_65Cu*abund_65Cu
+
+
 			E  = E_65Cu
 			#return E, CS
 			
@@ -187,8 +210,44 @@ class SimCrossSectionData:
 			E_62Ni, CS_62Ni = self.extract_from_alicefiles(f_62Ni, A, Z, CS_colonne)
 			E_64Ni, CS_64Ni = self.extract_from_alicefiles(f_64Ni, A, Z, CS_colonne)
 
+
+
 			CS = CS_58Ni*abund_58Ni + CS_60Ni*abund_60Ni+ CS_61Ni*abund_61Ni + CS_62Ni*abund_62Ni+ CS_64Ni*abund_64Ni
 			E  = E_64Ni
+
+			"""
+			CS_58Ni = CS_58Ni*abund_58Ni
+			CS_60Ni *= abund_60Ni
+			CS_61Ni *= abund_61Ni 
+			CS_62Ni *= abund_62Ni
+			CS_64Ni *= abund_64Ni
+
+			cs_withoutzeros_summed = []
+			
+			for i in range(len(E)):
+				print("**")
+				print(i)
+				intermediate_sum = []
+				for cs_list in [CS_58Ni, CS_60Ni, CS_61Ni, CS_62Ni, CS_64Ni]:
+					if cs_list[i]!= 0:
+						intermediate_sum.append(cs_list[i])
+						print("nonzero:")
+						print(cs_list[i])
+					else:
+						print("zero:")
+						print(cs_list[i])
+				
+				cs.cs_withoutzeros_summed
+			#CS_ = [] 
+			#for CS_list in [CS_58Ni, CS_60Ni, CS_61Ni, CS_62Ni, CS_64Ni]:
+			#	for cs in CS_list:
+			#		if cs!=0:
+			"""
+						
+					
+						
+
+			
 			#return E, CS
 			
 			E_new, CS_new = self.interpolation(E, CS)
@@ -212,10 +271,10 @@ class SimCrossSectionData:
 
 			CS = CS_54Fe*abund_53Fe + CS_56Fe*abund_56Fe+ CS_57Fe*abund_57Fe + CS_58Fe*abund_58Fe
 			E  = E_58Fe
-			#return E, CS
+			return E, CS
 			
-			E_new, CS_new = self.interpolation(E, CS)
-			return E_new, CS_new		
+			#E_new, CS_new = self.interpolation(E, CS)
+			#return E_new, CS_new		
 		
 
 		else:
@@ -364,7 +423,7 @@ class SimCrossSectionData:
 
 			f_63Cu = self.path + '/../Tendl/' + foil + '/rp029063_' + Z + A + file_ending + '.txt'
 			f_65Cu = self.path + '/../Tendl/' + foil + '/rp029065_' + Z + A + file_ending + '.txt'
-			print(f_63Cu)
+			#print(f_63Cu)
 			if os.path.isfile(f_63Cu): 
 				#print("Ir 191 file: ",f_191Ir)
 				print("f_63Cu exists")
@@ -528,8 +587,16 @@ class SimCrossSectionData:
 	def COH(self):
 		pass 
 
-	def EXFOR(self, reaction):
-		filename = self.path + '/../EXFOR/' + reaction + '.txt'
+	def EXFOR(self, reaction, independent=True):
+		if independent==True:
+			filename = self.path + '/../EXFOR/' + reaction + '_ind.txt'
+		elif independent==False:
+			filename = self.path + '/../EXFOR/' + reaction + '_cum.txt'
+
+		
+
+
+		#filename = self.path + '/../EXFOR/' + reaction + '.txt'
 		#print(filename)
 		#print(reaction)
 

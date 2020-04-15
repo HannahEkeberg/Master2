@@ -49,13 +49,13 @@ unc_fe_rhodrs = [0.110,0.034,0.114];
 clc;
 
 % Choose files for analysis
-fitzpeaks_reports = ir_fn;
-key_energies = ir_key_energies;
-glines = ir_glines;
+fitzpeaks_reports = ni_fn;
+key_energies = ni_key_energies;
+glines = ni_glines;
 EoB_Time = '26-Feb-2019 00:32:00'
-rhodrs = ir_rhodrs;
-mu_attenuation = load('ir_xcom.txt');
-unc_rhodrs = unc_ir_rhodrs;
+rhodrs = ni_rhodrs;
+mu_attenuation = load('ni_xcom.txt');
+unc_rhodrs = unc_ni_rhodrs;
 
 
 % Test new fitzpeaks_parser wrapper function
@@ -96,6 +96,7 @@ data = output;
 rows_Ni_52mMn = [70];   %check, check
 % rows_Ni_52Mn = [27,42,60,64,71];  %check
 rows_Ni_52Mn = [27,42,60,71];  %check
+rows_Ni_52gMn = [27,42,60];  %check
 rows_Ni_54Mn = [35]; %check
 rows_Ni_55Co = [3,13,15,18,30,34,41,46,57,63,67,69,84,97,104];   %check
 % rows_Ni_56Co = [29,45,55,59,66,82,90,91,92,99,101];  %check
@@ -127,7 +128,8 @@ rows_Ni_65Ni = [10,73,75,78]; %check
 
 
 % % 33MeV Copper foils:
-rows_Cu_52Mn = [20,23,34,39]; %check
+%rows_Cu_52Mn = [20,23,34,39]; %check
+rows_Cu_52gMn = [20,23,34,39]; %check
 rows_Cu_56Co = [22,25,31,42,44,47];  %check
 rows_Cu_57Co = [3,15]; %check
 rows_Cu_57Ni = [36]; %check
@@ -209,12 +211,15 @@ rows_Ir_191Os = [107]; %check
 %rows_Ir_190m2Ir = [108, 109, 110, 111]; %check
 rows_Ir_190m2Ir = [109,110, 111]; %check
 
+%rows_Ir_193Os = [112, 113, 114, 115, 116, 117, 118]; %check
+rows_Ir_193Os = [112, 113, 116, 117]; %check
+
 
 
 % Select rows to plot
 % varToStr = @(x) inputname(1);
-rows = rows_Ir_194Ir;
-outName = '../csv/Ir_194Ir';
+rows = rows_Ni_52gMn;
+outName = '../csv/Ni_52gMn';
 % rows = 12;
 % Find rows for the desired decay product
 selected_rows = data(rows,:);
@@ -225,10 +230,10 @@ selected_rows = data(rows,:);
 % energy = 0; % Show all foils in one plot (not for analysis!)
 % 
 % loop over all energies for a foil type
-% for energy = 128:100:1028   % Just Nickel
+for energy = 128:100:1028   % Just Nickel
 % for energy = 129:100:1029   % Just Copper
 % for energy = 126:100:326   % Just Iron
-for energy = 177:100:1077   % Just Iridium
+% for energy = 177:100:1077   % Just Iridium
 % 
 %  for energy = 177   % debug mode
     if energy==0
@@ -285,5 +290,5 @@ for energy = 177:100:1077   % Just Iridium
     
     %     Dump to csv for python / gnuplot
     %     Turn this line on to write files out!
-%     csvwrite([outName '_' num2str(energy) '.dat'],outfile);  %Saving the csv file 
+    csvwrite([outName '_' num2str(energy) '.dat'],outfile);  %Saving the csv file 
 end

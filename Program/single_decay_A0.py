@@ -564,6 +564,9 @@ np.savetxt("{}.csv".format(save_results_to +  'Ni_56Co'), np.array((A0, sigma_A0
 
 
 #single_decay_data(Ni_52Mn(), "Ni_52Mn", 10, Save_csv=True)   #since could not distinguish isomer + gs, do single decay and report cumulative yield. 
+#single_decay_data(Ni_52gMn(), "Ni_52gMn", 10, Save_csv=True)   Removed 1434 from matlab, since shared with 52mMn. This way maybe we can get independent and cumulative measurement
+
+
 #single_decay_data(Ni_54Mn(), "Ni_54Mn", 10, Save_csv=True)      #done
 
 #single_decay_data(Ni_59Fe(), "Ni_59Fe", 10, Save_csv=True)      #only in foil number 1, 3, 5
@@ -614,9 +617,9 @@ np.savetxt("{}.csv".format(save_results_to +  'Ni_56Co'), np.array((A0, sigma_A0
 #single_decay_data(Ir_187W(), "Ir_187W", 10, Save_csv=True)    # kind of weird looking?
 
 #single_decay_data(Ir_188Pt(), "Ir_188Pt", 10, Save_csv=True)    #USED
-#two_step_kp_data(Ir_188Pt(), Ir_188Ir(), "Ir_188Ir", 10, Save_csv= True)   #ok
+#two_step_kp_data(Ir_188Pt(), Ir_188Ir(), "Ir_188Ir", 10, Save_csv= False)   #ok
 #two_step_up_npat(Ir_188Ir(return_two_list=True), "Ir_188Pt", "Ir_188Ir", 10, '188PT', '188IR', Save_csv=True)
-#single_decay_data(Ir_188Ir(), "Ir_188Ir", 10, Save_csv=True)    #USED
+#single_decay_data(Ir_188Ir(), "Ir_188Ir", 10, Save_csv=False)    #USED
 
 #single_decay_data(Ir_188mRe(), "Ir_188mRe", 10, Save_csv=True)    #WEIRD, prob not produced?
 #single_decay_data(Ir_188Re(), "Ir_188Re", 10, Save_csv=True)    #ok
@@ -642,11 +645,13 @@ np.savetxt("{}.csv".format(save_results_to +  'Ni_56Co'), np.array((A0, sigma_A0
 #single_decay_data(Ir_190m2Ir(), "Ir_190m2Ir", 10, Save_csv=True)  
 
 #single_decay_data(Ir_191Pt(), "Ir_191Pt", 10, Save_csv=True)    #two gamma lines, does not agree
-#single_decay_data(Ir_192Ir(), "Ir_192Ir", 10, Save_csv=True)    #must go through false peaks
+#single_decay_data(Ir_192Ir(), "Ir_192Ir", 10, Save_csv=False)    #must go through false peaks
 #single_decay_data(Ir_191Os(), "Ir_191Os", 10, Save_csv=True)    
 
+#single_decay_data(Ir_193Os(), "Ir_193Os", 10, Save_csv=True)    
+
 ###    single_decay_data(Ir_193mPt(), "Ir_193mPt", 10, Save_csv=True)   
-single_decay_data(Ir_194m2Ir(), "Ir_194m2Ir", 10, Save_csv=True)    #ok, must go through false peaks
+#single_decay_data(Ir_194m2Ir(), "Ir_194m2Ir", 10, Save_csv=True)    #ok, must go through false peaks
 #two_step_kp_data(Ir_194m2Ir(), Ir_194Ir(), "Ir_194Ir", 10, Save_csv= True)  
 
 

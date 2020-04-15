@@ -1,13 +1,53 @@
 import numpy as np 
 import matplotlib.pyplot as plt
 import os 
-from scipy.optimize import curve_fit, minimize_scalar
-from scipy import asarray as ar,exp
-from scipy.stats import norm
+
+from sklearn.gaussian_process import GaussianProcessRegressor 
 
 
-from scipy.interpolate import interp1d, UnivariateSpline
 
+#from scipy.interpolate import UnivariateSpline
+from scipy import interpolate
+
+def interpolation(x,y):	
+	#print(x)
+	#plt.plot(x,y, label='data')
+
+
+	x_new = np.linspace(0, 6.25, 1000)
+	#spl = UnivariateSpline(x,y)
+	#spl.set_smoothing_factor(10)
+	#plt.plot(x_new, spl(x_new), 'g', lw=3, label='spline')
+	#lt.legend()
+	#plt.show()
+	
+	tck = interpolate.splrep(x, y, s=0)
+	y_new = interpolate.splev(x_new, tck, der=0)
+
+	return x_new, y_new
+
+
+def fwhm(x, y, k=10):
+    """
+    Determine full-with-half-maximum of a peaked set of points, x and y.
+
+    Assumes that there is only one peak present in the datasset.  The function
+    uses a spline interpolation of order k.
+    """
+    from scipy.interpolate import splrep, sproot, splev
+    half_max = np.amax(y)/2.0
+    print(half_max)
+    s = splrep(x, y - half_max, k=k)
+    roots = sproot(s)
+
+    if len(roots) > 2:
+        raise MultiplePeaks("The dataset appears to have multiple peaks, and "
+                "thus the FWHM can't be determined.")
+    elif len(roots) < 2:
+        raise NoPeaksFound("No proper peaks were found in the data set; likely "
+                "the dataset is flat (e.g. all zeros).")
+    else:
+        return abs(roots[1] - roots[0])
 
 path = os.getcwd() 
 ss_front_h = 'ss_front_horizontal.csv'
@@ -21,19 +61,43 @@ def read_csv(filename):
 	y  = np.loadtxt(filename, delimiter=',', skiprows=1, usecols=[1])
 	x = x.tolist(); y=y.tolist()
 
-	from scipy.signal import chirp, find_peaks, peak_widths
 
-	peaks, _ = find_peaks(y)
-	results_half = peak_widths(y, peaks, rel_height=1)
+	fwhm_ = fwhm(x,y, k=2)
+	print(fwhm_)
 
-	print(results_half[0])
+	y_pred =  gpr.predict(x_new)
+	#print(y_pred)
+
+	plt.plot(x,y, '.', label='data')
+	
+
+	
+
+
+
+	x_new, y_new = interpolation(x,y)
+	plt.plot(x_new, y_new, '--')
+	plt.legend()
+	plt.show()
+
+
+
+	#from scipy.signal import chirp, find_peaks, peak_widths
+
+	#peaks, _ = find_peaks(y)
+	#results_half = peak_widths(y, peaks, rel_height=1)
+
+	#print(results_half[0])
 
 	#plt.plot(y)
 	#print(type(peaks[0]))
-	plt.plot(y[peaks[20]], label='test')
+	#plt.plot(y[peaks[20]], label='test')
 	#plt.plot(peaks, y[peaks[0]], "y")
-	plt.legend()
-	plt.show()
+
+	#plt.plot(x,y)
+	#plt.plot(x_new, y_new)
+	#plt.legend()
+	#plt.show()
 	#print(type(results_half))
 	"""
 	index = y.index(np.max(y))

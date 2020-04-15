@@ -116,17 +116,61 @@ class Calculations:
 		else:
 			plt.plot(self.E, T)
 		
+
+
+class Q_val_calc:
+	def __init__(self, Q, Z_targ, A_targ, Z_prod, A_prod, decay_channel):
+		self.Q = Q 
+		self.d_mass = 1875.6 #MeV /c^2
+		self.p_mass = 938.28 #MeV/ c^2
+		self.n_mass = 939.57 #MeV / c^2
+
+		self.M_targ = Z_targ*self.p_mass + (A_targ-Z_targ)*self.n_mass
+		self.M_prod = Z_prod*self.p_mass + (A_prod-Z_prod)*self.n_mass
+
+		self.decay_channel = decay_channel
+		if isinstance(self.decay_channel,list):
+			m_outgoing = 0
+			for i in self.decay_channel:
+				if i == 'p':
+					m_outgoing+= self.p_mass
+				elif i == 'n':
+					m_outgoing+= self.n_mass
+			self.m_outgoing = m_outgoing
+
+		else:
+			if self.decay_channel == 'p':
+				self.m_outgoing= self.p_mass
+			elif self.decay_channel == 'n':
+				self.m_outgoing = self.n_mass
+
+		
+		E = -Q* (self.m_outgoing + self.M_prod)/ (self.m_outgoing + self.M_prod- self.M_targ)
+		print(E*1e3)
+		#	return E
+
+			
+
+
+Q_ = Q_val_calc(-10.251, 77, 191, 77, 190, ['p', 'n', 'n'])
+
+
+
+
+
+
+
 		
 #A= [193, 195]; Z=78
 #A = [58+2, 60+2, 61+2, 62+2, 64+2]; Z=29
 #A = [63, 65]; Z=30
 #A = [54, 56, 57, 58; Z=27
-p = Calculations('p', A, Z)
-a = Calculations('alpha', A, Z)
-n = Calculations('n', A, Z)
-t = Calculations('t', A, Z)
-d = Calculations('d', A, Z)
-h = Calculations('3He', A, Z)
+#p = Calculations('p', A, Z)
+#a = Calculations('alpha', A, Z)
+#n = Calculations('n', A, Z)
+#t = Calculations('t', A, Z)
+#d = Calculations('d', A, Z)
+#h = Calculations('3He', A, Z)
 
 
 

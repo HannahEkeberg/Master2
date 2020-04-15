@@ -449,6 +449,28 @@ def Ni_52Mn(return_two_list=False): #double decay known parent 52mMn
     #return list, lambda_parent, lambda_daughter
     return list, lambda_daughter
 
+def Ni_52gMn(return_two_list=False): #double decay known parent 52mMn
+    foil1 = path + 'Ni_52gMn_128.dat'
+    foil2 = path + 'Ni_52gMn_228.dat'
+    foil3 = path + 'Ni_52gMn_328.dat'
+    foil4 = path + 'Ni_52gMn_428.dat'
+    foil5 = path + 'Ni_52gMn_528.dat'
+    foil6 = path + 'Ni_52gMn_628.dat'
+    foil7 = path + 'Ni_52gMn_728.dat'
+    foil8 = path + 'Ni_52gMn_828.dat'
+    foil9 = path + 'Ni_52gMn_928.dat'
+    foil10 = path + 'Ni_52gMn_1028.dat'
+    list = [foil1, foil2, foil3, foil4, foil5, foil6, foil7, foil8, foil9, foil10]
+    #lambda_parent = np.log(2)/(21.1*m)
+    lambda_ = np.log(2)/(5.591*d)
+
+   
+
+
+    #return list, lambda_parent, lambda_daughter#[lambda_parent, lambda_daughter]
+    #return list, lambda_parent, lambda_daughter
+    return list, lambda_
+
 def Ni_54Mn(): #single decay
     foil1 = path + 'Ni_54Mn_128.dat'
     foil2 = path + 'Ni_54Mn_228.dat'
@@ -1022,6 +1044,21 @@ def Ir_193mPt(): #Single decay
     foil10= path + 'Ir_193mPt_1077.dat'
     list = [foil1, foil2, foil3, foil4, foil5, foil6, foil7, foil8, foil9, foil10]
     lambda_ = np.log(2)/(4.33*d)  #days to seconds
+    return list, lambda_    #mon, single"
+
+def Ir_193Os():  # single decay
+    foil1 = path + 'Ir_193Os_177.dat'
+    foil2 = path + 'Ir_193Os_277.dat'
+    foil3 = path + 'Ir_193Os_377.dat'
+    foil4 = path + 'Ir_193Os_477.dat'
+    foil5 = path + 'Ir_193Os_577.dat'
+    foil6 = path + 'Ir_193Os_677.dat'
+    foil7 = path + 'Ir_193Os_777.dat'
+    foil8 = path + 'Ir_193Os_877.dat'
+    foil9 = path + 'Ir_193Os_977.dat'
+    foil10= path + 'Ir_193Os_1077.dat'
+    list = [foil1, foil2, foil3, foil4, foil5, foil6, foil7, foil8, foil9, foil10]
+    lambda_ = np.log(2)/(29.830*h)  #hours to seconds
     return list, lambda_    #mon, single"
 
 def Ir_194m2Ir(): #single decay
