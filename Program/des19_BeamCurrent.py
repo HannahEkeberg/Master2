@@ -71,7 +71,7 @@ class BeamCurrent:
         #                        182, 189, 190, 191, 198, 199, 200, 207, 208, 209, 216, 217, 218, 225, 226, 227,
         #                        234, 235, 236, 243, 244, 245, 252, 253, 254, 255, 256, 259, 261, 262, 263, 264, 265 ]
 
-    def get_sigmaE(self, E, F, foil, makePlot=False):
+    def get_sigmaE(self, E, F, foil, makePlot=False, return_EF=False):
 
         ### for cupper, flux is going up in end, delete those points!
 
@@ -109,12 +109,25 @@ class BeamCurrent:
             mu_array[i] = mu
 
 
+        #for ind in F[i]:
+            #if ind==0:#np.isnan(ind):
+        
+                #print("nan")
         #if return_fwhm:
             #return fwhm
         #if fwhm[-1]<fwhm[-2]:
         #    print(fwhm)
+
+        #for peak in F:
+            #    for i in range(len(peak)):
+            #        if peak[i] < np.abs(1e-8):#if np.abs(peak[i]-peak[i+1]) > 0.02:
+            #            peak[i]=float('nan')
         if makePlot:
+                            
             self.Plot_energy_distribution(E,F,mu_array, fwhm, half_max, foil)  #make plot of energy distribution
+        
+        if return_EF==True:
+            return E, F
         else:
             return dEl, dEr   #return left and right uncertainty
 
@@ -160,15 +173,23 @@ class BeamCurrent:
             print("test")
             plt.legend()
         elif foil == 'all':
-            self.get_sigmaE(self.E_Ir, self.F_Ir, foil, makePlot=True)
-            self.get_sigmaE(self.E_Fe, self.F_Fe, foil, makePlot=True)
-            self.get_sigmaE(self.E_Cu, self.F_Cu, foil, makePlot=True)
-            self.get_sigmaE(self.E_Ni, self.F_Ni, foil, makePlot=True)
-            #print('way')
+            E_Ir, F_Ir = self.get_sigmaE(self.E_Ir, self.F_Ir, foil, return_EF=True)
+            E_Fe, F_Fe = self.get_sigmaE(self.E_Fe, self.F_Fe, foil, return_EF=True)
+            E_Cu, F_Cu = self.get_sigmaE(self.E_Cu, self.F_Cu, foil, return_EF=True)
+            E_Ni, F_Ni = self.get_sigmaE(self.E_Ni, self.F_Ni, foil, return_EF=True)
+            
+            for i in range(len(E_Ir)):
+                plt.plot(E_Ni[i], F_Ni[i], color='darkorange', linewidth=0.9, linestyle='-')
+                plt.plot(E_Ir[i], F_Ir[i], color='navy', linewidth=0.9, linestyle='-')
+                plt.plot(E_Cu[i], F_Cu[i], color='forestgreen', linewidth=0.9, linestyle='-')
+                if i<=2:
+                    plt.plot(E_Fe[i], F_Fe[i], color='crimson', linewidth=0.9)
+            plt.legend(['Nickel', 'Iridium', 'Copper', 'Iron'])
+            plt.xlabel('Deuteron energy (MeV)')
+            plt.ylabel(r'Relative deuteron flux, $d\phi/dE$')
         path_to_folder = self.path + '/BeamCurrent/beam_fluxes/'
-        plt.title('Energy distribution for {}-foils - '.format(foil))
-        plt.savefig(path_to_folder + foil + '_flux_distribution_'+name+'.png', dpi=300)
-        #plt.close()
+        plt.title('Energy distribution for {} foils (indx={}) '.format(foil, name))
+        #plt.savefig(path_to_folder + foil + '_flux_distribution_'+name+'.png', dpi=300)
         plt.show()
 
     def Plot_energy_distribution(self, E, F, mu, fwhm, half_max, foil):
@@ -417,7 +438,8 @@ class BeamCurrent:
         else:
             return E_Fe, E_Ni, E_Cu, E_Ir
 
-    def variance_minimization(self, compartment, name, include_56Co=False, MakePlot=False):
+    def variance_minimization(self, compartment, name, include_56Co=True, MakePlot=False):
+        #print(compartment)
         compartment=compartment-1
 
 
@@ -492,6 +514,7 @@ class BeamCurrent:
         I_est = popt[0]
 
         chi_sq = self.chi_sqaured(I, I_est, dI)
+        #print(len(dI))
 
         if MakePlot == True:
             plt.errorbar(WE_Ni, I_Ni_61Cu, color='magenta', marker='.', linewidth=0.001, xerr=dWE_Ni, yerr=dI_Ni_61Cu, elinewidth=0.5, capthick=0.5, capsize=3.0,label=r'$^{nat}$Ni(d,x)$^{61}$Cu' )
@@ -530,9 +553,10 @@ class BeamCurrent:
             plt.xlabel('Energy, MeV')
             plt.ylabel('Beam Current, nA')
 
-            plt.title(r'Linear fit for foils compartment {} - {}. $\chi^2$={:.2f} '.format(compartment+1, name, chi_sq))
+            #plt.title(r'Linear fit for foils compartment {} - {}. $\chi^2$={:.2f} '.format(compartment+1, name, chi_sq))
+            plt.title(r'Linear fit for foils compartment {}, $\chi^2$={:.2f} '.format(compartment+1,chi_sq))
             plt.legend(fontsize='x-small')
-            plt.savefig('BeamCurrent/chi_minimization/minimization_{}_'.format(compartment+1)+name+'.png', dpi=300)
+            #plt.savefig('BeamCurrent/chi_minimization/minimization_{}_'.format(compartment+1)+name+'.png', dpi=300)
             #plt.close()
             plt.show()
         return WE_Ni, chi_sq, I_est, sigma_I_est
@@ -643,12 +667,14 @@ class BeamCurrent:
         if SaveFig:
             plt.legend(fontsize='x-small')
             path = os.getcwd()
-            plt.savefig(path + '/BeamCurrent/current_all/' + name  + '.png',dpi=300)
+            #plt.savefig(path + '/BeamCurrent/current_all/' + name  + '.png',dpi=300)
             #plt.savefig(path+'/BeamCurrent/' + name +'.png', dpi=300)
             plt.show()
 
     def CurrentPlot_compartment(self, name, WABC = 'averaged_currents.csv', title=None):
-        compartment = [3,7,9]
+        #compartment = [3,7,9]
+        compartment = [3,6,9]
+        #print(compartment)
         WE_Ir, sigma_WE_Ir = self.WABE('Ir')
         #WABC = 'averaged_currents.csv' ## weighted average beam current filename
         #weighted_average_beam = np.genfromtxt(WABC, delimiter=',', usecols=[1])
@@ -677,11 +703,13 @@ class BeamCurrent:
         #weighted_average_beam = weighted_average_beam[::-1]
         sigma_weighted_average_beam = np.genfromtxt(WABC, delimiter=',', usecols=[2])
         #sigma_weighted_average_beam = sigma_weighted_average_beam[::-1]
+        
+        # turn on for weighted average... 
         plt.errorbar(WE_Ir, weighted_average_beam, color='black', marker='P', linewidth=0.001, xerr=sigma_WE_Ir, yerr=sigma_weighted_average_beam, elinewidth=0.5, capthick=0.5, capsize=3.0,label='weighted average beam current' )
         plt.legend(fontsize='x-small')
-        #plt.savefig('BeamCurrent/compartment_compare/comp_compared_{}.png'.format(name), dpi=300)
+        plt.savefig('BeamCurrent/Comparing_BC/comp_compared_{}.png'.format(name), dpi=300)
         plt.show()
-        #plt.close()
+        plt.close()
         #plt.title('')
 
     def current_for_CS(self, return_energies=False, mon_test=False):

@@ -96,6 +96,8 @@ class SimCrossSectionData:
 			#print(E, CS)
 			return E_typ, CS_typ
 
+
+
 		
 		"""
 
@@ -145,9 +147,66 @@ class SimCrossSectionData:
         
 
 	def ALICE(self, foil, A, Z, CS_colonne=4):
+
+		f_Ni = self.path + '/../Alice/plot_{}'.format('natNi_20')
+		f_Cu = self.path + '/../Alice/plot_{}'.format('natCu_20')
+		f_Fe = self.path + '/../Alice/plot_{}'.format('natFe_20')
+		f_Ir = self.path + '/../Alice/plot_{}'.format('natIr_20')
+		
+
+		if foil == 'Ni':
+			filename=f_Ni 
+		elif foil == 'Cu':
+			filename = f_Cu
+		elif foil == 'Fe':
+			filename = f_Fe
+		elif foil == 'Ir':
+			filename = f_Ir
+
+		with open(filename) as f:
+			content = f.readlines()
+			for s in content:
+				#line = ' '.join(s).split()
+				line = " ".join(s.split())
+				#print(line)
+
+			#print(content)
+			E_all = np.genfromtxt(filename, delimiter=' ', usecols=[0])#, skip_header=2)
+			CS_all = np.genfromtxt(filename, delimiter=' ', usecols=[CS_colonne])#, skip_header=2)
+			Z_ = np.genfromtxt(filename, delimiter=' ', usecols=[2])#, skip_header=2)
+			A_ = np.genfromtxt(filename, delimiter=' ', usecols=[3])#, skip_header=2)
+			
+			E = []; CS = [] 
+			#print(A, Z)
+			Z = ' ' + Z + ' ' # must change to this so that it doesnt get mixed up by other line
+			A = ' ' + A + ' '
+			for lines in range(len(content)):
+				if (A in content[lines]) and (Z in content[lines]):
+					#print(content[lines])
+					#print("line: ", lines)
+					#print("A: ", A_[lines])
+					#print("Z: ", Z_[lines])
+
+					E.append(E_all[lines])
+					CS.append(CS_all[lines])
+
+		
+		E_new, CS_new = self.interpolation(E, CS)
+		#plt.plot(E_new, CS_new)
+		#plt.show()
+		return E_new, CS_new
+
+	
+
+
+	def ALICE_isotopic(self, foil, A, Z, CS_colonne=4):
 		print("ALICE IN SIM")
 		print(foil, A, Z, CS_colonne)
 		#print("Alice")
+
+
+
+
 		if foil == 'Ir': 
 			abund_191Ir = 0.373 ; abund_193Ir = 0.627
 
@@ -662,8 +721,14 @@ class SimCrossSectionData:
 		plt.plot(E_189Pt, CS_189Pt, label=r'$^{189}$Pt')
 		plt.plot(E_191Pt, CS_191Pt, label=r'$^{191}$Pt')
 		plt.plot(E_193Pt, CS_193Pt, label=r'$^{193m}$Pt')
+		
+		plt.text(10, 340, r'$^{193}$Ir(d,2n)$^{193m}$Pt', color='red', fontsize=9)
+		plt.text(12, 300, r'$^{191}$Ir(d,2n)$^{191}$Pt', color='green', fontsize=9)
+		plt.text(25, 700, r'$^{193}$Ir(d,4n)$^{191}$Pt', color='green', fontsize=9)
+		plt.text(27, 360, r'$^{191}$Ir(d,4n)$^{189}$Pt', color='orange', fontsize=9)
+		plt.text(29, 200, r'$^{191}$Ir(d,5n)$^{188}$Pt', color='blue', fontsize=9)
 		#plt.plot(E_193Pt2, CS_193Pt2, label=r'$^{193m}$Pt talys')
-
+		plt.axis((0, 40, 0, 740))
 		plt.title('Tendl cross sections for deuterions on natural iridium')
 		plt.xlabel('Energy, MeV')
 		plt.ylabel('Cross section, mb')
@@ -681,7 +746,8 @@ class SimCrossSectionData:
 #print(path)
 
 
-SimCS = SimCrossSectionData()
+#SimCS = SimCrossSectionData()
+#SimCS.ALICE('Ni', '56', '27', 5)
 #SimCS.multiple_reactions()
 #foil = 'Ir'; A = '190'; Z = '77' # 183Ta
 #foil = 'Cu'; A = '60'; Z = '27' # 183Ta

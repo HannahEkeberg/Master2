@@ -12,6 +12,8 @@ from foil_info import *
 from simulated_CrossSectionData import SimCrossSectionData
 
 
+
+
 #func=Cu_62Zn(); A0_guess=4000
 #func=Ni_58Co(); A0_guess=[5000, 1000]
 #func = Ni_61Cu(); A0_guess=4000
@@ -84,29 +86,39 @@ selected_names = [#'B_-2,5_D_+4','B_+0,25_D_-5',  'B_+0,5_D_-4','B_+0,25_D_-4,75
 selected_names = ['B_0_D_0']
 """
 
-scaling='B_+2_D_+4,25'
-#scaling='B_+0,5_D_+1,25'
+#scaling='B_+2_D_+4,25'     #THE ONE USED SO FAR. TURN OF OTHER IF WANT AS NORMAL
+scaling='B_+0,5_D_+1,25'
 #scaling = 'B_+1,25_D_+2,75'
 #scaling='B_+1,75_D_+3,75'
-index = find_index(names, scaling); title= 'Beam current - Energy increase 2%, density increase 4.25%' #the one used so far. 
-#index = find_index(names, scaling); title= 'Beam current - Energy increase 0.5%, density increase 1.25%'
+#index = find_index(names, scaling); title= 'Beam current - Energy increase 2%, density increase 4.25%' #the one used so far. 
+index = find_index(names, scaling)#; title= 'Beam current - Energy increase 0.5%, density increase 1.25%'
 #index = find_index(names, scaling); title= 'Beam current - Energy increase 1.25%, density increase 2.75%'
 #index = find_index(names, scaling); title= 'Beam current - Energy increase 1.75%, density increase 3.75%'
 #print(files[index])
 #RZ = Run_Ziegler(files, names)
 csv_filename = './' + files[index] 
 
-#BC = BeamCurrent(files[index])
+BC = BeamCurrent(files[index])
 #BC.CurrentPlot_compartment(names[index], title=title)
+## Just energy-flux distributions
 #BC.plot_distribution('Ir', scaling)
 #BC.plot_distribution('Cu', scaling)
 #BC.plot_distribution('Ni', scaling)
 #BC.plot_distribution('Fe', scaling)
+#BC.plot_distribution('all',scaling)
+
+#print(weighted_average_BC)
+#BC.CurrentPlot_compartment(names[index], WABC=csv_filename)
+CS = CrossSections(files[index])
 
 
-
+#not important
 #BC.calculate_beam_current('Ni', 'Ni_56Co', print_terms=True)
 #BC.calculate_beam_current('Ni', 'Ni_58Co', print_terms=True)
+
+
+# just collecting A0, dA0, lamb, mass_density, sigma_mass_density, reaction_integral, ucertainty_integral, irr_time, sigma_irr_time
+### Testing that the program works, nothing else.. 
 #BC.calling_parameters_to_weightedaverage_func('Cu', 'Cu_62Zn')
 #BC.calling_parameters_to_weightedaverage_func('Cu', 'Cu_63Zn')
 #BC.calling_parameters_to_weightedaverage_func('Cu', 'Cu_65Zn')
@@ -115,7 +127,10 @@ csv_filename = './' + files[index]
 #BC.calling_parameters_to_weightedaverage_func('Ni', 'Ni_58Co')
 #BC.calling_parameters_to_weightedaverage_func('Fe', 'Fe_56Co')
 
-#BC.variance_minimization(6, names[index], include_56Co=True, MakePlot=True)
+
+#BC.variance_minimization(9, names[index], include_56Co=True, MakePlot=True)
+# returns WE_Ni, chi_sq, I_est, sigma_I_est
+
 
 
 #### positive B and positive D compensate each other- same for neg neg
@@ -139,11 +154,13 @@ csv_filename = './' + files[index]
 
 
 
-"""
+
 ###   This is where the csv file with the beam current is written  (assigned indexed ziegler file)
 csv_filename = './' + files[index] 
-#print("**", csv_filename)
+print("**", csv_filename)
 
+
+"""
 BC = BeamCurrent(files[index])
 #assigning variables for weighted_average.py
 A0, sigma_A0, lambda_, mass_density, sigma_mass_density, reaction_integral, uncertainty_integral, irr_time, sigma_irr_time = BC.reshaping_parameters()
@@ -249,7 +266,7 @@ CS = CrossSections(files[index])
 
 
 #CS.make_CS(Ni_54Mn(), 'Ni', 'Ni_54Mn.csv', 10, 'Ni_54Mn', csv_filename, '25', '54', ylimit=40, independent=True, CS_colonne_ALICE=5)
-#CS.make_CS(Ni_59Fe(), 'Ni', 'Ni_59Fe.csv', 10, 'Ni_59Fe', csv_filename, '26', '59', independent=False,CS_colonne_ALICE=5)   # first in decay chain
+#CS.make_CS(Ni_59Fe(), 'Ni', 'Ni_59Fe.csv', 10, 'Ni_59Fe', csv_filename, '26', '59', independent=False,CS_colonne_ALICE=5, ylimit=1)   # first in decay chain
 #CS.make_CS(Ni_60Cu(), 'Ni', 'Ni_60Cu.csv', 10, 'Ni_60Cu', csv_filename, '29', '60',CS_colonne_ALICE=5)
 #CS.make_CS(Ni_64Cu(), 'Ni', 'Ni_64Cu.csv', 10, 'Ni_64Cu', csv_filename, '29', '64',CS_colonne_ALICE=5)
 #CS.make_CS(Ni_60Co(), 'Ni', 'Ni_60Co.csv', 10, 'Ni_60Co', csv_filename, '27', '60', ylimit=55, independent=False,CS_colonne_ALICE=5) # first in decay chain
@@ -298,9 +315,9 @@ CS = CrossSections(files[index])
 
 # make 188 Ir independent by subtracting 188Ir cumulative-188Pt
 
-CS.make_CS(Ir_189Pt(), 'Ir', 'Ir_189Pt.csv', 10, 'Ir_189Pt', csv_filename, '78', '189', ylimit=520, independent=True)    # 
-CS.make_CS(Ir_189Ir(), 'Ir', 'Ir_189Ir.csv', 10, 'Ir_189Ir', csv_filename, '77', '189', independent=False, feeding='beta+', BR=1.0)    # need work on activity 
-CS.make_CS_subtraction('daughter', 'Ir', 10, csv_filename, Ir_189Pt(), 'Ir_189Pt', 'Ir_189Pt.csv', '78', '189',  Ir_189Ir(), 'Ir_189Ir', 'Ir_189Ir.csv', '77', '189', ylimit=500, independent=True, file_ending='.tot', CS_colonne_ALICE=4, BR_daughter=1.0)  # Necessary when subtracting
+#CS.make_CS(Ir_189Pt(), 'Ir', 'Ir_189Pt.csv', 10, 'Ir_189Pt', csv_filename, '78', '189', ylimit=520, independent=True)    # 
+#CS.make_CS(Ir_189Ir(), 'Ir', 'Ir_189Ir.csv', 10, 'Ir_189Ir', csv_filename, '77', '189', independent=False, feeding='beta+', BR=1.0)    # need work on activity 
+#CS.make_CS_subtraction('daughter', 'Ir', 10, csv_filename, Ir_189Pt(), 'Ir_189Pt', 'Ir_189Pt.csv', '78', '189',  Ir_189Ir(), 'Ir_189Ir', 'Ir_189Ir.csv', '77', '189', ylimit=500, independent=True, file_ending='.tot', CS_colonne_ALICE=4, BR_daughter=1.0)  # Necessary when subtracting
 
 
 #CS.make_CS(Ir_190Ir(), 'Ir', 'Ir_190Ir.csv', 10, 'Ir_190Ir', csv_filename, '77', '190', independent=False, CS_colonne_ALICE=4)     # file_ending=.tot because of decay from m1 m2 isomer. 

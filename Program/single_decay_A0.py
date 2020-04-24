@@ -29,7 +29,148 @@ if not os.path.exists(dir_csv):
 
 ####FUNCTIONS
 
-def A0_single_decay(filename_activity_time, lambda_, makePlot=False):
+
+csfont = {'fontname':'Georgia'}
+
+
+def plot_function(decay_type, foil, title, react_func, react_func_parent=None):
+    ### Just for plotting nicely
+
+
+
+
+    if decay_type=='single':
+        #print(react_func[0])
+        #print(react_func)
+        filelist_d, lamb = react_func
+        def onestep_decay(t, A0_guess):
+            #print(lamb)
+            A_est=A0_guess*np.exp(-lamb*t)
+            return A_est
+
+
+
+    elif decay_type == 'twostep_kp':
+        filelist_d, lamb_d = react_func
+        filelist_p, lamb_p = react_func_parent
+
+        def onestep_decay(t, A0_guess_parent):
+            A_est=A0_guess_parent*np.exp(-lamb_p*t)
+            return A_est
+
+
+        def twostep_kp_decay(t, A0_daughter_guess):  #if there are no gammas to be detected from parent
+            A_est  = A0_parent  *lamb_d / (lamb_p-lamb_d) * (np.exp(-lamb_d*t)-np.exp(-lamb_p*t)) + A0_daughter_guess*np.exp(-lamb_d*t)
+            return A_est
+        #A_est = A0_parent *lambda_daughter / (lambda_daughter-lambda_parent) * (np.exp(-lambda_daughter*time)-np.exp(-lambda_parent*time)) + A0_daughter_guess*np.exp(-lambda_daughter*time)
+        #A_est = A0_parent_guess*lambda_daughter / (lambda_parent-lambda_daughter) *( np.exp(-lambda_daughter*time)-np.exp(-lambda_parent*time)) + A0_daughter_guess*np.exp(-lambda_daughter *time)
+        #return A_est
+    elif decay_type == 'twostep_up':
+        filelist_d,lamb_p, lamb_d = react_func
+
+        def twostep_up_decay(t, A0_parent_guess, A0_daughter_guess):  #if there are no gammas to be detected from parent
+            A_est = A0_parent_guess*lamb_d / (lamb_p-lamb_d) *( np.exp(-lamb_d*t)-np.exp(-lamb_p*t)) + A0_daughter_guess*np.exp(-lamb_d *t)
+            return A_est
+
+    n = len(filelist_d)
+    if foil == None:
+        A = np.zeros(n)
+        dA = np.zeros(n)
+        t = np.zeros(n)
+        for i in range(len(filelist_d)):
+            t = np.genfromtxt(filelist_d[i], delimiter=',', usecols=[0]) #hours since e.o.b
+            A = np.genfromtxt(filelist_d[i], delimiter=',', usecols=[1]) 
+            dA = np.genfromtxt(filelist_d[i], delimiter=',', usecols=[2])
+            
+            index = ~(np.isnan(A) | np.isnan(dA))  #if either eps OR sigma eps is NaN
+            time = np.max(t[index])
+            xplot = np.linspace(0,time,1000)
+            
+            
+                #x = onestep_decay(lamb, t, A0_guess)
+                #print(x)
+            #print(lamb)
+            #def onestep_decay(t, A0_guess):
+            #    #print(lamb)
+            #    A_est=A0_guess*np.exp(-lamb*t)
+            #    return A_est
+            if decay_type=='single':
+                A0_guess = 600
+                popt, pcov=curve_fit(onestep_decay, t[index]*3600, A[index], p0=A0_guess, sigma=dA[index], absolute_sigma=True)
+                sigma_activity_estimated = np.sqrt(np.diagonal(pcov))   #Uncertainty in the fitting parameters
+                full_width = np.abs(onestep_decay(xplot*3600,*(popt+sigma_activity_estimated))-onestep_decay(xplot*3600,*(popt-sigma_activity_estimated))) #full width of confidence band
+                percent_uncert = full_width/(2*onestep_decay(xplot*3600,*popt))  #Distance from fitted line. Half width, sigma_A0/A0 along the line.
+                #print("Relative uncertainty of A0 (estimated) {}".format(percent_uncert[0]))
+                sigma_A0_estimated = (full_width/2)[0]  #uncertainty in the estimated A0. just taking out the first point.
+                A0_estimated = onestep_decay(0, popt)
+                plt.plot(xplot,onestep_decay(xplot*3600,*popt),'r-', color='red')
+                plt.plot(xplot,onestep_decay(xplot*3600,*(popt+sigma_activity_estimated)), color='blue', linewidth=0.4)
+                plt.plot(xplot,onestep_decay(xplot*3600,*(popt-sigma_activity_estimated)), color='blue', linewidth=0.4)
+                plt.plot(t[index],A[index], '.')
+                plt.errorbar(t[index], A[index], color='green', linewidth=0.001,yerr=dA[index], elinewidth=0.5, ecolor='k', capthick=0.5)   # cap thickness for error bar color='blue')
+                #plt.title('Activity for foil {} nucleus {}'.format(ID, Nucleus) )
+                plt.xlabel('time since eob, hours')
+                plt.ylabel('Activity, Bq')
+                #plt.title(title + " for foil {}".format(i+1), fontsize=12, **csfont)
+                plt.title(title + " for foil {}".format(i+1), fontsize=12)
+                plt.legend(['Fit', r'1$\sigma$ uncertainty'] )
+                plt.show()
+            elif decay_type=='twostep_kp':
+                A0_daughter_guess=3000; A0_parent_guess=6000
+                popt1, pcov1 = curve_fit(onestep_decay, t[index]*3600, A[index], p0=A0_parent_guess, sigma=dA[index], absolute_sigma=True)
+                A0_parent = popt1
+                popt, pcov = curve_fit(twostep_kp_decay, t[index]*3600, A[index], p0=A0_daughter_guess, sigma=dA[index], absolute_sigma=True)
+                sigma_activity_estimated = np.sqrt(np.diagonal(pcov))   #Uncertainty in the fitting parameters
+                plt.plot(xplot, twostep_kp_decay(xplot*3600,*popt), 'r-', color='red')
+                plt.plot(xplot, twostep_kp_decay(xplot*3600,*(popt+sigma_activity_estimated)), color='blue', linewidth=0.4)
+                plt.plot(xplot, twostep_kp_decay(xplot*3600,*(popt-sigma_activity_estimated)), color='blue', linewidth=0.4)
+                plt.plot(t[index],A[index], '.')
+                plt.errorbar(t[index], A[index], color='green', linewidth=0.001,yerr=dA[index], elinewidth=0.5, ecolor='k', capthick=0.5)   # cap thickness for error bar color='blue')
+                #plt.title('Activity for foil {} nucleus {}'.format(ID, Nucleus) )
+                plt.xlabel('time since eob, hours')
+                plt.ylabel('Activity, Bq')
+                plt.title(title + " for foil {}".format(i+1), fontsize=12)
+                plt.legend(['Fit', r'1$\sigma$ uncertainty'] )
+                #plt.show()
+                #print(len(xplot), len(twostep_kp_decay(xplot*3600, *popt)))
+                #print(popt)
+            elif decay_type =='twostep_up':
+                A0_daughter_guess=3000; A0_parent_guess=6000
+                popt, pcov = curve_fit(twostep_up_decay, t[index]*3600, A[index], p0=[A0_parent_guess, A0_daughter_guess], sigma=dA[index], absolute_sigma=True)
+                #print(len(xplot), len(twostep_up_decay(xplot*3600, *popt)))
+                #print(popt)popt = popt[-1]
+                sigma_activity_estimated = np.sqrt(np.diagonal(pcov))   #Uncertainty in the fitting parameters
+                plt.plot(xplot, twostep_up_decay(xplot*3600,*popt), 'r-', color='red')
+                #plt.plot(xplot, twostep_up_decay(xplot*3600,*popt), 'r-', color='red')
+                #print(len(xplot), len(twostep_up_decay(xplot*3600, *popt)))
+                #print(popt)
+                plt.plot(xplot, twostep_up_decay(xplot*3600,*(popt+sigma_activity_estimated)), color='blue', linewidth=0.4)
+                plt.plot(xplot, twostep_up_decay(xplot*3600,*(popt-sigma_activity_estimated)), color='blue', linewidth=0.4)
+                plt.plot(t[index],A[index], '.')
+                plt.errorbar(t[index], A[index], color='green', linewidth=0.001,yerr=dA[index], elinewidth=0.5, ecolor='k', capthick=0.5)   # cap thickness for error bar color='blue')
+                plt.xlabel('time since eob, hours')
+                plt.ylabel('Activity, Bq')
+                plt.title(title + " for foil {}".format(i+1), fontsize=12)
+                plt.legend(['Fit', r'1$\sigma$ uncertainty'] )
+                plt.show()
+
+    #else:
+    #    file = filelist_d[foil-1] # indexing correctly
+    #    t = np.genfromtxt(file, delimiter=',', usecols=[0]) #hours since e.o.b
+    #    A = np.genfromtxt(file, delimiter=',', usecols=[1]) 
+    #    dA = np.genfromtxt(file, delimiter=',', usecols=[2])
+
+
+
+
+#plot_function('single', None, r'Activity curve for $^{nat}$Ni(d,x)$^{61}$Cu', Ni_61Cu())
+#plot_function('single', None, r'Activity curve for $^{nat}$Ir(d,x)$^{193m}$Pt', Ir_193mPt())
+plot_function('twostep_up', None, r'Activity curve for $^{nat}$Ni(d,x)$^{58}$Co', Ni_58Co())
+#plot_function('twostep_up', None, 'title', Ni_58Co())
+#plot_function('twostep_kp', None, r'Activity curve for $^{nat}$Ni(d,x)$^{56}Co$', Ni_56Co_old(), Ni_56Ni())
+
+
+def A0_single_decay(filename_activity_time, lambda_, makePlot=False, title_plot=None):
     #ID = filename_activity_time[-8:-4]
     #Nucleus = filename_activity_time[-12:-8]
    

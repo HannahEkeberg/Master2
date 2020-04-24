@@ -195,6 +195,7 @@ class CrossSections:
 
         print("     E     ", "    CS    " )
         print(np.vstack((E,CS)).T)
+        #print(dE)
 
         dE_tot = dE[0]+dE[1]
         csv_save_array = np.vstack((E, dE_tot, CS, dCS)).T
@@ -235,7 +236,7 @@ class CrossSections:
             title = r'$^{nat}$' + foil + '(d,x)' + r'$^{{ {} }}$'.format(A+state) + reaction[-2:]  + ' - Cumulative' 
 
 
-        
+        print(dE)
         if save_text==True:
             plt.errorbar(E, CS, marker='P', color='darkred',linewidth=0.0001, xerr=dE, yerr=dCS, elinewidth=1.0, capthick=1.0, capsize=3.0, label='this data')
             self.modelling('Tendl', foil, Z, A, reaction, file_ending, independent=independent, feeding=feeding, BR=BR, CS_colonne=CS_colonne_ALICE)

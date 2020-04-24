@@ -20,7 +20,7 @@ monitor_reactions_per_foil = np.array([3, 3, 1])
 
 ### Read in numbers of decays from csv file
 
-def Average_BeamCurrent(A0, sigma_A0, mass_density, sigma_mass_density, lambda_, reaction_integral, uncertainty_integral, irr_time, sigma_irr_time, csv_filename='averaged_currents.csv'):
+def Average_BeamCurrent(A0, sigma_A0, mass_density, sigma_mass_density, lambda_, reaction_integral, uncertainty_integral, irr_time, sigma_irr_time, csv_filename='averaged_currents.csv', save_csv=False):
 
 
     def decomment(csvfile):
@@ -187,7 +187,7 @@ def Average_BeamCurrent(A0, sigma_A0, mass_density, sigma_mass_density, lambda_,
     # print('uncertainty_lambdas: ',uncertainty_lambdas)
 
     for i_energy in range(0, number_of_energies):
-        print('i_energy: ',i_energy)
+        #print('i_energy: ',i_energy)
 		# Get nonzero entries in A0:
         nonzero_indices = np.nonzero(EoB_activities[i_energy,:])
         ad = areal_density[i_energy,:]
@@ -310,14 +310,14 @@ def Average_BeamCurrent(A0, sigma_A0, mass_density, sigma_mass_density, lambda_,
         uncertainty_weighted_average_current = np.sqrt(1.0/denominator)
 
 
-        print("weighted_average_current: ",weighted_average_current, " +/- ",uncertainty_weighted_average_current, " nA     (", 100*uncertainty_weighted_average_current/weighted_average_current ," %)")
+        ####print("weighted_average_current: ",weighted_average_current, " +/- ",uncertainty_weighted_average_current, " nA     (", 100*uncertainty_weighted_average_current/weighted_average_current ," %)")
 
 		# Append values for current energy
         output_foil_index.append(i_energy)
         output_mu.append(weighted_average_current)
         output_unc_mu.append(uncertainty_weighted_average_current)
         output_percent_unc.append(100*uncertainty_weighted_average_current/weighted_average_current)
-        print("********************************************************************\n")
+        ####print("********************************************************************\n")
     # print("Raw currents: \n",currents)
     # print("Raw unc_currents: \n",unc_currents)
 
@@ -329,9 +329,17 @@ def Average_BeamCurrent(A0, sigma_A0, mass_density, sigma_mass_density, lambda_,
     outfile = np.stack((np.transpose(output_foil_index),np.transpose(output_mu),np.transpose(output_unc_mu),np.transpose(output_percent_unc)), axis=-1)
     #import os
     #path = os.getcwd()
-    print("Does it save? ")
-    print(csv_filename)
-    np.savetxt("./{}".format(csv_filename), outfile, delimiter=",", header="Foil Index, Average Current (nA), Uncertainty in Average Current (nA), % Uncertainty")
+    #print("Does it save? ")
+    #print(csv_filename)
+    #save_string = "weighted_BC_"+csv_filename
+    #print(save_string)
+
+    csv_outname = 'WABC_' + csv_filename[10:-11] + '.csv'
+    
+    if save_csv==True:
+        #np.savetxt("./{}".format(csv_filename), outfile, delimiter=",", header="Foil Index, Average Current (nA), Uncertainty in Average Current (nA), % Uncertainty")
+        np.savetxt("./{}".format(csv_outname), outfile, delimiter=",", header="Foil Index, Average Current (nA), Uncertainty in Average Current (nA), % Uncertainty")
+        #np.savetxt("weighted_BC_{}".format(csv_filename), outfile, delimiter=",", header="Foil Index, Average Current (nA), Uncertainty in Average Current (nA), % Uncertainty")
 
 
 
