@@ -30,7 +30,7 @@ def find_index(list, element):
     return list.index(element)
 
 
-#good_files=['B_+1_D_+1,25', 'B_+1,25_D_+2', 'B_+1,5_D_+2,75', 'B_+2,25_D_+5','B_+2,5_D_+7,5','B_+1_D_+2', 'B_0_D_0']
+good_files=['B_+1_D_+1,25', 'B_+1,25_D_+2', 'B_+1,5_D_+2,75', 'B_+2,25_D_+5','B_+2,5_D_+7,5','B_+1_D_+2', 'B_0_D_0']
 #index = find_index(names, 'B_+0,5_D_+1,25')
 index = find_index(names, 'B_+2_D_+4,25')  # looks good but downside: weird ziegler flux distribution
 #index = find_index(names, 'B_+0,75_D_-2,75')
@@ -44,7 +44,7 @@ name = names[index]
 BC = BeamCurrent(files[index])
 CS = CrossSections(files[index])
 #BC.plot_distribution('all', files[index])
-BC.plot_distribution('Ir', files[index])
+#BC.plot_distribution('Ir', files[index])
 
 
 #BC.CurrentPlot_compartment(name=name, WABC = 'averaged_currents.csv', title='Beam current - after variance minimization')
@@ -65,12 +65,20 @@ WABC_file = 'WABC_'+ ziegler_filename[10:-11] + '.csv'
 #BC.CurrentPlot_compartment(names[index], WABC=WABC_file, title='After variance minimization')
 #BC.CurrentPlot_compartment(names[index], WABC=WABC_file, title='Before variance minimization')
 #BC.plot_distribution('all', name)
-BC.variance_minimization(3, name, include_56Co=True, MakePlot=True)
-BC.variance_minimization(6, name, include_56Co=True, MakePlot=True)
-BC.variance_minimization(9, name, include_56Co=True, MakePlot=True)
+#BC.plot_distribution('all', name)
+#BC.variance_minimization(3, name, include_56Co=True, MakePlot=True)
+#BC.variance_minimization(6, name, include_56Co=True, MakePlot=True)
+#BC.variance_minimization(9, name, include_56Co=True, MakePlot=True)
 
 
 
+CS.mon_CS_test(Fe_56Co(), 'Fe', 'Fe_56Co.csv', 3, 'Fe_56Co', names[index], WABC_file)
+CS.mon_CS_test(Ni_61Cu(), 'Ni', 'Ni_61Cu.csv', 10, 'Ni_61Cu', names[index], WABC_file)
+CS.mon_CS_test(Ni_56Co(), 'Ni', 'Ni_56Co.csv', 10, 'Ni_56Co', names[index], WABC_file)
+CS.mon_CS_test(Ni_58Co(), 'Ni', 'Ni_58Co.csv', 10, 'Ni_58Co', names[index], WABC_file)
+CS.mon_CS_test(Cu_62Zn(), 'Cu', 'Cu_62Zn.csv', 10, 'Cu_62Zn', names[index], WABC_file)
+CS.mon_CS_test(Cu_63Zn(), 'Cu', 'Cu_63Zn.csv', 10, 'Cu_63Zn', names[index], WABC_file)
+CS.mon_CS_test(Cu_65Zn(), 'Cu', 'Cu_65Zn.csv', 10, 'Cu_65Zn', names[index], WABC_file)
 
 
 

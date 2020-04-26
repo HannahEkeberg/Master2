@@ -6,7 +6,7 @@
                        P E A K     F I T     R E P O R T
                        _________________________________
 
- Spectrum file Analysed: CA03032019_32cm_Ir06_HPGE1.Chn   
+ Spectrum file Analysed: CA03032019_32cm_Ir06_HPGE1.Chn
  Sample Title :          Ir06
 
  Spectrum saved on  3-Mar-2019 at 17:24    Collected on  3-Mar-2019 at  1:15
@@ -16,18 +16,18 @@
             Energy     Calibration Performed on  6-Mar-2019 at 16:50
             Peak Shape Calibration Performed on  6-Mar-2019 at 16:52
 
- 
+
 
    Datetime:   3-Mar-2019   1:15
-   Live:      57086.0 
+   Live:      57086.0
    Mass:      677
    Shelf:     30
    Detector:      1
 
-   Reported Activity values were rounded     
-   FitzPeaks Version: 3.71 23rd January 2014           
-                                                                                                     
-              
+   Reported Activity values were rounded
+   FitzPeaks Version: 3.71 23rd January 2014
+
+
 
 
  Peak   Centre   FW@HM         Goodness   Peak      %      Gammas       %      2 Sigma

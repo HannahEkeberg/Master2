@@ -671,7 +671,7 @@ class CrossSections:
             E_mon = np.loadtxt(filename, usecols=[0], skiprows=6)
             Cs_mon = np.loadtxt(filename, usecols=[1], skiprows=6)
 
-            self.modelling('Exfor', 'Fe', '26', '56', 'Fe_56Co', '.tot')
+            self.modelling('Exfor', 'Fe', '26', '56', 'Fe_56Co', '.tot', independent=True, feeding=None, CS_colonne=5, BR=1.0)
             #self.modelling('Talys', 'Fe', '26', '56', 'Fe_56Co', '.tot')
             #self.modelling('Tendl', 'Fe', '26', '56', 'Fe_56Co', '.tot')
             A = '56'; foil='Fe'; title = r'$^{nat}$' + foil + '(d,x)' + r'$^{{ {} }}$'.format(A) + reaction[-2:]  + ' - Independent' 
@@ -683,8 +683,8 @@ class CrossSections:
             filename =  path_to_monitor_data+'nid61cut/nid61cut.txt'
             E_mon = np.loadtxt(filename, usecols=[0], skiprows=6)
             Cs_mon = np.loadtxt(filename, usecols=[1], skiprows=6)
-
-            self.modelling('Exfor', 'Ni', '28', '61', 'Ni_61Cu', '.tot')
+            
+            self.modelling('Exfor', 'Ni', '28', '61', 'Ni_61Cu', '.tot', independent=True, feeding=None, CS_colonne=5, BR=1.0)
             A = '61'; foil='Ni'; title = r'$^{nat}$' + foil + '(d,x)' + r'$^{{ {} }}$'.format(A) + reaction[-2:]  + ' - Independent' 
 
         if reaction=='Ni_56Co':
@@ -694,7 +694,8 @@ class CrossSections:
 
             lamb_, mass_density_, sigma_mass_density_, E_, dE_, A0_, sigma_A0_ = self.get_var(Ni_56Ni(), 'Ni', 'Ni_56Ni.csv', 10, 'Ni_56Ni')
             CS_56Ni, dCS_56Ni = self.cross_section_calc(n, A0_, sigma_A0_, mass_density, sigma_mass_density, I_Ni, sigma_I, lamb_, 'Ni_56Ni')
-            self.modelling('Exfor', 'Ni', '28', '56', 'Ni_56Co', '.tot')
+        
+            self.modelling('Exfor', 'Ni', '28', '56', 'Ni_56Co', '.tot', independent=False, feeding=None, CS_colonne=5, BR=1.0)
             CS = CS_56Co +  CS_56Ni
 
             Cumulative_flag = True
@@ -712,7 +713,7 @@ class CrossSections:
             CS_58Co, dCS_58Co = self.cross_section_calc(n, A0, sigma_A0, mass_density, sigma_mass_density, I_Ni, sigma_I, lamb, reaction)
             E = self.E_Ni;dE = self.dE_Ni
             filename =  path_to_monitor_data+'nid58cot/nid58cot.txt'
-            self.modelling('Exfor', 'Ni', '28', '58', 'Ni_58Co', '.tot')
+            self.modelling('Exfor', 'Ni', '28', '58', 'Ni_58Co', '.tot', independent=False, feeding=None, CS_colonne=5, BR=1.0)
 
             lamb_, mass_density_, sigma_mass_density_, E_, dE_, A0_, sigma_A0_ = self.get_var(Ni_58mCo(), 'Ni', 'Ni_58mCo.csv', 10, 'Ni_58mCo')
             CS_58mCo, dCS_58mCo = self.cross_section_calc(n, A0_, sigma_A0_, mass_density, sigma_mass_density, I_Ni, sigma_I, lamb_, 'Ni_58mCo')
@@ -733,7 +734,7 @@ class CrossSections:
             filename =  path_to_monitor_data+'cud62znt/cud62znt.txt'
             E_mon = np.loadtxt(filename, usecols=[0], skiprows=6)
             Cs_mon = np.loadtxt(filename, usecols=[1], skiprows=6)
-            self.modelling('Exfor', 'Cu', '29', '62', 'Cu_62Zn', '.tot')
+            self.modelling('Exfor', 'Cu', '29', '62', 'Cu_62Zn', '.tot', independent=True, feeding=None, CS_colonne=5, BR=1.0)
             A = '62'; foil='Zn'; title = r'$^{nat}$' + foil + '(d,x)' + r'$^{{ {} }}$'.format(A) + reaction[-2:]  + ' - Cumulative' 
         if reaction=='Cu_63Zn':
             CS, dCS = self.cross_section_calc(n, A0, sigma_A0, mass_density, sigma_mass_density, I_Cu, sigma_I, lamb, reaction)
@@ -741,7 +742,7 @@ class CrossSections:
             filename =  path_to_monitor_data+'cud63znt/cud63znt.txt'
             E_mon = np.loadtxt(filename, usecols=[0], skiprows=6)
             Cs_mon = np.loadtxt(filename, usecols=[1], skiprows=6)
-            self.modelling('Exfor', 'Cu', '29', '63', 'Cu_63Zn', '.tot')
+            self.modelling('Exfor', 'Cu', '29', '63', 'Cu_63Zn', '.tot', independent=True, feeding=None, CS_colonne=5, BR=1.0)
             A = '63'; foil='Zn'; title = r'$^{nat}$' + foil + '(d,x)' + r'$^{{ {} }}$'.format(A) + reaction[-2:]  + ' - Cumulative' 
         if reaction=='Cu_65Zn':
             CS, dCS = self.cross_section_calc(n, A0, sigma_A0, mass_density, sigma_mass_density, I_Cu, sigma_I, lamb, reaction)
@@ -749,7 +750,7 @@ class CrossSections:
             filename =  path_to_monitor_data+'cud65znt/cud65znt.txt'
             E_mon = np.loadtxt(filename, usecols=[0], skiprows=6)
             Cs_mon = np.loadtxt(filename, usecols=[1], skiprows=6)
-            self.modelling('Exfor', 'Cu', '29', '65', 'Cu_65Zn', '.tot')
+            self.modelling('Exfor', 'Cu', '29', '65', 'Cu_65Zn', '.tot', independent=True, feeding=None, CS_colonne=5, BR=1.0)
             A = '65'; foil='Zn'; title = r'$^{nat}$' + foil + '(d,x)' + r'$^{{ {} }}$'.format(A) + reaction[-2:]  + ' - Cumulative' 
 
 
@@ -840,15 +841,14 @@ class CrossSections:
             plt.gca().set_ylim(bottom=0, top=max_CS)
 
         if subtract!= None:
-
-            pass
-            #plt.savefig(path_to_cs_figs + reaction+'_subtracted.png', dpi=300)
+            plt.savefig(path_to_cs_figs + reaction+'_subtracted.png', dpi=300)
         else:
-            pass
-            #plt.savefig(path_to_cs_figs + reaction+'.png', dpi=300)
+            
+            plt.savefig(path_to_cs_figs + reaction+'.png', dpi=300)
         
 
-        plt.show()
+        #plt.show()
+        plt.close()
 
 
 

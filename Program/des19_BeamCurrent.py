@@ -170,8 +170,8 @@ class BeamCurrent:
 
         elif foil == 'Ir':
             self.get_sigmaE(self.E_Ir, self.F_Ir, foil, makePlot=True)
-            print("test")
-            plt.legend()
+            #print("test")
+            plt.legend(fontsize='small')
         elif foil == 'all':
             E_Ir, F_Ir = self.get_sigmaE(self.E_Ir, self.F_Ir, foil, return_EF=True)
             E_Fe, F_Fe = self.get_sigmaE(self.E_Fe, self.F_Fe, foil, return_EF=True)
@@ -188,19 +188,22 @@ class BeamCurrent:
             plt.xlabel('Deuteron energy (MeV)')
             plt.ylabel(r'Relative deuteron flux, $d\phi/dE$')
         path_to_folder = self.path + '/BeamCurrent/beam_fluxes/'
-        plt.title('Energy distribution for {} foils (indx={}) '.format(foil, name))
+        plt.title('Energy distribution for {} foils '.format(foil, name))
         #plt.savefig(path_to_folder + foil + '_flux_distribution_'+name+'.png', dpi=300)
         plt.show()
 
     def Plot_energy_distribution(self, E, F, mu, fwhm, half_max, foil):
         #print(half_max[0])
         #path_to_folder = self.path + '/BeamCurrent/'
-
-        colors = ['mediumpurple', 'cyan', 'palevioletred', 'darkorange', 'forestgreen', 'orchid', 'dodgerblue', 'lime', 'crimson', 'indianred']
+        numbs = ['1', '2', '3', '4', '5', '6', '7', '8', '9', '10' ]
+        colors = ['mediumpurple', 'cyan', 'palevioletred', 'darkorange', 'forestgreen', 'orchid', 'dodgerblue', 'navy', 'crimson', 'indianred']
         for j in range(len(E)):
-            plt.plot(E[j], F[j], color='navy', linewidth=0.7)
+            #plt.plot(E[j], F[j], color='navy', linewidth=0.7)
+            plt.plot(E[j], F[j], color=colors[j], linewidth=0.7)
+
             half = np.max(F[j])*0.5
-            plt.plot(half_max[j], [half, half], linewidth=0.8, color=colors[j], label='fwhm={0:.2f}'.format(fwhm[j]))
+            #plt.plot(half_max[j], [half, half], linewidth=0.8, color=colors[j], label='fwhm={0:.2f}'.format(fwhm[j]))
+            plt.plot(half_max[j], [half, half], linewidth=0.8, color=colors[j], label=foil+numbs[j]+', fwhm: {0:.2f}'.format(fwhm[j]))
             plt.vlines(mu[j], ymin=0.0, ymax = np.max(F[j]), linewidth=0.4, linestyle='--')#, label=r'$\mu=${}'.format(mu))
         #plt.title('Energy distribution for {}-foils'.format(foil))
         plt.xlabel('Energy, MeV')
