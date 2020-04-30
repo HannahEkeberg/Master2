@@ -82,6 +82,35 @@ def Cu_52Mn(): #non-mon, BUT WAS PRODUCED, needs work ?????????
     lambda_daughter = np.log(2)/(5.591*d) #52Mn
     return list, lambda_daughter# lambda_parent, lambda_daughter
 
+def Cu_54Mn():
+    foil1 = path + 'Cu_54Mn_129.dat'
+    foil2 = path + 'Cu_54Mn_229.dat'
+    foil3 = path + 'Cu_54Mn_329.dat'
+    foil4 = path + 'Cu_54Mn_429.dat'
+    foil5 = path + 'Cu_54Mn_529.dat'
+    foil6 = path + 'Cu_54Mn_629.dat'
+    foil7 = path + 'Cu_54Mn_729.dat'
+    foil8 = path + 'Cu_54Mn_829.dat'
+    foil9 = path + 'Cu_54Mn_929.dat'
+    foil10= path + 'Cu_54Mn_1029.dat'
+    list = [foil1, foil2, foil3, foil4, foil5, foil6, foil7, foil8, foil9, foil10]
+    lamb = np.log(2)/(312.3*d)
+    return list, lamb
+
+def Cu_56Mn():
+    foil1 = path + 'Cu_56Mn_129.dat'
+    foil2 = path + 'Cu_56Mn_229.dat'
+    foil3 = path + 'Cu_56Mn_329.dat'
+    foil4 = path + 'Cu_56Mn_429.dat'
+    foil5 = path + 'Cu_56Mn_529.dat'
+    foil6 = path + 'Cu_56Mn_629.dat'
+    foil7 = path + 'Cu_56Mn_729.dat'
+    foil8 = path + 'Cu_56Mn_829.dat'
+    foil9 = path + 'Cu_56Mn_929.dat'
+    foil10= path + 'Cu_56Mn_1029.dat'
+    list = [foil1, foil2, foil3, foil4, foil5, foil6, foil7, foil8, foil9, foil10]
+    lamb = np.log(2)/(2.5785*h)
+    return list, lamb
 
 def Cu_56Co():   #single decay        #looks weird
     foil1 = path + 'Cu_56Co_129.dat'

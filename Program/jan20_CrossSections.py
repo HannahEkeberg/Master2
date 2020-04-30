@@ -225,16 +225,21 @@ class CrossSections:
         else:
             state=isomer_state
 
+        nucl = reaction[-2]
+        numbs = ['1', '2', '3', '4', '5', '6', '7', '8','9']
         if independent==True: 
-            nucl = reaction[-2]
-            numbs = ['1', '2', '3', '4', '5', '6', '7', '8','9']
+            #nucl = reaction[-2]
+            #numbs = ['1', '2', '3', '4', '5', '6', '7', '8','9']
             if nucl in numbs:
                 title = r'$^{nat}$' + foil + '(d,x)' + r'$^{{ {} }}$'.format(A+state) + reaction[-1:]  + ' - Independent' 
             else:
                 title = r'$^{nat}$' + foil + '(d,x)' + r'$^{{ {} }}$'.format(A+state) + reaction[-2:]  + ' - Independent' 
-        else: 
-            title = r'$^{nat}$' + foil + '(d,x)' + r'$^{{ {} }}$'.format(A+state) + reaction[-2:]  + ' - Cumulative' 
-
+        else:
+            if nucl in numbs: 
+                title = r'$^{nat}$' + foil + '(d,x)' + r'$^{{ {} }}$'.format(A+state) + reaction[-1:]  + ' - Cumulative' 
+            else:
+                title = r'$^{nat}$' + foil + '(d,x)' + r'$^{{ {} }}$'.format(A+state) + reaction[-2:]  + ' - Cumulative' 
+        print(A+state)
 
         #print(dE)
         if save_text==True:
@@ -309,11 +314,11 @@ class CrossSections:
             type_CS='_independent'
         elif isinstance(independent, str):
             type_CS = independent
-
+        #print(type_CS)
         nucl = reaction[-2]
         numbs = ['1', '2', '3', '4', '5', '6', '7', '8','9']
-        if nucl in numbs:
-            title = r'$^{nat}$' + foil + '(d,x)' + r'$^{{ {} }}$'.format(A+state) + reaction[-1:]  + ' - ' + type_CS[1:] 
+        if nucl in numbs: 
+            title = r'$^{nat}$' + foil +'(d,x)' + r'$^{{ {} }}$'.format(A+state) + reaction[-1:]  + ' - ' + type_CS[1:] 
         else:
             title = r'$^{nat}$' + foil + '(d,x)' + r'$^{{ {} }}$'.format(A+state) + reaction[-2:]  + ' - ' + type_CS[1:] 
         

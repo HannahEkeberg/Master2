@@ -165,7 +165,7 @@ def plot_function(decay_type, foil, title, react_func, react_func_parent=None):
 
 #plot_function('single', None, r'Activity curve for $^{nat}$Ni(d,x)$^{61}$Cu', Ni_61Cu())
 #plot_function('single', None, r'Activity curve for $^{nat}$Ir(d,x)$^{193m}$Pt', Ir_193mPt())
-plot_function('twostep_up', None, r'Activity curve for $^{nat}$Ni(d,x)$^{58}$Co', Ni_58Co())
+#plot_function('twostep_up', None, r'Activity curve for $^{nat}$Ni(d,x)$^{58}$Co', Ni_58Co())
 #plot_function('twostep_up', None, 'title', Ni_58Co())
 #plot_function('twostep_kp', None, r'Activity curve for $^{nat}$Ni(d,x)$^{56}Co$', Ni_56Co_old(), Ni_56Ni())
 
@@ -664,6 +664,8 @@ np.savetxt("{}.csv".format(save_results_to +  'Ni_56Co'), np.array((A0, sigma_A0
 #single_decay_data(Cu_57Co(), "Cu_57Co", 10, Save_csv=True)
 
 #single_decay_data(Cu_57Ni(), "Cu_57Ni", 10, Save_csv=True)
+#single_decay_data(Cu_54Mn(), "Cu_54Mn", 10, Save_csv=True)
+single_decay_data(Cu_56Mn(), "Cu_56Mn", 10, Save_csv=True)
 
 #two_step_up_data(Cu_58Co(), "Cu_58mCo", "Cu_58Co", 10, Save_csv = True)     #WEIRD
 #two_step_up_npat(Cu_58Co(), "Cu_58mCo_npat", "Cu_58Co_npat", 10, '58COm', '58COg', Save_csv=True)
