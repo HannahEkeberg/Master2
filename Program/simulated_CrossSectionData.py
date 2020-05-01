@@ -135,7 +135,7 @@ class SimCrossSectionData:
 			f.close()
 		return np.array((E_new)), np.array((CS_new))
 		"""
-	def interpolation(self, x,y):	
+	def interpolation(self, x,y, tendl=False):	
 		#print(x)
 
 		no = []; yes = []
@@ -151,23 +151,24 @@ class SimCrossSectionData:
 				#print(x[i])
 				no.append(i)
 		
-		if no[0]==1:
-			print(y[no[0]])
-			print(y[no[1]])
+		#if no[0]==1:
+		#	print(y[no[0]])
+		#	print(y[no[1]])
 
 
 
 		### ZERO PADDING WORKS!!!!
-		if x[0]!=0:
-			zero_padding = np.linspace(0,x[0]-0.5,10)
-			zeros_y = np.zeros((len(zero_padding)))
-			
+		if tendl==False:	
+			if x[0]!=0:
+				zero_padding = np.linspace(0,x[0]-0.5,10)
+				zeros_y = np.zeros((len(zero_padding)))
+				
 
-			x = np.concatenate((zero_padding, x))
-			y = np.concatenate((zeros_y, y))
+				x = np.concatenate((zero_padding, x))
+				y = np.concatenate((zeros_y, y))
 
 
-
+		#print(y)
 
 
 		#if x[0]!=0 and y[0]!=0:
@@ -685,7 +686,7 @@ class SimCrossSectionData:
 		#plt.show()
 		#print(E, CS)
 
-		E_new, CS_new = self.interpolation(E, CS)
+		E_new, CS_new = self.interpolation(E, CS, tendl=True)
 		return E_new, CS_new 
 
 	def EMPIRE(self):
@@ -987,8 +988,14 @@ class SimCrossSectionData:
 
 #print(path)
 
-"""
+
 SimCS = SimCrossSectionData()
+#E_p, CS_p = SimCS.COH('Ni', '056', '028', 'Ni_56Ni', isomer=None)
+#E, CS = SimCS.Tendl('Ni', '057', '028', file_ending='.tot')
+#print(E)
+
+
+"""
 #E, CS = SimCS.COH('Ir', '193', '078', 'Ir_193mPt', isomer='M')
 #E, CS = SimCS.COH('Cu', '064', '029', 'Cu_64Cu', isomer=None)
 E, CS = SimCS.COH('Fe', '054', '025', 'Fe_54Mn', isomer=None)

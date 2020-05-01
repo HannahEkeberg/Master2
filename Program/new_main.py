@@ -76,15 +76,15 @@ WABC_file = 'WABC_'+ ziegler_filename[10:-11] + '.csv'
 
 
 #MONITOR REACTIONS
-"""
-CS.mon_CS_test(Fe_56Co(), 'Fe', 'Fe_56Co.csv', 3, 'Fe_56Co', names[index], WABC_file)
-CS.mon_CS_test(Ni_61Cu(), 'Ni', 'Ni_61Cu.csv', 10, 'Ni_61Cu', names[index], WABC_file)
-CS.mon_CS_test(Ni_56Co(), 'Ni', 'Ni_56Co.csv', 10, 'Ni_56Co', names[index], WABC_file)
-CS.mon_CS_test(Ni_58Co(), 'Ni', 'Ni_58Co.csv', 10, 'Ni_58Co', names[index], WABC_file)
+
+#CS.mon_CS_test(Fe_56Co(), 'Fe', 'Fe_56Co.csv', 3, 'Fe_56Co', names[index], WABC_file)
+#CS.mon_CS_test(Ni_61Cu(), 'Ni', 'Ni_61Cu.csv', 10, 'Ni_61Cu', names[index], WABC_file)
+#CS.mon_CS_test(Ni_56Co(), 'Ni', 'Ni_56Co.csv', 10, 'Ni_56Co', names[index], WABC_file)
+#CS.mon_CS_test(Ni_58Co(), 'Ni', 'Ni_58Co.csv', 10, 'Ni_58Co', names[index], WABC_file)
 CS.mon_CS_test(Cu_62Zn(), 'Cu', 'Cu_62Zn.csv', 10, 'Cu_62Zn', names[index], WABC_file)
 CS.mon_CS_test(Cu_63Zn(), 'Cu', 'Cu_63Zn.csv', 10, 'Cu_63Zn', names[index], WABC_file)
 CS.mon_CS_test(Cu_65Zn(), 'Cu', 'Cu_65Zn.csv', 10, 'Cu_65Zn', names[index], WABC_file)
-"""
+
 
 
 ### Ni reactions
@@ -97,14 +97,14 @@ CS.mon_CS_test(Cu_65Zn(), 'Cu', 'Cu_65Zn.csv', 10, 'Cu_65Zn', names[index], WABC
 #CS.make_CS(Ni_60Co(), 'Ni', 'Ni_60Co.csv', 10, 'Ni_60Co', WABC_file, '27', '60', ylimit=55, independent=False,CS_colonne_ALICE=5) # first in decay chain
 #CS.make_CS(Ni_65Ni(), 'Ni', 'Ni_65Ni.csv', 10, 'Ni_65Ni', WABC_file, '28', '65', independent=False,CS_colonne_ALICE=5) # first in decay chain
 #CS.make_CS(Ni_55Co(), 'Ni', 'Ni_55Co.csv', 10, 'Ni_55Co', WABC_file, '27', '55', ylimit=45,independent=False,CS_colonne_ALICE=5) # first in decay chain
-#CS.make_CS(Ni_57Ni(), 'Ni', 'Ni_57Ni.csv', 10, 'Ni_57Ni', WABC_file, '28', '57', ylimit=150, independent=False,CS_colonne_ALICE=5) # first in decay chain)
+#CS.make_CS(Ni_57Ni(), 'Ni', 'Ni_57Ni.csv', 10, 'Ni_57Ni', WABC_file, '28', '57', ylimit=150, independent=False,CS_colonne_ALICE=5, file_ending='.tot') # first in decay chain)
 
 #CS.make_CS(Ni_58mCo(), 'Ni', 'Ni_58mCo.csv', 10, 'Ni_58mCo', WABC_file, '27', '58', ylimit=270, independent=True,CS_colonne_ALICE=7, isomer_state='m', file_ending='.L01')
 #CS.make_CS(Ni_58Co(), 'Ni', 'Ni_58Co.csv', 10, 'Ni_58Co', WABC_file, '27', '58', ylimit=270, independent=True,CS_colonne_ALICE=5, isomer_state=None, file_ending='.L00')
 
 #CS.make_CS(Ni_56Ni(), 'Ni', 'Ni_56Ni.csv', 10, 'Ni_56Ni', WABC_file, '28', '56', ylimit=4, independent=False, BR=None, CS_colonne_ALICE=5) # first in decay chain)
-#CS.make_CS_subtraction('daughter', 'Ni', 10, WABC_file, Ni_56Ni(), 'Ni_56Ni', 'Ni_56Ni.csv', '28', '56',  Ni_56Co(), 'Ni_56Co', 'Ni_56Co.csv', '27', '56', BR_daughter=1.0, ylimit=40, isomer_state=None, independent=True, file_ending='.tot', save_text=True, feeding='beta+')  # Necessary when subtracting
-#CS.make_CS(Ni_56Co(), 'Ni', 'Ni_56Co.csv', 10, 'Ni_56Co', WABC_file, '27', '56', independent=True, CS_colonne_ALICE=5) # first in decay chain)
+#CS.make_CS_subtraction('daughter', 'Ni', 10, WABC_file, Ni_56Ni(), 'Ni_56Ni', 'Ni_56Ni.csv', '28', '56',  Ni_56Co(), 'Ni_56Co', 'Ni_56Co.csv', '27', '56', BR_daughter=1.0, ylimit=80, isomer_state=None, independent=False, file_ending='.tot', save_text=True, feeding='beta+')  # Necessary when subtracting
+#CS.make_CS(Ni_56Co(), 'Ni', 'Ni_56Co.csv', 10, 'Ni_56Co', WABC_file, '27', '56', independent=True, CS_colonne_ALICE=5, ylimit=80) # first in decay chain)
 
 
 ### Cu reactions
@@ -115,7 +115,7 @@ CS.mon_CS_test(Cu_65Zn(), 'Cu', 'Cu_65Zn.csv', 10, 'Cu_65Zn', names[index], WABC
 #CS.make_CS(Cu_60Co(), 'Cu', 'Cu_60Co.csv', 10, 'Cu_60Co', WABC_file, '27', '60', ylimit=25, independent=False, CS_colonne_ALICE=5) # first in decay chain)   
 #CS.make_CS(Cu_61Co(), 'Cu', 'Cu_61Co.csv', 10, 'Cu_61Co', WABC_file, '27', '61', ylimit=4, independent=False,CS_colonne_ALICE=5) # first in decay chain)  
 #CS.make_CS(Cu_61Cu(), 'Cu', 'Cu_61Cu.csv', 10, 'Cu_61Cu', WABC_file, '29', '61', ylimit=110, independent=False, CS_colonne_ALICE=5) # first in decay chain)   
-CS.make_CS(Cu_64Cu(), 'Cu', 'Cu_64Cu.csv', 10, 'Cu_64Cu', WABC_file, '29', '64',CS_colonne_ALICE=5)
+#CS.make_CS(Cu_64Cu(), 'Cu', 'Cu_64Cu.csv', 10, 'Cu_64Cu', WABC_file, '29', '64',CS_colonne_ALICE=5)
 
 ### Fe reactions 
 #CS.make_CS(Fe_48V(), 'Fe', 'Fe_48V.csv', 3, 'Fe_48V', WABC_file, '23', '48', independent=False, file_ending='.tot', ylimit=0.176, CS_colonne_ALICE=5)   
@@ -131,14 +131,15 @@ CS.make_CS(Cu_64Cu(), 'Cu', 'Cu_64Cu.csv', 10, 'Cu_64Cu', WABC_file, '29', '64',
 
 ### Ir reactions
 #CS.make_CS(Ir_188Pt(), 'Ir', 'Ir_188Pt.csv', 10, 'Ir_188Pt', WABC_file, '78', '188', ylimit=300, independent=True)   
-#CS.make_CS(Ir_188Ir(), 'Ir', 'Ir_188Ir.csv', 10, 'Ir_188Ir', WABC_file, '77', '188', ylimit=15, independent=False, isomer_state='m1+g', CS_colonne_ALICE=4, feeding='beta+', BR=1.0)
+#CS.make_CS(Ir_188Ir(), 'Ir', 'Ir_188Ir.csv', 10, 'Ir_188Ir', WABC_file, '77', '188', ylimit=15, independent=False, isomer_state='m1+g', CS_colonne_ALICE=4, feeding='beta+', BR=1.0, reaction_parent='Ir_188Pt')
 #CS.make_CS_subtraction('daughter', 'Ir', 10, WABC_file, Ir_188Pt(), 'Ir_188Pt', 'Ir_188Pt.csv', '78', '188',  Ir_188Ir(), 'Ir_188Ir', 'Ir_188Ir.csv', '77', '188', ylimit=15, BR_daughter=1.0, isomer_state='m1+g', independent=True, file_ending='.tot', CS_colonne_ALICE=4, save_text=True, feeding=None)  # Necessary when subtracting
 
 
 #CS.make_CS(Ir_189Pt(), 'Ir', 'Ir_189Pt.csv', 10, 'Ir_189Pt', WABC_file, '78', '189', ylimit=520, independent=True)    # 
-#CS.make_CS(Ir_189Ir(), 'Ir', 'Ir_189Ir.csv', 10, 'Ir_189Ir', WABC_file, '77', '189', independent=False, feeding='beta+', BR=1.0)    # need work on activity 
-#CS.make_CS(Ir_189Ir(), 'Ir', 'Ir_189Ir.csv', 10, 'Ir_189Ir', WABC_file, '77', '189', independent=False, feeding='beta+', BR=1.0)    # need work on activity 
+#CS.make_CS(Ir_189Ir(), 'Ir', 'Ir_189Ir.csv', 10, 'Ir_189Ir', WABC_file, '77', '189', independent=False, feeding='beta+', BR=1.0, reaction_parent='Ir_189Pt')    # need work on activity 
 #CS.make_CS_subtraction('daughter', 'Ir', 10, WABC_file, Ir_189Pt(), 'Ir_189Pt', 'Ir_189Pt.csv', '78', '189',  Ir_189Ir(), 'Ir_189Ir', 'Ir_189Ir.csv', '77', '189', ylimit=500, independent=True, file_ending='.tot', CS_colonne_ALICE=4, BR_daughter=1.0)  # Necessary when subtracting
+
+
 
 #CS.make_CS(Ir_190Ir(), 'Ir', 'Ir_190Ir.csv', 10, 'Ir_190Ir', WABC_file, '77', '190', independent=False, CS_colonne_ALICE=4)     # file_ending=.tot because of decay from m1 m2 isomer. 
 #CS.make_CS(Ir_190m2Ir(), 'Ir', 'Ir_190m2Ir.csv', 10, 'Ir_190m2Ir', WABC_file, '77', '190', file_ending='.L37', isomer_state='m2', independent=True, CS_colonne_ALICE=6)   # 0.0860   
@@ -150,7 +151,6 @@ CS.make_CS(Cu_64Cu(), 'Cu', 'Cu_64Cu.csv', 10, 'Cu_64Cu', WABC_file, '29', '64',
 
 #CS.make_CS(Ir_194Ir(), 'Ir', 'Ir_194Ir.csv', 10, 'Ir_194Ir', WABC_file, '77', '194', file_ending='.L00', independent=False)    
 #CS.make_CS(Ir_194m2Ir(), 'Ir', 'Ir_194m2Ir.csv', 10, 'Ir_194m2Ir', WABC_file, '77', '194', file_ending='not', isomer_state='m2', independent=True, CS_colonne_ALICE=6)     #talys=.L34
-
 #CS.make_CS(Ir_193mPt(), 'Ir', 'Ir_193mPt.csv', 10, 'Ir_193mPt', WABC_file, '78', '193', file_ending='.L05', isomer_state='m', independent=True, CS_colonne_ALICE=6, ylimit=300)   
 
 
