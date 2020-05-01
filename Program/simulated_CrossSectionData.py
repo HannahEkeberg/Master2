@@ -137,11 +137,57 @@ class SimCrossSectionData:
 		"""
 	def interpolation(self, x,y):	
 		#print(x)
+
+		no = []; yes = []
+		for i in range(len(y)):
+			if y[i-1]>y[i]:
+				#print("**")
+				#print(x[i])
+				#print(y[i-1], y[i])
+				yes.append(i)
+			else:
+				#print("@@")
+				#print(y[i-1], y[i])
+				#print(x[i])
+				no.append(i)
+		
+		if no[0]==1:
+			print(y[no[0]])
+			print(y[no[1]])
+
+
+
+		### ZERO PADDING WORKS!!!!
+		if x[0]!=0:
+			zero_padding = np.linspace(0,x[0]-0.5,10)
+			zeros_y = np.zeros((len(zero_padding)))
+			
+
+			x = np.concatenate((zero_padding, x))
+			y = np.concatenate((zeros_y, y))
+
+
+
+
+
+		#if x[0]!=0 and y[0]!=0:
+
 		tck = interpolate.splrep(x, y, s=0)
 		x_new = np.linspace(1, 40, 1000)
+		#x_new = np.linspace(0, 40, 1000)
 		#for i in range(len(x_new)):
 			#y_new = interpolate.splev(x_new[i], tck, der=0)
 		y_new = interpolate.splev(x_new, tck, der=0)
+
+
+		
+
+		#for i in range(len(y_new[:50])):
+		#	if y_new[i-1]> y_new[i]: 
+		#		print("cross section decreases")
+		#	else:
+		#		print("cross section increases")
+			#print(y_new[i], y_new[i-1])
 
 		return x_new, y_new
         
@@ -195,6 +241,7 @@ class SimCrossSectionData:
 		#plt.plot(E_new, CS_new)
 		#plt.show()
 		return E_new, CS_new
+		#return E, CS
 
 	
 
@@ -820,7 +867,17 @@ class SimCrossSectionData:
 			CS = CS_54Fe*abund_54Fe + CS_56Fe*abund_56Fe + CS_57Fe*abund_57Fe + CS_58Fe*abund_58Fe 	
 		
 
+		#if E[0]==1:
+		#	zero_padding = np.linspace(0,1,5)
+		#	cs_zeros = np.zeros(len(zero_padding))
+		#	E = np.concatenate((zero_padding, E))
+		#	CS = np.concatenate((cs_zeros, CS))
+		#print(E)
+
+
 		E, CS = self.interpolation(E, CS)
+		#E = np.concatenate((zero_padding, E))
+		#CS = np.concatenate((zero_padding, CS))
 		#plt.plot(E, CS)
 		#plt.show()
 		return E, CS
@@ -930,9 +987,39 @@ class SimCrossSectionData:
 
 #print(path)
 
+"""
+SimCS = SimCrossSectionData()
+#E, CS = SimCS.COH('Ir', '193', '078', 'Ir_193mPt', isomer='M')
+#E, CS = SimCS.COH('Cu', '064', '029', 'Cu_64Cu', isomer=None)
+E, CS = SimCS.COH('Fe', '054', '025', 'Fe_54Mn', isomer=None)
 
-#SimCS = SimCrossSectionData()
-#SimCS.COH('Ir', '193', '078', 'Ir_193mPt', isomer='M')
+E_al, CS_al = SimCS.ALICE('Fe', '54', '25', CS_colonne=5)
+
+#print(E)
+
+plt.plot(E,CS, label="CoH")
+plt.plot(E_al, CS_al, label="ALICE")
+plt.legend()
+plt.show()
+"""
+
+
+"""
+if E[0]==1:
+	zero_padding = np.linspace(0,1,5)
+	cs_zeros = np.zeros(len(zero_padding))
+	E = np.concatenate((zero_padding, E))
+	CS = np.concatenate((cs_zeros, CS))
+
+plt.plot(E,CS, label="zeropadding")
+plt.legend()
+plt.show()
+"""
+
+
+
+
+
 #SimCS.COH('Ir', '191', '078', 'Ir_191Pt')
 #"SimCS.COH('Ni', '054', '025', 'Ni_54Mn' )
 #SimCS.ALICE('Ni', '56', '27', 5)

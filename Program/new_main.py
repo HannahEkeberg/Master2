@@ -57,6 +57,7 @@ ziegler_filename = './' + files[index]
 ### Matrices containing all data, which are going into Andrew's function Average_Beamcurrent in weighted_average.py
 ### Ni: 61Cu, 56Co, 58Co, Cu: 62Zn, 63Zn, 65Zn, Fe: 56Co
 #A0, sigma_A0, lambda_, mass_density, sigma_mass_density, reaction_integral, uncertainty_integral, irr_time, sigma_irr_time = BC.reshaping_parameters()
+
 #Making a new csv file. If ran once, the csv can be called like below: WABS_file
 #weighted_average_BC, sigma_weighted_average_BC = Average_BeamCurrent(A0, sigma_A0, mass_density, sigma_mass_density,  lambda_, reaction_integral, uncertainty_integral, irr_time, sigma_irr_time, csv_filename=ziegler_filename, save_csv=True)
 
@@ -88,7 +89,7 @@ CS.mon_CS_test(Cu_65Zn(), 'Cu', 'Cu_65Zn.csv', 10, 'Cu_65Zn', names[index], WABC
 
 ### Ni reactions
 
-#CS.make_CS(Ni_52Mn(), 'Ni', 'Ni_52Mn.csv', 10, 'Ni_52Mn', WABC_file, '25', '52', independent=False, ylimit=10, CS_colonne_ALICE=5, file_ending='.tot', isomer_state='m+g')   # using 1434 keV line 
+#CS.make_CS(Ni_52Mn(), 'Ni', 'Ni_52Mn.csv', 10, 'Ni_52Mn', WABC_file, '25', '52', independent=False, ylimit=10, CS_colonne_ALICE=5, file_ending='.tot', isomer_state=None)   # using 1434 keV line 
 #CS.make_CS(Ni_54Mn(), 'Ni', 'Ni_54Mn.csv', 10, 'Ni_54Mn', WABC_file, '25', '54', ylimit=40, independent=True, CS_colonne_ALICE=5)
 #CS.make_CS(Ni_59Fe(), 'Ni', 'Ni_59Fe.csv', 10, 'Ni_59Fe', WABC_file, '26', '59', independent=False,CS_colonne_ALICE=5, ylimit=1)   # first in decay chain
 #CS.make_CS(Ni_60Cu(), 'Ni', 'Ni_60Cu.csv', 10, 'Ni_60Cu', WABC_file, '29', '60',CS_colonne_ALICE=5, ylimit=75)
@@ -114,7 +115,7 @@ CS.mon_CS_test(Cu_65Zn(), 'Cu', 'Cu_65Zn.csv', 10, 'Cu_65Zn', names[index], WABC
 #CS.make_CS(Cu_60Co(), 'Cu', 'Cu_60Co.csv', 10, 'Cu_60Co', WABC_file, '27', '60', ylimit=25, independent=False, CS_colonne_ALICE=5) # first in decay chain)   
 #CS.make_CS(Cu_61Co(), 'Cu', 'Cu_61Co.csv', 10, 'Cu_61Co', WABC_file, '27', '61', ylimit=4, independent=False,CS_colonne_ALICE=5) # first in decay chain)  
 #CS.make_CS(Cu_61Cu(), 'Cu', 'Cu_61Cu.csv', 10, 'Cu_61Cu', WABC_file, '29', '61', ylimit=110, independent=False, CS_colonne_ALICE=5) # first in decay chain)   
-#CS.make_CS(Cu_64Cu(), 'Cu', 'Cu_64Cu.csv', 10, 'Cu_64Cu', WABC_file, '29', '64',CS_colonne_ALICE=5)
+CS.make_CS(Cu_64Cu(), 'Cu', 'Cu_64Cu.csv', 10, 'Cu_64Cu', WABC_file, '29', '64',CS_colonne_ALICE=5)
 
 ### Fe reactions 
 #CS.make_CS(Fe_48V(), 'Fe', 'Fe_48V.csv', 3, 'Fe_48V', WABC_file, '23', '48', independent=False, file_ending='.tot', ylimit=0.176, CS_colonne_ALICE=5)   
@@ -227,7 +228,7 @@ b = coulomb_barrier(1, 78, 1, 191)
 print("Coulomb barrier: ", b, "MeV")  
 
 """
-
+"""
 def plot_WABC():
 	wabc_before = 'WABC_B_0_D_0.csv'
 	wabc_after1 = 'WABC_B_+2_D_+4,25.csv'
@@ -257,5 +258,6 @@ def plot_WABC():
 	plt.show()
 
 plot_WABC()
+"""
 
 ####

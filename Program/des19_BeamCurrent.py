@@ -235,8 +235,8 @@ class BeamCurrent:
             int_uncertainty = np.trapz(F[i]*relative_sigma_Cs, E[i])/np.trapz(F[i],E[i])
             uncertainty_integral.append(int_uncertainty)
 
-            int_reaction = np.trapz(F[i]*Cs_, E[i])/np.trapz(F[i],E[i])
-            reaction_integral.append(int_reaction)
+            int_reaction = np.trapz(F[i]*Cs_, E[i])/np.trapz(F[i],E[i])      # Calculation of the reaction integral over each foil. 
+            reaction_integral.append(int_reaction)                           # making lists of each integral
 
         if return_interp_CS:
             #print(tck)
