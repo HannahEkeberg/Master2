@@ -896,7 +896,7 @@ class SimCrossSectionData:
 		elif independent==False:
 			filename = self.path + '/../EXFOR/' + reaction + '_cum.txt'
 
-		
+		#print("From sim cross sections, filename is: ", filename)
 
 
 		#filename = self.path + '/../EXFOR/' + reaction + '.txt'
@@ -943,6 +943,7 @@ class SimCrossSectionData:
 					CS.append(float(string[2])*1e3) # in mb
 					dCS.append(float(string[3])*1e3) # in mb
 					author.append(string[5]) #index 4 is equal to #
+			#print(author)
 			return E, dE, CS, dCS, author
 		else: 
 			#print("exfor file does not exist for {}".format(reaction))
@@ -988,8 +989,20 @@ class SimCrossSectionData:
 
 #print(path)
 
-
+"""
 SimCS = SimCrossSectionData()
+E_2, CS_2 = SimCS.ALICE('Ir', '189', '77', 4)
+E_1, CS_1 = SimCS.ALICE('Ir', '189', '78', 4)
+
+plt.plot(E_1, CS_1, label='189Pt')
+plt.plot(E_2, CS_2, label='189Ir')
+BR = 1.0 
+CS_tot = CS_2+CS_1*BR
+plt.plot(E_1, CS_tot, label='cum')
+plt.legend()
+plt.show()
+"""
+
 #E_p, CS_p = SimCS.COH('Ni', '056', '028', 'Ni_56Ni', isomer=None)
 #E, CS = SimCS.Tendl('Ni', '057', '028', file_ending='.tot')
 #print(E)

@@ -140,11 +140,11 @@ def plot_multiple_spectra(list_of_filenames, list_of_labels, log=True, zoom=[0,0
 
 
 
-def plot_spectrum(foil, filename, title, zoom=[0,0,0,0], log=False):
+def plot_spectrum(foil, filename, title, zoom=[0,0,0,0], log=False, nuclide='all'):
 	if foil=='Ir':
-		gammas = {'188Ir': [1209.80, 1715.67,2059.65], '189Ir': [95.23, 216.7, 233.5, 245.1], '190Ir': [605.14, 569.30, 407.22, 371.24],
+		gammas = {'188Ir': [155.032, 2214.62, 632.99,477.99, 1209.80, 1715.67,2059.65], '189Ir': [95.23, 216.7, 233.5, 245.1], '190Ir': [605.14, 569.30, 407.22, 371.24],
 		'192m2Ir': [361.2, 502.5, 616.5 ], '192Ir': [295.95650, 468.06885, 612.46215], '194Ir': [298.541], '194m2Ir': [338.8, 482.6, 562.4, 687.8],    
-		'188Pt': [195.05, 381.43], '189Pt': [94.34, 2243.50, 721.28], '191Pt': 91.1,'193mPt':[66.831,135.50]}
+		'188Pt': [187.59, 195.05, 381.43], '189Pt': [94.34, 568.84, 243.50, 721.28, 607.59], '191Pt': [91.1, 538.90, 409.44, 359.90, 82.407],'193mPt':[66.831,135.50]}
 		#gammas = {'193mPt':[66.831,135.50]}
 		#pass 
 	if foil == 'Cu':
@@ -158,69 +158,130 @@ def plot_spectrum(foil, filename, title, zoom=[0,0,0,0], log=False):
 	list_of_markers = ['.', '.', '.', '.', '.', '.', '.', '.', '.', '.', '*']
 	colors = ['mediumpurple', 'cyan', 'palevioletred', 'darkorange', 'forestgreen', 'orchid', 'dodgerblue', 'lime', 'crimson', 'indianred', 'black']
 
-	g = list(gammas.values())
-	key = list(gammas.keys())
-	#print(type(g[1]))
-	#print(g[0][0])
-	#for i in range(len(E)):
-		#if np.abs(g[0][0]-E[i]) < 1:
-			#print(i)
-			#print(E[i])
-		#if (np.abs(np.where(g[0][0])-E[i])< 0.5) == True:
-			#print(i)
-			#print(E[i])
-			#print(g[0][0])
+
+	if nuclide=='all':
+		g = list(gammas.values())
+		key = list(gammas.keys())
 
 
-	if log==True:
-		C = np.log(C)
-		plt.plot(E, C, color='slategrey', linewidth=0.8)
-		#marker_on_yaxis = 14
-	#else: 
-		#marker_on_yaxis = 4e5
-	else: 
-		plt.plot(E, C, color='slategrey', linewidth=0.8)
+		if log==True:
+			C = np.log(C)
+			plt.plot(E, C, color='slategrey', linewidth=0.8)
+			#marker_on_yaxis = 14
+		#else: 
+			#marker_on_yaxis = 4e5
+		else: 
+			plt.plot(E, C, color='slategrey', linewidth=0.8)
 
-	
-	for i,e in enumerate(g):
-		if isinstance(e, list):
-			for j in range(len(e)):
-				### Label only for the first element of this loop. 
+		
+		for i,e in enumerate(g):
+			if isinstance(e, list):
+				for j in range(len(e)):
+					### Label only for the first element of this loop. 
+					list_of_inds = []
+					for k in range(len(E)):
+						if np.abs(e[j]-E[k])<0.5:
+							list_of_inds.append(k)
+					mean_k = int(np.mean(list_of_inds))
+					label_placement = C[mean_k]*1.05
+					plt.plot(e[j], label_placement, color=colors[i], marker=list_of_markers[i], label=(key[i] if j==0 else ""))
+					#plt.axvline(e[j],linewidth=0.5, linestyle='--', color=colors[i])#, marker=list_of_markers[0]))
+					#plt.plot(e[j], marker_on_yaxis, marker=list_of_markers[i], color=colors[i], label=(key[i] if j==0 else ""))
+					
+				
+			else:
+				
+				#plt.axvline(e,linewidth=0.5, linestyle='--', color=colors[i])#, marker=list_of_markers[0])
+				#marker_on_yaxis = C[i]	
+				#print(ind)
 				list_of_inds = []
 				for k in range(len(E)):
-					if np.abs(e[j]-E[k])<1:
+					if np.abs(e-E[k])<0.5:
 						list_of_inds.append(k)
 				mean_k = int(np.mean(list_of_inds))
-				label_placement = C[mean_k]*1.05
-				plt.plot(e[j], label_placement, color=colors[i], marker=list_of_markers[i], label=(key[i] if j==0 else ""))
-				#plt.axvline(e[j],linewidth=0.5, linestyle='--', color=colors[i])#, marker=list_of_markers[0]))
-				#plt.plot(e[j], marker_on_yaxis, marker=list_of_markers[i], color=colors[i], label=(key[i] if j==0 else ""))
+				#print(mean_k)
 				
-			
-		else:
-			
-			#plt.axvline(e,linewidth=0.5, linestyle='--', color=colors[i])#, marker=list_of_markers[0])
-			#marker_on_yaxis = C[i]	
-			#print(ind)
-			list_of_inds = []
-			for k in range(len(E)):
-				if np.abs(e-E[k])<1:
-					list_of_inds.append(k)
-			mean_k = int(np.mean(list_of_inds))
-			#print(mean_k)
-			
-			label_placement = C[mean_k]*1.05
-			plt.plot(e, label_placement, color=colors[i], marker=list_of_markers[i], label=key[i])
+				label_placement = C[mean_k]#*1.05
+				plt.plot(e, label_placement, color=colors[i], marker=list_of_markers[i], label=key[i])
 
 
-			
+		plt.legend(fontsize="x-small")
 					
 
 			#plt.plot(e, marker_on_yaxis, marker=list_of_markers[i], color=colors[i], label=key[i])
 		
 		
+	else: # Nuclide equal to specific element 
+		key = nuclide 
+		print(key)
+		energies = gammas.get(key)
+		
+		if log==True:
+			C = np.log(C)
+
+			plt.plot(E, C, color='slategrey', linewidth=0.8)
+			#marker_on_yaxis = 14
+		#else: 
+			#marker_on_yaxis = 4e5
+		else: 
+			plt.plot(E, C, color='slategrey', linewidth=0.8)
+
+
+		#for e in energies:	
+		
+		for e in energies:
+			list_of_inds = []
+			for k in range(len(E)):
+				if np.abs(e-E[k])<1:
+					list_of_inds.append(k)
+			#print(list_of_inds)
+			mean_k = int(np.mean(list_of_inds))
+			#print(mean_k)
+				
+				#print(mean_k)
+			label_placement = C[mean_k] #*1.05
+			#print(label_placement)
+			
+			#print(e)
+			plt.plot(e, label_placement, '*', color='black', label=e)
+			#plt.legend([key])
+
+
+		#for i,e in enumerate(energies):
+		#	if isinstance(e, list):
+		#		for j in range(len(e)):
+					### Label only for the first element of this loop. 
+		#			list_of_inds = []
+		#			for k in range(len(E)):
+		#				if np.abs(e[j]-E[k])<1:
+		#					list_of_inds.append(k)
+		#			mean_k = int(np.mean(list_of_inds))
+		#			label_placement = C[mean_k]*1.05
+		#			plt.plot(e[j], label_placement, color=colors[i], marker=list_of_markers[i], label=(key[i] if j==0 else ""))
+					#plt.axvline(e[j],linewidth=0.5, linestyle='--', color=colors[i])#, marker=list_of_markers[0]))
+					#plt.plot(e[j], marker_on_yaxis, marker=list_of_markers[i], color=colors[i], label=(key[i] if j==0 else ""))
+					
+				
+		#	else:
+				
+				#plt.axvline(e,linewidth=0.5, linestyle='--', color=colors[i])#, marker=list_of_markers[0])
+				#marker_on_yaxis = C[i]	
+				#print(ind)
+		#		list_of_inds = []
+		#		for k in range(len(E)):
+		#			if np.abs(e-E[k])<1:
+		#				list_of_inds.append(k)
+		#		mean_k = int(np.mean(list_of_inds))
+				#print(mean_k)
+				
+		#		label_placement = C[mean_k]*1.05
+		#		plt.plot(e, label_placement, color=colors[i], marker=list_of_markers[i], label=key[i])
+
+
+
+
 	if zoom!= [0,0,0,0]:
-		print("dif")
+		#print("dif")
 		plt.xlim(zoom[0], zoom[1])
 		plt.ylim(zoom[2], zoom[3])
 
@@ -231,7 +292,7 @@ def plot_spectrum(foil, filename, title, zoom=[0,0,0,0], log=False):
 	else:
 		plt.ylabel('Counts')
 	plt.title(title)
-	plt.legend(fontsize="x-small")
+	#plt.legend(fontsize="x-small")
 
 	plt.show()
 
@@ -266,6 +327,10 @@ Ir01_02262019 = path + 'AA02262019_Ir01_50cm_room131.Spe'
 
 
 plot_spectrum('Ir', Ir05_030619, title='Gammaray spectrum for Ir05 (ca. 35 hours after EOB)', zoom=[0,2000,0,13], log=True)
-#plot_spectrum('Ir', Ir05_030619, title='Gammaray spectrum for Ir05 (ca. 35 hours after EOB)', zoom=[0,0,0,0], log=False)
+#plot_spectrum('Ir', Ir05_030619, title='Gammaray spectrum for Ir05 (ca. 35 hours after EOB)', zoom=[0,2000,0,120000], log=False)
+#plot_spectrum('Ir', Ir05_030619, title='Gammaray spectrum for Ir05 (ca. 35 hours after EOB)', zoom=[100,200,4,13], log=True)
+#plot_spectrum('Ir', Ir05_030619, title='Gammaray spectrum for Ir05 - 188Pt', zoom=[0,2000,0,13], log=True, nuclide='188Pt')
+
+
 
 

@@ -49,13 +49,13 @@ unc_fe_rhodrs = [0.110,0.034,0.114];
 clc;
 
 % Choose files for analysis
-fitzpeaks_reports = cu_fn;
-key_energies = cu_key_energies;
-glines = cu_glines;
+fitzpeaks_reports = ni_fn;
+key_energies = ni_key_energies;
+glines = ni_glines;
 EoB_Time = '26-Feb-2019 00:32:00'
-rhodrs = cu_rhodrs;
-mu_attenuation = load('cu_xcom.txt');
-unc_rhodrs = unc_cu_rhodrs;
+rhodrs = ni_rhodrs;
+mu_attenuation = load('ni_xcom.txt');
+unc_rhodrs = unc_ni_rhodrs;
 
 
 % Test new fitzpeaks_parser wrapper function
@@ -98,7 +98,9 @@ rows_Ni_52mMn = [70];   %check, check
 rows_Ni_52Mn = [27,42,60,71];  %check
 rows_Ni_52gMn = [27,42,60];  %check
 rows_Ni_54Mn = [35]; %check
-rows_Ni_55Co = [3,13,15,18,30,34,41,46,57,63,67,69,84,97,104];   %check
+%rows_Ni_55Co = [3,13,15,18,30,34,41,46,57,63,67,69,84,97,104];   %check
+rows_Ni_55Co = [13,18,30,41,57,63,67,97];   %check
+
 % rows_Ni_56Co = [29,45,55,59,66,82,90,91,92,99,101];  %check
 rows_Ni_56Co = [29,45,55,90,91,92, 106];  %check
 % rows_Ni_56Co = [29,45,55,59,82,90];  %check
@@ -221,8 +223,8 @@ rows_Ir_193Os = [112, 113, 116, 117]; %check
 
 % Select rows to plot
 % varToStr = @(x) inputname(1);
-rows = rows_Cu_56Mn;
-outName = '../csv/Cu_56Mn';
+rows = rows_Ni_55Co;
+outName = '../csv/Ni_55Co';
 % rows = 12;
 % Find rows for the desired decay product
 selected_rows = data(rows,:);
@@ -233,12 +235,12 @@ selected_rows = data(rows,:);
 % energy = 0; % Show all foils in one plot (not for analysis!)
 % 
 % loop over all energies for a foil type
-% for energy = 128:100:1028   % Just Nickel
-for energy = 129:100:1029   % Just Copper
+for energy = 128:100:1028   % Just Nickel
+% for energy = 129:100:1029   % Just Copper
 % for energy = 126:100:326   % Just Iron
 % for energy = 177:100:1077   % Just Iridium
 % 
-%  for energy = 177   % debug mode
+%  for energy = 428   % debug mode
     if energy==0
         % Return all rows for plotting
         gammas = selected_rows;

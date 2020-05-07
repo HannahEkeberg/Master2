@@ -114,7 +114,9 @@ def plot_function(decay_type, foil, title, react_func, react_func_parent=None):
                 #plt.title(title + " for foil {}".format(i+1), fontsize=12, **csfont)
                 plt.title(title + " for foil {}".format(i+1), fontsize=12)
                 plt.legend(['Fit', r'1$\sigma$ uncertainty'] )
-                plt.show()
+                #plt.show()
+
+                #print_stuff = np.vstack((, dE_tot, new_CS, new_dCS)).T
             elif decay_type=='twostep_kp':
                 A0_daughter_guess=3000; A0_parent_guess=6000
                 popt1, pcov1 = curve_fit(onestep_decay, t[index]*3600, A[index], p0=A0_parent_guess, sigma=dA[index], absolute_sigma=True)
@@ -152,8 +154,10 @@ def plot_function(decay_type, foil, title, react_func, react_func_parent=None):
                 plt.ylabel('Activity, Bq')
                 plt.title(title + " for foil {}".format(i+1), fontsize=12)
                 plt.legend(['Fit', r'1$\sigma$ uncertainty'] )
-                plt.show()
-
+                #plt.show()
+            plt.show()
+            
+            print("foil ", i+1, ": ", popt[0], " Bq")
     #else:
     #    file = filelist_d[foil-1] # indexing correctly
     #    t = np.genfromtxt(file, delimiter=',', usecols=[0]) #hours since e.o.b
@@ -164,6 +168,9 @@ def plot_function(decay_type, foil, title, react_func, react_func_parent=None):
 
 
 #plot_function('single', None, r'Activity curve for $^{nat}$Ni(d,x)$^{61}$Cu', Ni_61Cu())
+#plot_function('single', None, r'Activity curve for $^{nat}$Ni(d,x)$^{52}$Mn', Ni_52Mn())
+#plot_function('single', None, r'Activity curve for $^{nat}$Ni(d,x)$^{59}$Fe', Ni_59Fe())
+#plot_function('single', None, r'Activity curve for $^{nat}$Ni(d,x)$^{55}$Co', Ni_55Co())
 #plot_function('single', None, r'Activity curve for $^{nat}$Ir(d,x)$^{193m}$Pt', Ir_193mPt())
 #plot_function('twostep_up', None, r'Activity curve for $^{nat}$Ni(d,x)$^{58}$Co', Ni_58Co())
 #plot_function('twostep_up', None, 'title', Ni_58Co())
@@ -301,8 +308,6 @@ def A0_double_decay_unknown_parent(filename_activity_time, lambda_parent, lambda
     sigma_A0_estimated_ground_state=np.zeros(len(xplot))
     for i in range(len(xplot)):
         sigma_A0_estimated_ground_state[i] = uncertainty_cov_A0(popt, pcov, lambda_parent, lambda_daughter, i)
-
-
 
 
 
@@ -665,7 +670,7 @@ np.savetxt("{}.csv".format(save_results_to +  'Ni_56Co'), np.array((A0, sigma_A0
 
 #single_decay_data(Cu_57Ni(), "Cu_57Ni", 10, Save_csv=True)
 #single_decay_data(Cu_54Mn(), "Cu_54Mn", 10, Save_csv=True)
-single_decay_data(Cu_56Mn(), "Cu_56Mn", 10, Save_csv=True)
+#single_decay_data(Cu_56Mn(), "Cu_56Mn", 10, Save_csv=True)
 
 #two_step_up_data(Cu_58Co(), "Cu_58mCo", "Cu_58Co", 10, Save_csv = True)     #WEIRD
 #two_step_up_npat(Cu_58Co(), "Cu_58mCo_npat", "Cu_58Co_npat", 10, '58COm', '58COg', Save_csv=True)
@@ -693,7 +698,7 @@ single_decay_data(Cu_56Mn(), "Cu_56Mn", 10, Save_csv=True)
 #two_step_kp_data(Ni_57Ni(), Ni_57Co(), "Ni_57Co", 10, Save_csv= True)    #WEIRD
 
 
-#single_decay_data(Ni_55Co(), "Ni_55Co", 10, Save_csv=True)      #EXCELLENT
+single_decay_data(Ni_55Co(), "Ni_55Co", 10, Save_csv=True)      #EXCELLENT
 
 
 #single_decay_data(Ni_52mMn(), "Ni_52mMn", 10, Save_csv=True)      #WEIRD

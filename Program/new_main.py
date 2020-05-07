@@ -36,8 +36,9 @@ index = find_index(names, 'B_+2_D_+4,25')  # looks good but downside: weird zieg
 #index = find_index(names, 'B_+0,75_D_-2,75')
 #index = find_index(names, 'B_0_D_0')
 #index = find_index(names, good_files[-2])
+#index= find_index(names, good_files[0])
 
-
+print(names[index])
 name = names[index]
 
 
@@ -63,8 +64,28 @@ ziegler_filename = './' + files[index]
 
 
 
+"""
+### TESTING IF ANY OTHER BC's IMPROVES 63Zn
+for i in good_files:
+	index=find_index(names, i)  # looks good but downside: weird ziegler flux distribution
+	#print(index)
+	BC = BeamCurrent(files[index])
+	CS = CrossSections(files[index])
+	ziegler_filename = './' + files[index] 
+	WABC_file = 'WABC_'+ ziegler_filename[10:-11] + '.csv'
+	CS.mon_CS_test(Cu_63Zn(), 'Cu', 'Cu_63Zn.csv', 10, 'Cu_63Zn', names[index], WABC_file)
+"""
+#BC.plot_distribution('all', files[index])
+#BC.plot_distribution('Ir', files[index])
+
+
+#BC.CurrentPlot_compartment(name=name, WABC = 'averaged_currents.csv', title='Beam current - after variance minimization')
+
+### Ziegler filenames
+ziegler_filename = './' + files[index] 
 
 WABC_file = 'WABC_'+ ziegler_filename[10:-11] + '.csv'
+
 #print(WABC_file)
 #BC.CurrentPlot_compartment(names[index], WABC=WABC_file, title='After variance minimization')
 #BC.CurrentPlot_compartment(names[index], WABC=WABC_file, title='Before variance minimization')
@@ -81,52 +102,54 @@ WABC_file = 'WABC_'+ ziegler_filename[10:-11] + '.csv'
 #CS.mon_CS_test(Ni_61Cu(), 'Ni', 'Ni_61Cu.csv', 10, 'Ni_61Cu', names[index], WABC_file)
 #CS.mon_CS_test(Ni_56Co(), 'Ni', 'Ni_56Co.csv', 10, 'Ni_56Co', names[index], WABC_file)
 #CS.mon_CS_test(Ni_58Co(), 'Ni', 'Ni_58Co.csv', 10, 'Ni_58Co', names[index], WABC_file)
-CS.mon_CS_test(Cu_62Zn(), 'Cu', 'Cu_62Zn.csv', 10, 'Cu_62Zn', names[index], WABC_file)
-CS.mon_CS_test(Cu_63Zn(), 'Cu', 'Cu_63Zn.csv', 10, 'Cu_63Zn', names[index], WABC_file)
-CS.mon_CS_test(Cu_65Zn(), 'Cu', 'Cu_65Zn.csv', 10, 'Cu_65Zn', names[index], WABC_file)
+#CS.mon_CS_test(Cu_62Zn(), 'Cu', 'Cu_62Zn.csv', 10, 'Cu_62Zn', names[index], WABC_file)
+#CS.mon_CS_test(Cu_63Zn(), 'Cu', 'Cu_63Zn.csv', 10, 'Cu_63Zn', names[index], WABC_file)
+#CS.mon_CS_test(Cu_65Zn(), 'Cu', 'Cu_65Zn.csv', 10, 'Cu_65Zn', names[index], WABC_file)
 
 
 
 ### Ni reactions
 
-#CS.make_CS(Ni_52Mn(), 'Ni', 'Ni_52Mn.csv', 10, 'Ni_52Mn', WABC_file, '25', '52', independent=False, ylimit=10, CS_colonne_ALICE=5, file_ending='.tot', isomer_state=None)   # using 1434 keV line 
-#CS.make_CS(Ni_54Mn(), 'Ni', 'Ni_54Mn.csv', 10, 'Ni_54Mn', WABC_file, '25', '54', ylimit=40, independent=True, CS_colonne_ALICE=5)
-#CS.make_CS(Ni_59Fe(), 'Ni', 'Ni_59Fe.csv', 10, 'Ni_59Fe', WABC_file, '26', '59', independent=False,CS_colonne_ALICE=5, ylimit=1)   # first in decay chain
-#CS.make_CS(Ni_60Cu(), 'Ni', 'Ni_60Cu.csv', 10, 'Ni_60Cu', WABC_file, '29', '60',CS_colonne_ALICE=5, ylimit=75)
-#CS.make_CS(Ni_64Cu(), 'Ni', 'Ni_64Cu.csv', 10, 'Ni_64Cu', WABC_file, '29', '64',CS_colonne_ALICE=5)
-#CS.make_CS(Ni_60Co(), 'Ni', 'Ni_60Co.csv', 10, 'Ni_60Co', WABC_file, '27', '60', ylimit=55, independent=False,CS_colonne_ALICE=5) # first in decay chain
-#CS.make_CS(Ni_65Ni(), 'Ni', 'Ni_65Ni.csv', 10, 'Ni_65Ni', WABC_file, '28', '65', independent=False,CS_colonne_ALICE=5) # first in decay chain
-#CS.make_CS(Ni_55Co(), 'Ni', 'Ni_55Co.csv', 10, 'Ni_55Co', WABC_file, '27', '55', ylimit=45,independent=False,CS_colonne_ALICE=5) # first in decay chain
-#CS.make_CS(Ni_57Ni(), 'Ni', 'Ni_57Ni.csv', 10, 'Ni_57Ni', WABC_file, '28', '57', ylimit=150, independent=False,CS_colonne_ALICE=5, file_ending='.tot') # first in decay chain)
+# CS.make_CS(Ni_52Mn(), 'Ni', 'Ni_52Mn.csv', 10, 'Ni_52Mn', WABC_file, '25', '52', independent=False, ylimit=10, CS_colonne_ALICE=5, file_ending='.tot', isomer_state=None)   # using 1434 keV line 
+# CS.make_CS(Ni_54Mn(), 'Ni', 'Ni_54Mn.csv', 10, 'Ni_54Mn', WABC_file, '25', '54', ylimit=40, independent=True, CS_colonne_ALICE=5)
+# CS.make_CS(Ni_59Fe(), 'Ni', 'Ni_59Fe.csv', 10, 'Ni_59Fe', WABC_file, '26', '59', independent=False,CS_colonne_ALICE=5, ylimit=1)   # first in decay chain
+# CS.make_CS(Ni_55Co(), 'Ni', 'Ni_55Co.csv', 10, 'Ni_55Co', WABC_file, '27', '55', ylimit=45,independent=False,CS_colonne_ALICE=5) # first in decay chain
+# CS.make_CS(Ni_60Co(), 'Ni', 'Ni_60Co.csv', 10, 'Ni_60Co', WABC_file, '27', '60', ylimit=55, independent=False,CS_colonne_ALICE=5) # first in decay chain
+# CS.make_CS(Ni_57Ni(), 'Ni', 'Ni_57Ni.csv', 10, 'Ni_57Ni', WABC_file, '28', '57', ylimit=150, independent=False,CS_colonne_ALICE=5, file_ending='.tot') # first in decay chain)
+# CS.make_CS(Ni_65Ni(), 'Ni', 'Ni_65Ni.csv', 10, 'Ni_65Ni', WABC_file, '28', '65', independent=False,CS_colonne_ALICE=5) # first in decay chain
+# CS.make_CS(Ni_60Cu(), 'Ni', 'Ni_60Cu.csv', 10, 'Ni_60Cu', WABC_file, '29', '60',CS_colonne_ALICE=5, ylimit=75)
+# CS.make_CS(Ni_64Cu(), 'Ni', 'Ni_64Cu.csv', 10, 'Ni_64Cu', WABC_file, '29', '64',CS_colonne_ALICE=5)
 
-#CS.make_CS(Ni_58mCo(), 'Ni', 'Ni_58mCo.csv', 10, 'Ni_58mCo', WABC_file, '27', '58', ylimit=270, independent=True,CS_colonne_ALICE=7, isomer_state='m', file_ending='.L01')
-#CS.make_CS(Ni_58Co(), 'Ni', 'Ni_58Co.csv', 10, 'Ni_58Co', WABC_file, '27', '58', ylimit=270, independent=True,CS_colonne_ALICE=5, isomer_state=None, file_ending='.L00')
 
-#CS.make_CS(Ni_56Ni(), 'Ni', 'Ni_56Ni.csv', 10, 'Ni_56Ni', WABC_file, '28', '56', ylimit=4, independent=False, BR=None, CS_colonne_ALICE=5) # first in decay chain)
-#CS.make_CS_subtraction('daughter', 'Ni', 10, WABC_file, Ni_56Ni(), 'Ni_56Ni', 'Ni_56Ni.csv', '28', '56',  Ni_56Co(), 'Ni_56Co', 'Ni_56Co.csv', '27', '56', BR_daughter=1.0, ylimit=80, isomer_state=None, independent=False, file_ending='.tot', save_text=True, feeding='beta+')  # Necessary when subtracting
-#CS.make_CS(Ni_56Co(), 'Ni', 'Ni_56Co.csv', 10, 'Ni_56Co', WABC_file, '27', '56', independent=True, CS_colonne_ALICE=5, ylimit=80) # first in decay chain)
+# CS.make_CS(Ni_58mCo(), 'Ni', 'Ni_58mCo.csv', 10, 'Ni_58mCo', WABC_file, '27', '58', ylimit=270, independent=True,CS_colonne_ALICE=7, isomer_state='m', file_ending='.L01')
+# CS.make_CS(Ni_58Co(), 'Ni', 'Ni_58Co.csv', 10, 'Ni_58Co', WABC_file, '27', '58', ylimit=270, independent=True,CS_colonne_ALICE=5, isomer_state=None, file_ending='.L00')
+# CS.make_CS_subtraction('daughter', 'Ni', 10, WABC_file, Ni_58mCo(), 'Ni_58mCo', 'Ni_58mCo.csv', '28', '58',  Ni_58Co(), 'Ni_58Co', 'Ni_58Co.csv', '27', '58', BR_daughter=1.0, ylimit=None, isomer_state=None, independent=False, file_ending='.tot', save_text=True, feeding=None, CS_colonne_ALICE=4)  # Necessary when subtracting
+
+# CS.make_CS(Ni_56Ni(), 'Ni', 'Ni_56Ni.csv', 10, 'Ni_56Ni', WABC_file, '28', '56', ylimit=4, independent=False, BR=None, CS_colonne_ALICE=5) # first in decay chain)
+CS.make_CS_subtraction('daughter', 'Ni', 10, WABC_file, Ni_56Ni(), 'Ni_56Ni', 'Ni_56Ni.csv', '28', '56',  Ni_56Co(), 'Ni_56Co', 'Ni_56Co.csv', '27', '56', BR_daughter=1.0, ylimit=80, isomer_state=None, independent=False, file_ending='.tot', save_text=True, feeding='beta+', CS_colonne_ALICE=4)  # Necessary when subtracting
+CS.make_CS(Ni_56Co(), 'Ni', 'Ni_56Co.csv', 10, 'Ni_56Co', WABC_file, '27', '56', independent=True, CS_colonne_ALICE=5, ylimit=80) # first in decay chain)
 
 
 ### Cu reactions
 
-#CS.make_CS(Cu_64Cu(), 'Cu', 'Cu_64Cu.csv', 10, 'Cu_64Cu', WABC_file, '29', '64', CS_colonne_ALICE=5)
-#CS.make_CS(Cu_65Ni(), 'Cu', 'Cu_65Ni.csv', 10, 'Cu_65Ni', WABC_file, '28', '65', CS_colonne_ALICE=5)
-#CS.make_CS(Cu_59Fe(), 'Cu', 'Cu_59Fe.csv', 10, 'Cu_59Fe', WABC_file, '26', '59', ylimit=1, independent=False, CS_colonne_ALICE=5) # first in decay chain
-#CS.make_CS(Cu_60Co(), 'Cu', 'Cu_60Co.csv', 10, 'Cu_60Co', WABC_file, '27', '60', ylimit=25, independent=False, CS_colonne_ALICE=5) # first in decay chain)   
-#CS.make_CS(Cu_61Co(), 'Cu', 'Cu_61Co.csv', 10, 'Cu_61Co', WABC_file, '27', '61', ylimit=4, independent=False,CS_colonne_ALICE=5) # first in decay chain)  
-#CS.make_CS(Cu_61Cu(), 'Cu', 'Cu_61Cu.csv', 10, 'Cu_61Cu', WABC_file, '29', '61', ylimit=110, independent=False, CS_colonne_ALICE=5) # first in decay chain)   
-#CS.make_CS(Cu_64Cu(), 'Cu', 'Cu_64Cu.csv', 10, 'Cu_64Cu', WABC_file, '29', '64',CS_colonne_ALICE=5)
+# CS.make_CS(Cu_64Cu(), 'Cu', 'Cu_64Cu.csv', 10, 'Cu_64Cu', WABC_file, '29', '64', CS_colonne_ALICE=5)
+# CS.make_CS(Cu_65Ni(), 'Cu', 'Cu_65Ni.csv', 10, 'Cu_65Ni', WABC_file, '28', '65', CS_colonne_ALICE=5)
+# CS.make_CS(Cu_59Fe(), 'Cu', 'Cu_59Fe.csv', 10, 'Cu_59Fe', WABC_file, '26', '59', ylimit=1, independent=False, CS_colonne_ALICE=5) # first in decay chain
+# CS.make_CS(Cu_60Co(), 'Cu', 'Cu_60Co.csv', 10, 'Cu_60Co', WABC_file, '27', '60', ylimit=25, independent=False, CS_colonne_ALICE=5) # first in decay chain)   
+# CS.make_CS(Cu_61Co(), 'Cu', 'Cu_61Co.csv', 10, 'Cu_61Co', WABC_file, '27', '61', ylimit=4, independent=False,CS_colonne_ALICE=5) # first in decay chain)  
+# CS.make_CS(Cu_61Cu(), 'Cu', 'Cu_61Cu.csv', 10, 'Cu_61Cu', WABC_file, '29', '61', ylimit=110, independent=False, CS_colonne_ALICE=5) # first in decay chain)   
+# CS.make_CS(Cu_64Cu(), 'Cu', 'Cu_64Cu.csv', 10, 'Cu_64Cu', WABC_file, '29', '64',CS_colonne_ALICE=5)
 
 ### Fe reactions 
-#CS.make_CS(Fe_48V(), 'Fe', 'Fe_48V.csv', 3, 'Fe_48V', WABC_file, '23', '48', independent=False, file_ending='.tot', ylimit=0.176, CS_colonne_ALICE=5)   
-#CS.make_CS(Fe_51Cr(), 'Fe', 'Fe_51Cr.csv', 3, 'Fe_51Cr', WABC_file, '24', '51', independent=False, ylimit=20, CS_colonne_ALICE=5)   
-#CS.make_CS(Fe_52Mn(), 'Fe', 'Fe_52Mn.csv', 3, 'Fe_52Mn', WABC_file, '25', '52', ylimit=50, independent=False, CS_colonne_ALICE=5)   
-#CS.make_CS(Fe_53Fe(), 'Fe', 'Fe_53Fe.csv', 3, 'Fe_53Fe', WABC_file, '26', '53', independent=False, CS_colonne_ALICE=5)   
-#CS.make_CS(Fe_54Mn(), 'Fe', 'Fe_54Mn.csv', 3, 'Fe_54Mn', WABC_file, '25', '54', independent=True, ylimit=125, CS_colonne_ALICE=5)   
-#CS.make_CS(Fe_55Co(), 'Fe', 'Fe_55Co.csv', 3, 'Fe_55Co', WABC_file, '27', '55', independent=True, CS_colonne_ALICE=5)   
-#CS.make_CS(Fe_57Co(), 'Fe', 'Fe_57Co.csv', 3, 'Fe_57Co', WABC_file, '27', '57', independent=True, CS_colonne_ALICE=5)   
-#CS.make_CS(Fe_58Co(), 'Fe', 'Fe_58Co.csv', 3, 'Fe_58Co', WABC_file, '27', '58', independent=False, CS_colonne_ALICE=5)   
-#CS.make_CS(Fe_59Fe(), 'Fe', 'Fe_59Fe.csv', 3, 'Fe_59Fe', WABC_file, '26', '59', independent=True, CS_colonne_ALICE=5)   # only produced via 58Fe(d,n). abundance is low so had to redo energy. Ask Andrew about energy. 
+# CS.make_CS(Fe_48V(), 'Fe', 'Fe_48V.csv', 3, 'Fe_48V', WABC_file, '23', '48', independent=False, file_ending='.tot', ylimit=0.176, CS_colonne_ALICE=5)   
+# CS.make_CS(Fe_51Cr(), 'Fe', 'Fe_51Cr.csv', 3, 'Fe_51Cr', WABC_file, '24', '51', independent=False, ylimit=20, CS_colonne_ALICE=5)   
+# CS.make_CS(Fe_52Mn(), 'Fe', 'Fe_52Mn.csv', 3, 'Fe_52Mn', WABC_file, '25', '52', ylimit=50, independent=False, CS_colonne_ALICE=5)   
+# CS.make_CS(Fe_53Fe(), 'Fe', 'Fe_53Fe.csv', 3, 'Fe_53Fe', WABC_file, '26', '53', independent=False, CS_colonne_ALICE=5)   
+# CS.make_CS(Fe_54Mn(), 'Fe', 'Fe_54Mn.csv', 3, 'Fe_54Mn', WABC_file, '25', '54', independent=True, ylimit=125, CS_colonne_ALICE=5)   
+# CS.make_CS(Fe_55Co(), 'Fe', 'Fe_55Co.csv', 3, 'Fe_55Co', WABC_file, '27', '55', independent=True, CS_colonne_ALICE=5)   
+# CS.make_CS(Fe_57Co(), 'Fe', 'Fe_57Co.csv', 3, 'Fe_57Co', WABC_file, '27', '57', independent=True, CS_colonne_ALICE=5)   
+# CS.make_CS(Fe_58Co(), 'Fe', 'Fe_58Co.csv', 3, 'Fe_58Co', WABC_file, '27', '58', independent=False, CS_colonne_ALICE=5)   
+# CS.make_CS(Fe_59Fe(), 'Fe', 'Fe_59Fe.csv', 3, 'Fe_59Fe', WABC_file, '26', '59', independent=True, CS_colonne_ALICE=5)   # only produced via 58Fe(d,n). abundance is low so had to redo energy. Ask Andrew about energy. 
 
 
 ### Ir reactions
@@ -137,21 +160,22 @@ CS.mon_CS_test(Cu_65Zn(), 'Cu', 'Cu_65Zn.csv', 10, 'Cu_65Zn', names[index], WABC
 
 #CS.make_CS(Ir_189Pt(), 'Ir', 'Ir_189Pt.csv', 10, 'Ir_189Pt', WABC_file, '78', '189', ylimit=520, independent=True)    # 
 #CS.make_CS(Ir_189Ir(), 'Ir', 'Ir_189Ir.csv', 10, 'Ir_189Ir', WABC_file, '77', '189', independent=False, feeding='beta+', BR=1.0, reaction_parent='Ir_189Pt')    # need work on activity 
+
 #CS.make_CS_subtraction('daughter', 'Ir', 10, WABC_file, Ir_189Pt(), 'Ir_189Pt', 'Ir_189Pt.csv', '78', '189',  Ir_189Ir(), 'Ir_189Ir', 'Ir_189Ir.csv', '77', '189', ylimit=500, independent=True, file_ending='.tot', CS_colonne_ALICE=4, BR_daughter=1.0)  # Necessary when subtracting
 
 
 
-#CS.make_CS(Ir_190Ir(), 'Ir', 'Ir_190Ir.csv', 10, 'Ir_190Ir', WABC_file, '77', '190', independent=False, CS_colonne_ALICE=4)     # file_ending=.tot because of decay from m1 m2 isomer. 
-#CS.make_CS(Ir_190m2Ir(), 'Ir', 'Ir_190m2Ir.csv', 10, 'Ir_190m2Ir', WABC_file, '77', '190', file_ending='.L37', isomer_state='m2', independent=True, CS_colonne_ALICE=6)   # 0.0860   
+# CS.make_CS(Ir_190Ir(), 'Ir', 'Ir_190Ir.csv', 10, 'Ir_190Ir', WABC_file, '77', '190', independent=False, CS_colonne_ALICE=4)     # file_ending=.tot because of decay from m1 m2 isomer. 
+# CS.make_CS(Ir_190m2Ir(), 'Ir', 'Ir_190m2Ir.csv', 10, 'Ir_190m2Ir', WABC_file, '77', '190', file_ending='.L37', isomer_state='m2', independent=True, CS_colonne_ALICE=6)   # 0.0860   
 #CS.make_CS_subtraction('daughter', 'Ir', 10, WABC_file, Ir_190m2Ir(), 'Ir_190m2Ir', 'Ir_190m2Ir.csv', '77', '190',  Ir_190Ir(), 'Ir_190Ir', 'Ir_190Ir.csv', '77', '190', BR_daughter=0.0860, ylimit=None, isomer_state='m1+g', independent=True)#independent='_cumulative_190m1+190Ir', file_ending='.tot')  # Necessary when subtracting
 
-#CS.make_CS(Ir_191Pt(), 'Ir', 'Ir_191Pt.csv', 10, 'Ir_191Pt', WABC_file, '78', '191', independent=True, ylimit=800) 
+# CS.make_CS(Ir_191Pt(), 'Ir', 'Ir_191Pt.csv', 10, 'Ir_191Pt', WABC_file, '78', '191', independent=True, ylimit=800) 
 
-#CS.make_CS(Ir_192Ir(), 'Ir', 'Ir_192Ir.csv', 10, 'Ir_192Ir', WABC_file, '77', '192', file_ending='.tot', independent=False)    
+# CS.make_CS(Ir_192Ir(), 'Ir', 'Ir_192Ir.csv', 10, 'Ir_192Ir', WABC_file, '77', '192', file_ending='.tot', independent=False)    
 
-#CS.make_CS(Ir_194Ir(), 'Ir', 'Ir_194Ir.csv', 10, 'Ir_194Ir', WABC_file, '77', '194', file_ending='.L00', independent=False)    
-#CS.make_CS(Ir_194m2Ir(), 'Ir', 'Ir_194m2Ir.csv', 10, 'Ir_194m2Ir', WABC_file, '77', '194', file_ending='not', isomer_state='m2', independent=True, CS_colonne_ALICE=6)     #talys=.L34
-#CS.make_CS(Ir_193mPt(), 'Ir', 'Ir_193mPt.csv', 10, 'Ir_193mPt', WABC_file, '78', '193', file_ending='.L05', isomer_state='m', independent=True, CS_colonne_ALICE=6, ylimit=300)   
+# CS.make_CS(Ir_194Ir(), 'Ir', 'Ir_194Ir.csv', 10, 'Ir_194Ir', WABC_file, '77', '194', file_ending='.L00', independent=False)    
+# CS.make_CS(Ir_194m2Ir(), 'Ir', 'Ir_194m2Ir.csv', 10, 'Ir_194m2Ir', WABC_file, '77', '194', file_ending='not', isomer_state='m2', independent=True, CS_colonne_ALICE=6)     #talys=.L34
+# CS.make_CS(Ir_193mPt(), 'Ir', 'Ir_193mPt.csv', 10, 'Ir_193mPt', WABC_file, '78', '193', file_ending='.L05', isomer_state='m', independent=True, CS_colonne_ALICE=6, ylimit=300)   
 
 
 
@@ -200,8 +224,8 @@ def coulomb_barrier(Z_a, Z_b, A_a, A_b):
 	else:	
 		R_a = r0*A_a**(1/3)# *1e-15 #m
 	R_b = r0*A_b**(1/3)# *1e-15 #m
-	print("particle radius: ", R_a, A_a)
-	print("nuclear radius: ", R_b, A_b)
+	#print("particle radius: ", R_a, A_a)
+	#print("nuclear radius: ", R_b, A_b)
 
 	#print(R_a)
 	#print(r0)
@@ -221,13 +245,41 @@ def coulomb_barrier(Z_a, Z_b, A_a, A_b):
 	#return 1
 
 #proton, 193Ir
-b = coulomb_barrier(1, 78, 1, 191)
-
-
-
-print("Coulomb barrier: ", b, "MeV")  
-
+b1 = coulomb_barrier(1, 78, 1, 193)
+b2 = coulomb_barrier(1, 78, 1, 195)
+print("mean:", np.mean((b1, b2)))
+print("Coulomb barrier for compound nucleus 193Pt: ", b1, "MeV")  
+print("Coulomb barrier for compound nucleus 195t: ", b2, "MeV") 
+print("***")
+b1 = coulomb_barrier(1, 29, 1, 60)
+b2 = coulomb_barrier(1, 29, 1, 62)
+b3 = coulomb_barrier(1, 29, 1, 63)
+b4 = coulomb_barrier(1, 29, 1, 64)
+b5 = coulomb_barrier(1, 29, 1, 66)
+print("mean:", np.mean((b1, b2, b3, b4)))
+print("Coulomb barrier for compound nucleus 60Cu: ", b1, "MeV")  
+print("Coulomb barrier for compound nucleus 62Cu: ", b2, "MeV")  
+print("Coulomb barrier for compound nucleus 63Cu: ", b3, "MeV")  
+print("Coulomb barrier for compound nucleus 64Cu: ", b4, "MeV")  
+print("Coulomb barrier for compound nucleus 66Cu: ", b5, "MeV")  
+print("***")
+b1 = coulomb_barrier(1, 30, 1, 65)
+b2 = coulomb_barrier(1, 30, 1, 67)
+print("mean:", np.mean((b1, b2)))
+print("Coulomb barrier for compound nucleus 65Zn: ", b1, "MeV")  
+print("Coulomb barrier for compound nucleus 67Zn: ", b2, "MeV")  
+print("***")
+b1 = coulomb_barrier(1, 27, 1, 56)
+b2 = coulomb_barrier(1, 27, 1, 58)
+b3 = coulomb_barrier(1, 27, 1, 59)
+b4 = coulomb_barrier(1, 27, 1, 60)
+print("mean:", np.mean((b1, b2, b3, b4)))
+print("Coulomb barrier for compound nucleus 56Co: ", b1, "MeV")  
+print("Coulomb barrier for compound nucleus 58Co: ", b2, "MeV")  
+print("Coulomb barrier for compound nucleus 59Co: ", b3, "MeV")  
+print("Coulomb barrier for compound nucleus 60Co: ", b4, "MeV")  
 """
+
 """
 def plot_WABC():
 	wabc_before = 'WABC_B_0_D_0.csv'

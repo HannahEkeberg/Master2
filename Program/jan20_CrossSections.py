@@ -239,11 +239,11 @@ class CrossSections:
                 title = r'$^{nat}$' + foil + '(d,x)' + r'$^{{ {} }}$'.format(A+state) + reaction[-1:]  + ' - Cumulative' 
             else:
                 title = r'$^{nat}$' + foil + '(d,x)' + r'$^{{ {} }}$'.format(A+state) + reaction[-2:]  + ' - Cumulative' 
-        print(A+state)
+        #print(A+state)
 
         #print(dE)
         if save_text==True:
-            plt.errorbar(E, CS, marker='P', color='darkred',linewidth=0.0001, xerr=dE, yerr=dCS, elinewidth=1.0, capthick=1.0, capsize=3.0, label='this data')
+            plt.errorbar(E, CS, marker='P', color='darkred',linewidth=0.0001, xerr=dE, yerr=dCS, elinewidth=1.0, capthick=1.0, capsize=3.0, label='This Work')
             self.modelling('Tendl', foil, Z, A, reaction, file_ending, independent=independent, feeding=feeding, BR=BR, CS_colonne=CS_colonne_ALICE, isomer_state=isomer_state)
             self.modelling('Talys', foil, Z, A, reaction, file_ending, independent=independent, feeding=feeding, BR=BR, CS_colonne=CS_colonne_ALICE, isomer_state=isomer_state)
             self.modelling('Exfor', foil, Z, A, reaction, file_ending, independent=independent, feeding=feeding, BR=BR, CS_colonne=CS_colonne_ALICE, isomer_state=isomer_state)
@@ -362,11 +362,12 @@ class CrossSections:
                 plt.errorbar(E, CS_daughter, marker='.', color='green',linewidth=0.0001, xerr=dE, yerr=dCS_daughter, elinewidth=0.5, capthick=1.0, capsize=3.0, label=reaction_daughter + ' - Cumulative')    
                 plt.errorbar(E, new_CS, marker='P', color='darkred',linewidth=0.0001, xerr=dE, yerr=new_dCS, elinewidth=1.0, capthick=1.0, capsize=3.0, label=reaction_daughter +  ' - Independent')
             elif independent==False:
-                plt.errorbar(E, CS_daughter, marker='.', color='green',linewidth=0.0001, xerr=dE, yerr=dCS_daughter, elinewidth=1.0, capthick=1.0, capsize=3.0, label=reaction_daughter +' - independent')    
-                plt.errorbar(E, new_CS, marker='P', color='darkred',linewidth=0.0001, xerr=dE, yerr=new_dCS, elinewidth=1.0, capthick=1.0, capsize=3.0, label=reaction_daughter + ' - cumulative')
-            plt.errorbar(E, CS_parent, marker='.', color='magenta',linewidth=0.0001, xerr=dE, yerr=dCS_parent, elinewidth=0.5, capthick=1.0, capsize=3.0, label=reaction_parent + ' (feeding: {}%)'.format(BR_daughter*100))
+                plt.errorbar(E, CS_daughter, marker='.', color='green',linewidth=0.0001, xerr=dE, yerr=dCS_daughter, elinewidth=1.0, capthick=1.0, capsize=3.0, label=reaction_daughter +' - Independent')    
+                plt.errorbar(E, new_CS, marker='P', color='darkred',linewidth=0.0001, xerr=dE, yerr=new_dCS, elinewidth=1.0, capthick=1.0, capsize=3.0, label=reaction_daughter + ' - Cumulative')
+            plt.errorbar(E, CS_parent, marker='.', color='magenta',linewidth=0.0001, xerr=dE, yerr=dCS_parent, elinewidth=0.5, capthick=1.0, capsize=3.0, label=reaction_parent + ' (Feeding: {}%)'.format(BR_daughter*100))
             self.modelling('Tendl', foil, Z, A, reaction, file_ending, independent=independent, feeding=feeding, BR=BR_daughter, CS_colonne=CS_colonne_ALICE, isomer_state=isomer_state)
-            self.modelling('ALICE', foil, Z, A, reaction, file_ending, independent=independent, feeding=feeding, BR=BR_daughter, CS_colonne=CS_colonne_ALICE, isomer_state=isomer_state)
+            self.modelling('Alice', foil, Z, A, reaction, file_ending, independent=independent, feeding=feeding, BR=BR_daughter, CS_colonne=CS_colonne_ALICE, isomer_state=isomer_state)
+            #print(feeding, "from subtraction func")
             self.modelling('Talys', foil, Z, A, reaction, file_ending, independent=independent, feeding=feeding, BR=BR_daughter, CS_colonne=CS_colonne_ALICE, isomer_state=isomer_state)
             #self.modelling('Exfor', foil, Z, A, reaction, file_ending, independent=independent, feeding=None, BR=BR_daughter)
             self.modelling('Exfor', foil, Z, A, reaction, file_ending, independent=independent, feeding=feeding, BR=BR_daughter, CS_colonne=CS_colonne_ALICE, isomer_state=isomer_state)
@@ -486,10 +487,56 @@ class CrossSections:
         #print("modelling:", model, foil )
         #print(feeding)
         SimCS = SimCrossSectionData() 
+        #print(model)
+        #print("****")
         if model == 'Alice':    # needs to come before chaning Z and A, since using the inputvalues
             try:
-                E, CS = SimCS.ALICE(foil, A, Z, CS_colonne)
-                plt.plot(E, CS, label='Alice', color='green', linestyle=':')
+                #print("ALICE")
+                #E, CS = SimCS.ALICE(foil, A, Z, CS_colonne)
+                #plt.plot(E, CS, label='Alice', color='green', linestyle=':')
+
+                #if isinstance(CS_colonne, list):     # To calculate if there is feeding from isomer. 
+                #    print("yes")
+                #else:
+                #print("foil: ", foil)
+                #print("A: ", A)
+                #print("Z: ", Z)
+                #print("Colonne: ", CS_colonne)
+                if feeding == None:
+                    E, CS = SimCS.ALICE(foil, A, Z, CS_colonne)
+                    #print("foil: ", foil)
+                    #print("A: ", A_p)
+                    #print("Z: ", Z_p)
+                    #print("Colonne: ", CS_colonne)
+                    plt.plot(E, CS, label='Alice', color='green', linestyle=':')
+                else:
+                    E, CS = SimCS.ALICE(foil, A, Z, CS_colonne)
+                    if feeding=='beta+':
+                        Z_p = int(Z)+1; A_p = A
+                        Z_p = str(Z_p)
+                    elif feeding == 'beta-':
+                        Z_p = int(Z)-1; A_p = A
+                        Z_p = str(Z_p)
+                    
+                    #print("foil: ", foil)
+                    #print("A: ", A_p)
+                    #print("Z: ", Z_p)
+                    #print("Colonne: ", CS_colonne)
+                    #E_p, CS_p = SimCS.ALICE('Ir', '189', '78', 4)
+
+
+                    E_p, CS_p = SimCS.ALICE(foil, A_p, Z_p, CS_colonne)
+
+                    #print(E)
+                    #print(CS_p)
+                    CS_tot = CS + CS_p*BR
+                    plt.plot(E, CS_tot, label='Alice', color='green', linestyle=':')
+                #print("ALICE: ", feeding)
+                #print(Z_p, A)
+
+
+
+
 
                 """
                 if feeding==None:
@@ -612,12 +659,12 @@ class CrossSections:
                     plt.plot(E, CS, label='CoH', linestyle='-', color='dodgerblue', linewidth=0.7)
                 elif independent==False and feeding!=None:
                     E, CS = SimCS.COH(foil, A, Z, reaction, isomer=isomer_state)
-                    print("works:")
-                    print(foil)
-                    print(A)
-                    print(Z)
-                    print(reaction)
-                    print(isomer_state)
+                    #print("works:")
+                    #print(foil)
+                    #print(A)
+                    #print(Z)
+                    #print(reaction)
+                    #print(isomer_state)
                     #print(E)
                     if feeding=='beta+':
                         Z_p = int(Z)+1; A_p = A
@@ -629,13 +676,13 @@ class CrossSections:
                         Z_p = int(Z)-1; A_p = A
                         Z_p = '0' + str(Z_p)
                         #reaction_new = reaction[:-2] + 'Pt'
-                    print("Not working:")
-                    print(foil)
-                    print(A_p)
-                    print(Z_p)
-                    print(reaction_parent)
-                    print(isomer_state)    
-                    print("Z_p: ", Z_p, "A_p: ", A_p)
+                    #print("Not working:")
+                    #print(foil)
+                    #print(A_p)
+                    #print(Z_p)
+                    #print(reaction_parent)
+                    #print(isomer_state)    
+                    #print("Z_p: ", Z_p, "A_p: ", A_p)
                     #print(reaction_parent)
                     #print(foil)
                     E_p, CS_p = SimCS.COH(foil, A_p, Z_p, reaction=reaction_parent, isomer=isomer_state)
@@ -796,6 +843,8 @@ class CrossSections:
             #print(dCs_mon)
 
             self.modelling('Exfor', 'Fe', '26', '56', 'Fe_56Co', '.tot', independent=True, feeding=None, CS_colonne=5, BR=1.0, isomer_state=None)
+            
+
             #self.modelling('Talys', 'Fe', '26', '56', 'Fe_56Co', '.tot')
             #self.modelling('Tendl', 'Fe', '26', '56', 'Fe_56Co', '.tot')
             A = '56'; foil='Fe'; title = r'$^{nat}$' + foil + '(d,x)' + r'$^{{ {} }}$'.format(A) + reaction[-2:]  + ' - Independent' 
@@ -897,9 +946,9 @@ class CrossSections:
         #if reaction == 'Ni_56Co' or reaction=='Ni_58Co':
 
         if Cumulative_flag:
-            label = 'monitor data (cumulative)'
+            label = 'Monitor Data (cumulative)'
         else:
-            label = 'monitor data'
+            label = 'Monitor Data'
 
         CS = [float('nan') if x==0 else x for x in CS]
         plt.plot(E_mon, Cs_mon, label='Recommended CS (IAEA)')
@@ -963,8 +1012,8 @@ class CrossSections:
 
         handles, labels = plt.gca().get_legend_handles_labels()
         by_label = OrderedDict(zip(labels, handles))
-        plt.legend(by_label.values(), by_label.keys(),fontsize='small', loc='best')
-
+        plt.legend(by_label.values(), by_label.keys(),fontsize='x-small', loc='best')
+        
         plt.gca().set_xlim(left=0, right=40)
         if max_CS==None:
             plt.gca().set_ylim(bottom=0)
