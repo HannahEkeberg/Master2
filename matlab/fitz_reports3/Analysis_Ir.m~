@@ -99,7 +99,8 @@ rows_Ni_52Mn = [27,42,60,71];  %check
 rows_Ni_52gMn = [27,42,60];  %check
 rows_Ni_54Mn = [35]; %check
 %rows_Ni_55Co = [3,13,15,18,30,34,41,46,57,63,67,69,84,97,104];   %check
-rows_Ni_55Co = [3,15,18,30,34,41,46,57,63,67,69,84,97,104];  
+rows_Ni_55Co = [13,18,30,41,57,63,67,97];   %check
+
 % rows_Ni_56Co = [29,45,55,59,66,82,90,91,92,99,101];  %check
 rows_Ni_56Co = [29,45,55,90,91,92, 106];  %check
 % rows_Ni_56Co = [29,45,55,59,82,90];  %check
@@ -109,8 +110,11 @@ rows_Ni_56Co = [29,45,55,90,91,92, 106];  %check
 rows_Ni_56Mn = [ 106,107,108];  %check
 %rows_Ni_56Ni = [7,8,16,28,32,74];  %check
 rows_Ni_56Ni = [7,16,28,32,74];  %check
-rows_Ni_57Co = [4,6,26]; %check
-rows_Ni_57Ni = [12,25,40,49,58,68,80,81,86,87,95,103]; %check
+%rows_Ni_57Co = [4,6,26]; %check
+rows_Ni_57Co = [4,6]; %check
+%rows_Ni_57Ni = [12,25,40,49,58,68,80,81,86,87,95,103]; %check
+%rows_Ni_57Ni = [68,81,87]; 
+rows_Ni_57Ni = [68,81,87,103]; 
 rows_Ni_58Co = [31,38,77];   %check
 rows_Ni_59Fe = [61];%check
 % rows_Ni_60Cu = [14,17,23,36,43,44,48,52,62,83,85,88,89,93,96,99,101,102]; %check
@@ -222,8 +226,8 @@ rows_Ir_193Os = [112, 113, 116, 117]; %check
 
 % Select rows to plot
 % varToStr = @(x) inputname(1);
-rows = rows_Ni_55Co;
-outName = '../csv/Ni_55Co';
+rows = rows_Ni_57Ni;
+outName = '../csv/Ni_57Ni';
 % rows = 12;
 % Find rows for the desired decay product
 selected_rows = data(rows,:);
@@ -239,7 +243,7 @@ for energy = 128:100:1028   % Just Nickel
 % for energy = 126:100:326   % Just Iron
 % for energy = 177:100:1077   % Just Iridium
 % 
-%  for energy = 177   % debug mode
+%  for energy = 928   % debug mode
     if energy==0
         % Return all rows for plotting
         gammas = selected_rows;
@@ -272,6 +276,22 @@ for energy = 128:100:1028   % Just Nickel
                 end
             end
         end
+        
+    if isequal(rows, rows_Ni_)
+        unwanted_indices = zeros(1,length(gammas));
+        % we are looking at 56CO
+        for gamma_index=1:length(gammas)
+            obj = gammas(1,gamma_index);
+            if obj.TimeSinceEoB < 25.0
+                if (obj.EGamma == key_energies(rows_Ni_56Mn(1))) || (obj.EGamma == key_energies(rows_Ni_56Mn(2))) || (obj.EGamma == key_energies(rows_Ni_56Mn(3)))
+                    unwanted_indices(gamma_index) = 1;
+%                 background_count_rate = 2.8338e-02;
+%                 % get the 1238 keV count rate
+%                 contaminated_count_rate = obj.NumberOfCounts
+%                 % get 
+                end
+            end
+        end        
 %         gammas = gammas(1,wanted_indices);
     gammas = gammas(1,unwanted_indices==0);
     end
@@ -294,5 +314,5 @@ for energy = 128:100:1028   % Just Nickel
     
     %     Dump to csv for python / gnuplot
     %     Turn this line on to write files out!
-%     csvwrite([outName '_' num2str(energy) '.dat'],outfile);  %Saving the csv file 
+    csvwrite([outName '_' num2str(energy) '.dat'],outfile);  %Saving the csv file 
 end

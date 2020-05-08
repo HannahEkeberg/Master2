@@ -1,11 +1,11 @@
-#ZVView-data-copy:  22-Feb-2020 16:39:08
+#ZVView-data-copy:   8-May-2020 10:03:32
 #=======================================
 #
 #name:   29-CU-0(D,X)28-NI-65,,SIG
 #X.axis: Incident Energy
 #Y.axis: Cross Section
 #wdata:  4
-#ldata:  35
+#ldata:  33
 #data...
 #            X         +-dX            Y         +-dY  # Comments...
 #          MeV          MeV        barns        barns  # Year,Author(s)           ## EXFOR-ID
@@ -42,7 +42,5 @@
          19.99         0.26      0.00021         6e-5  # 2006,S.Takacs+           ## D4176006  #dY:28.6%  
          20.05         0.32      0.00033      0.00011  # 2006,S.Takacs+           ## D4176006  #dY:33.3%  
          20.29          0.3      0.00048      0.00013  # 2006,S.Takacs+           ## D4176006  #dY:27.1%  
-          40.8            0      0.00367            0  # 1950,F.O.Bartell+        ## P0069007             
-          49.8            0      0.00391            0  # 1950,F.O.Bartell+        ## P0069007             
 //
 #-------------------------------------------------------------------------------

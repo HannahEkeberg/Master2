@@ -35,7 +35,9 @@ csfont = {'fontname':'Georgia'}
 
 def plot_function(decay_type, foil, title, react_func, react_func_parent=None):
     ### Just for plotting nicely
-
+    # print("*****")
+    # print(decay_type)
+    # print(react_func)
 
 
 
@@ -51,7 +53,8 @@ def plot_function(decay_type, foil, title, react_func, react_func_parent=None):
 
 
     elif decay_type == 'twostep_kp':
-        filelist_d, lamb_d = react_func
+        # print(react_func)
+        filelist_d, lamb_d, lamb_p = react_func
         filelist_p, lamb_p = react_func_parent
 
         def onestep_decay(t, A0_guess_parent):
@@ -168,6 +171,10 @@ def plot_function(decay_type, foil, title, react_func, react_func_parent=None):
 
 
 #plot_function('single', None, r'Activity curve for $^{nat}$Ni(d,x)$^{61}$Cu', Ni_61Cu())
+
+# plot_function('single', None, r'Activity curve for $^{nat}$Ni(d,x)$^{57}$Ni', Ni_57Ni())
+# plot_function('twostep_kp', None, r'Activity curve for $^{nat}$Ni(d,x)$^{57}$Co', Ni_57Co(), Ni_57Ni())
+
 #plot_function('single', None, r'Activity curve for $^{nat}$Ni(d,x)$^{52}$Mn', Ni_52Mn())
 #plot_function('single', None, r'Activity curve for $^{nat}$Ni(d,x)$^{59}$Fe', Ni_59Fe())
 #plot_function('single', None, r'Activity curve for $^{nat}$Ni(d,x)$^{55}$Co', Ni_55Co())
@@ -693,13 +700,12 @@ np.savetxt("{}.csv".format(save_results_to +  'Ni_56Co'), np.array((A0, sigma_A0
 ### Ni
 #single_decay_data(Ni_56Ni(), "Ni_56Ni", 10, Save_csv=True)      #EXCELLENT
 
-#single_decay_data(Ni_57Ni(), "Ni_57Ni", 10, Save_csv=True)      #EXCELLENT
+# single_decay_data(Ni_57Ni(), "Ni_57Ni", 10, Save_csv=True)      #EXCELLENT
 
-#two_step_kp_data(Ni_57Ni(), Ni_57Co(), "Ni_57Co", 10, Save_csv= True)    #WEIRD
+#two_step_kp_data(Ni_57Ni(), Ni_57Co(), "Ni_57Co", 10, Save_csv= True)
 
 
-single_decay_data(Ni_55Co(), "Ni_55Co", 10, Save_csv=True)      #EXCELLENT
-
+#single_decay_data(Ni_55Co(), "Ni_55Co", 10, Save_csv=True)      #EXCELLENT
 
 #single_decay_data(Ni_52mMn(), "Ni_52mMn", 10, Save_csv=True)      #WEIRD
 #two_step_up_npat(Ni_52Mn(return_two_list=True), "Ni_52mMn_npat", "Ni_52Mn_npat", 10, '52MNm', '52MN', Save_csv=True)
@@ -731,7 +737,7 @@ single_decay_data(Ni_55Co(), "Ni_55Co", 10, Save_csv=True)      #EXCELLENT
 #single_decay_data(Ni_56Ni(), "Ni_56Ni", 10, Save_csv=True)     #not produced?
 #single_decay_data(Ni_65Ni(), "Ni_65Ni", 10, Save_csv=True)     #not produced?
 #single_decay_data(Ni_55Co(), "Ni_55Co", 10, Save_csv=True)     #not produced?
-#single_decay_data(Ni_56Mn(), "Ni_56Mn", 10, Save_csv=True)     #not produced?
+single_decay_data(Ni_56Mn(), "Ni_56Mn", 10, Save_csv=True)     #not produced?
 #single_decay_data(Ni_57Ni(), "Ni_57Ni", 10, Save_csv=True)     #not produced?
 
 

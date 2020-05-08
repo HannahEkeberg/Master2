@@ -944,7 +944,14 @@ class SimCrossSectionData:
 					dCS.append(float(string[3])*1e3) # in mb
 					author.append(string[5]) #index 4 is equal to #
 			#print(author)
-			return E, dE, CS, dCS, author
+			author_new  = []
+			for auth in author:
+				#print(auth)
+				if '+' in auth:
+					#print("in")
+					author_new.append(auth.replace('+', ''))
+			#print(author_new)
+			return E, dE, CS, dCS, author_new
 		else: 
 			#print("exfor file does not exist for {}".format(reaction))
 			return 0, 0, 0, 0, '0'

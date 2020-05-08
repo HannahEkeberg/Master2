@@ -1,27 +1,14 @@
-#ZVView-data-copy:   4-Apr-2020 10:31:42
+#ZVView-data-copy:   7-May-2020 08:53:15
 #=======================================
 #
-#name:   28-NI-58(D,3N+P)28-NI-56,,SIG
+#name:   28-NI-0(D,X)28-NI-56,,SIG
 #X.axis: Incident Energy
 #Y.axis: Cross Section
-#wdata:  2
-#ldata:  13
+#wdata:  4
+#ldata:  66
 #data...
-#            X            Y  # Comments...
-#          MeV        barns  # Year,Author(s)           ## EXFOR-ID
-          29.7            0      0.00018            0  # 1971,C.K.Cline           ## D4061002             
-          30.7            0      0.00018            0  # 1971,C.K.Cline           ## D4061002             
-          32.3            0      0.00038            0  # 1971,C.K.Cline           ## D4061002             
-          32.4            0      0.00049            0  # 1971,C.K.Cline           ## D4061002             
-            34            0      0.00056            0  # 1971,C.K.Cline           ## D4061002             
-          34.9            0      0.00086            0  # 1971,C.K.Cline           ## D4061002             
-          35.6            0      0.00064            0  # 1971,C.K.Cline           ## D4061002             
-          36.5            0       0.0012            0  # 1971,C.K.Cline           ## D4061002             
-          37.2            0        0.001            0  # 1971,C.K.Cline           ## D4061002             
-          38.8            0       0.0011            0  # 1971,C.K.Cline           ## D4061002             
-          38.9            0       0.0014            0  # 1971,C.K.Cline           ## D4061002             
-          40.3            0       0.0016            0  # 1971,C.K.Cline           ## D4061002             
-          40.5            0        0.002            0  # 1971,C.K.Cline           ## D4061002             
+#            X         +-dX            Y         +-dY  # Comments...
+#          MeV          MeV        barns        barns  # Year,Author(s)           ## EXFOR-ID
           26.1          0.9         6e-5         1e-5  # 2013,A.Hermanne+         ## D4282035  #dY:16.7%  
           26.9          0.9       0.0001         1e-5  # 2013,A.Hermanne+         ## D4282012  #dY:10.0%  
           28.3          0.8      0.00016         3e-5  # 2013,A.Hermanne+         ## D4282035  #dY:18.8%  

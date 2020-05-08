@@ -45,11 +45,16 @@ def tunneling_prob(Z_p, Z_t, A_p, A_t, E_beam):
 	return T
 
 
-t = tunneling_prob(2, 20, 4, 60, 10)	
-print(t)
+#t = tunneling_prob(2, 20, 4, 60, 10)	
+#print(t)
 
-#b = coulomb_barrier(1, 29, 1, 60)
-#print(r"Proton barrier height for $^{60*}$Cu: ", b)
+
+b1_a = coulomb_barrier(2, 30, 4, 65)
+b2_a = coulomb_barrier(2, 30, 4, 67)
+b1_p = coulomb_barrier(1, 30, 1, 65)
+b2_p = coulomb_barrier(1, 30, 1, 67)
+print(b1_a, b2_a)
+print(b1_p, b2_p)
 
 #b = coulomb_barrier(0, 29, 1, 60)
 #print(r"Neutron barrier height for $^{60*}$Cu: ", b)
