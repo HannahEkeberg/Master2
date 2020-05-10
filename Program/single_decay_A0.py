@@ -687,8 +687,8 @@ np.savetxt("{}.csv".format(save_results_to +  'Ni_56Co'), np.array((A0, sigma_A0
 #two_step_up_data(Cu_60Co(), "Cu_60mCo", "Cu_60Co", 10, Save_csv = True)   #WEIRD
 #single_decay_data(Cu_60Co(), "Cu_60Co", 10, Save_csv=True)  #REporing as cumulative instead
 
-#two_step_up_data(Cu_61Co(), "Cu_61Fe", "Cu_61Co", 10, Save_csv = True)   #OK
-#single_decay_data(Cu_61Co(), "Cu_61Co", 10, Save_csv=True)
+# two_step_up_data(Cu_61Co(), "Cu_61Fe", "Cu_61Co", 10, Save_csv = True)   #OK
+single_decay_data(Cu_61Co(), "Cu_61Co", 10, Save_csv=True)
 
 #single_decay_data(Cu_61Cu(), "Cu_61Cu", 10, Save_csv=True)      #some weird values
 
@@ -737,7 +737,7 @@ np.savetxt("{}.csv".format(save_results_to +  'Ni_56Co'), np.array((A0, sigma_A0
 #single_decay_data(Ni_56Ni(), "Ni_56Ni", 10, Save_csv=True)     #not produced?
 #single_decay_data(Ni_65Ni(), "Ni_65Ni", 10, Save_csv=True)     #not produced?
 #single_decay_data(Ni_55Co(), "Ni_55Co", 10, Save_csv=True)     #not produced?
-single_decay_data(Ni_56Mn(), "Ni_56Mn", 10, Save_csv=True)     #not produced?
+# single_decay_data(Ni_56Mn(), "Ni_56Mn", 10, Save_csv=True)     #not produced?
 #single_decay_data(Ni_57Ni(), "Ni_57Ni", 10, Save_csv=True)     #not produced?
 
 

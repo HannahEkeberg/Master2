@@ -165,6 +165,8 @@ class Efficiency_calculations(Detector_Information_fitz):
         save_results_to = os.getcwd()+'/efficiency_csv/'
         np.savetxt("{}.csv".format(save_results_to +  self.detector), popt, delimiter=",")
 
+        #print("**")
+
 
         ### The error is calculated in matlab script by Andrew. Make matrix to import in matlab scripts
         ### One for optimal parameters, and one for the covarian matrix
@@ -213,9 +215,15 @@ class Efficiency_calculations(Detector_Information_fitz):
         plt.legend(['Fit','Cs137', 'Ba133', 'Eu152'], loc='best')
 
         plt.title('Efficiency calibration of det {}'.format(self.detector))
-        plt.savefig("Efficiency_curves/{}".format(self.detector), dpi=300)
-        plt.show()
+        #plt.savefig("Efficiency_curves/{}".format(self.detector), dpi=300)
+        #plt.show()
         #plt.clf()
+
+    def only_calibration_plot(self):
+        plt.errorbar(self.E_Cs, self.eps_Cs, marker='.', linewidth=0.0001, yerr=self.sigma_eps_Cs, elinewidth=1.0, capthick=1.0, capsize=3.0, label=r'$^{137}$Cs')
+        plt.errorbar(self.E_Ba, self.eps_Ba, marker='.', linewidth=0.0001, yerr=self.sigma_eps_Ba, elinewidth=1.0, capthick=1.0, capsize=3.0, label=r'$^{133}$Ba')
+        plt.errorbar(self.E_Eu, self.eps_Eu, marker='.', linewidth=0.0001, yerr=self.sigma_eps_Eu, elinewidth=1.0, capthick=1.0, capsize=3.0, label=r'$^{152}$Eu')
+
 
     #def chi(self):
     #    np.sum(((self.eps - self.efficiency_estimated(self.E))/self.sigma_eps)**2 / len(self.eps) -5)
@@ -231,11 +239,51 @@ class Efficiency_calculations(Detector_Information_fitz):
 #    print(x.plot_func())
     #print(x.plot_data())#.efficiency_measured())
 
-names=['HPGE1_10','HPGE1_30','HPGE2_10','HPGE2_30', 'IDM1_53','IDM2_32','IDM3_40','IDM4_25', 'room131_5', 'room131_10', 'room131_15', 'room131_18', 'room131_22', 'room131_30', 'room131_40', 'room131_50', 'room131_60'] # ['HPGE', 'HPGE2', 'IDM1', 'IDM2', 'IDM3', 'IDM4', 'room_131_5cm', 'room_131_10cm', 'room_131_15cm', 'room_131_18cm', 'room_131_22cm', 'room_131_30cm', 'room_131_40cm', 'room_131_50cm', 'room_131_60cm']
-for i in names:
-    x=Efficiency_calculations(i)  #Question: can a function name
-    x.plot_func()
+#names=['HPGE1_10','HPGE1_30','HPGE2_10','HPGE2_30', 'IDM1_53','IDM2_32','IDM3_40','IDM4_25', 'room131_5', 'room131_10', 'room131_15', 'room131_18', 'room131_22', 'room131_30', 'room131_40', 'room131_50', 'room131_60'] # ['HPGE', 'HPGE2', 'IDM1', 'IDM2', 'IDM3', 'IDM4', 'room_131_5cm', 'room_131_10cm', 'room_131_15cm', 'room_131_18cm', 'room_131_22cm', 'room_131_30cm', 'room_131_40cm', 'room_131_50cm', 'room_131_60cm']
+#for i in names:
+#    x=Efficiency_calculations(i)  #Question: can a function name
+#    x.plot_func()
 
+
+#Efficiency_calculations('HPGE1_10').plot_func()
 
 #chi = x.chi()
 #print("Chi: {}".format(chi))
+
+
+def plot_efficiency_from_matlab(detector, numb=None, distance=None):   # since this didnt work (above) had to use Johns npat stuff to make efficiency matrix. This is the plots
+    
+    path = os.getcwd()  + '/../matlab/fitz_reports3/' 
+    efficiency = path + 'efficiency_new_'+detector + '.txt'
+    unc_efficiency = path + 'unc_efficiency_new_'+detector + '.txt'
+
+
+    ##xplot = path + 'x_array.txt'
+    #E = np.genfromtxt(xplot)
+    #print(E.shape)
+    eps = np.genfromtxt(efficiency)
+    deps = np.genfromtxt(unc_efficiency)
+    E = np.linspace(30,2500, len(eps))#np.linspace(20, 1600, len(eps)) #np.linspace(0,2000, len(eps))
+    #print(eps)
+    #E= np.linspace(20,2500, len(eps))#30:2500;
+
+    Efficiency_calculations(detector).only_calibration_plot()
+
+    plt.plot(E,eps, color='red', label='Curvefit')
+    plt.plot(E, eps+deps, color='blue', linewidth=0.4)
+    plt.plot(E, eps-deps, color='blue', linewidth=0.4)
+    plt.legend()
+    if numb==None and distance==None:
+        plt.title('Efficiency curve for detector {}'.format(detector))
+        plt.savefig(os.getcwd()+ '/Efficiency_curves/new_'+detector+'png',  dpi=300)
+    else:
+        plt.title('Efficiency curve for detector {} at {} cm'.format(numb, distance))
+        plt.savefig(os.getcwd()+ '/Efficiency_curves/new_det'+ numb +  '_' + "numb" + distance+ 'cm.png', dpi=300)
+
+    plt.show()
+
+
+
+#plot_efficiency_from_matlab('HPGE1_10', '1', '10')
+plot_efficiency_from_matlab('HPGE1_30', '1', '30')    
+#plot_efficiency_from_matlab('room131_5', '7', '5')    

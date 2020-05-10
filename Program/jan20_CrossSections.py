@@ -1020,7 +1020,7 @@ class CrossSections:
         if legend_force == False:
             plt.legend(by_label.values(), by_label.keys(),fontsize='small', loc='best')
         else: 
-            plt.legend(by_label.values(), by_label.keys(),fontsize='small', loc=[0,0.5])
+            plt.legend(by_label.values(), by_label.keys(),fontsize='x-small', loc=legend_force)
         plt.gca().set_xlim(left=0, right=40)
         if max_CS==None:
             plt.gca().set_ylim(bottom=0)

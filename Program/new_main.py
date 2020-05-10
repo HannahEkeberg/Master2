@@ -98,13 +98,13 @@ WABC_file = 'WABC_'+ ziegler_filename[10:-11] + '.csv'
 
 #MONITOR REACTIONS
 
-#CS.mon_CS_test(Fe_56Co(), 'Fe', 'Fe_56Co.csv', 3, 'Fe_56Co', names[index], WABC_file)
-#CS.mon_CS_test(Ni_61Cu(), 'Ni', 'Ni_61Cu.csv', 10, 'Ni_61Cu', names[index], WABC_file)
-#CS.mon_CS_test(Ni_56Co(), 'Ni', 'Ni_56Co.csv', 10, 'Ni_56Co', names[index], WABC_file)
-#CS.mon_CS_test(Ni_58Co(), 'Ni', 'Ni_58Co.csv', 10, 'Ni_58Co', names[index], WABC_file)
-#CS.mon_CS_test(Cu_62Zn(), 'Cu', 'Cu_62Zn.csv', 10, 'Cu_62Zn', names[index], WABC_file)
-#CS.mon_CS_test(Cu_63Zn(), 'Cu', 'Cu_63Zn.csv', 10, 'Cu_63Zn', names[index], WABC_file)
-#CS.mon_CS_test(Cu_65Zn(), 'Cu', 'Cu_65Zn.csv', 10, 'Cu_65Zn', names[index], WABC_file)
+# CS.mon_CS_test(Fe_56Co(), 'Fe', 'Fe_56Co.csv', 3, 'Fe_56Co', names[index], WABC_file)
+# CS.mon_CS_test(Ni_61Cu(), 'Ni', 'Ni_61Cu.csv', 10, 'Ni_61Cu', names[index], WABC_file)
+# CS.mon_CS_test(Ni_56Co(), 'Ni', 'Ni_56Co.csv', 10, 'Ni_56Co', names[index], WABC_file)
+# CS.mon_CS_test(Ni_58Co(), 'Ni', 'Ni_58Co.csv', 10, 'Ni_58Co', names[index], WABC_file)
+# CS.mon_CS_test(Cu_62Zn(), 'Cu', 'Cu_62Zn.csv', 10, 'Cu_62Zn', names[index], WABC_file)
+# CS.mon_CS_test(Cu_63Zn(), 'Cu', 'Cu_63Zn.csv', 10, 'Cu_63Zn', names[index], WABC_file)
+# CS.mon_CS_test(Cu_65Zn(), 'Cu', 'Cu_65Zn.csv', 10, 'Cu_65Zn', names[index], WABC_file)
 
 
 
@@ -115,7 +115,7 @@ WABC_file = 'WABC_'+ ziegler_filename[10:-11] + '.csv'
 
 
 #!!!!!
-# CS.make_CS(Ni_56Mn(), 'Ni', 'Ni_56Mn.csv', 10, 'Ni_56Mn', WABC_file, '25', '56', ylimit=1.2, independent=False, CS_colonne_ALICE=5, force_legend=[0,0]), very uncertain on this cross section measurement. Used all strong lines, only points from 12 hours or less and took out high activities. 
+# CS.make_CS(Ni_56Mn(), 'Ni', 'Ni_56Mn.csv', 10, 'Ni_56Mn', WABC_file, '25', '56', ylimit=1.2, independent=False, CS_colonne_ALICE=5)  #, very uncertain on this cross section measurement. Used all strong lines, only points from 12 hours or less and took out high activities. 
 #!!!!!
 
 # CS.make_CS(Ni_59Fe(), 'Ni', 'Ni_59Fe.csv', 10, 'Ni_59Fe', WABC_file, '26', '59', independent=False,CS_colonne_ALICE=5, ylimit=1)   # first in decay chain
@@ -128,16 +128,16 @@ WABC_file = 'WABC_'+ ziegler_filename[10:-11] + '.csv'
 
 
 # CS.make_CS(Ni_58mCo(), 'Ni', 'Ni_58mCo.csv', 10, 'Ni_58mCo', WABC_file, '27', '58', ylimit=270, independent=True,CS_colonne_ALICE=7, isomer_state='m', file_ending='.L01')
-# CS.make_CS(Ni_58Co(), 'Ni', 'Ni_58Co.csv', 10, 'Ni_58Co', WABC_file, '27', '58', ylimit=270, independent=True,CS_colonne_ALICE=6, isomer_state=None, file_ending='.L00')
-# CS.make_CS_subtraction('daughter', 'Ni', 10, WABC_file, Ni_58mCo(), 'Ni_58mCo', 'Ni_58mCo.csv', '28', '58',  Ni_58Co(), 'Ni_58Co', 'Ni_58Co.csv', '27', '58', BR_daughter=1.0, ylimit=None, isomer_state=None, independent=False, file_ending='.tot', save_text=True, feeding=None, CS_colonne_ALICE=5)  # Necessary when subtracting
+# CS.make_CS(Ni_58Co(), 'Ni', 'Ni_58Co.csv', 10, 'Ni_58Co', WABC_file, '27', '58', ylimit=200, independent=True,CS_colonne_ALICE=6, isomer_state=None, file_ending='.L00')
+# CS.make_CS_subtraction('daughter', 'Ni', 10, WABC_file, Ni_58mCo(), 'Ni_58mCo', 'Ni_58mCo.csv', '28', '58',  Ni_58Co(), 'Ni_58Co', 'Ni_58Co.csv', '27', '58', BR_daughter=1.0, ylimit=None, isomer_state=None, independent=False, file_ending='.tot', save_text=True, feeding=None, CS_colonne_ALICE=5, force_legend='upper right')  # Necessary when subtracting
 
 # CS.make_CS(Ni_57Co(), 'Ni', 'Ni_57Co.csv', 10, 'Ni_57Co', WABC_file, '27', '57', ylimit=600, independent=True,CS_colonne_ALICE=5, file_ending='.tot', feeding='beta+') # first in decay chain)
-# CS.make_CS(Ni_57Ni(), 'Ni', 'Ni_57Ni.csv', 10, 'Ni_57Ni', WABC_file, '28', '57', ylimit=150, independent=False,CS_colonne_ALICE=5, file_ending='.tot') # first in decay chain)
+CS.make_CS(Ni_57Ni(), 'Ni', 'Ni_57Ni.csv', 10, 'Ni_57Ni', WABC_file, '28', '57', ylimit=125, independent=False,CS_colonne_ALICE=5, file_ending='.tot') # first in decay chain)
 # CS.make_CS_subtraction('daughter', 'Ni', 10, WABC_file, Ni_57Ni(), 'Ni_57Ni', 'Ni_57Ni.csv', '28', '57',  Ni_57Co(), 'Ni_57Co', 'Ni_57Co.csv', '27', '57', BR_daughter=1.0, ylimit=None, isomer_state=None, independent=False, file_ending='.tot', save_text=True, feeding='beta+', CS_colonne_ALICE=5)  # Necessary when subtracting
 
 
-# CS.make_CS(Ni_56Ni(), 'Ni', 'Ni_56Ni.csv', 10, 'Ni_56Ni', WABC_file, '28', '56', ylimit=4, independent=False, BR=None, CS_colonne_ALICE=5) # first in decay chain)
-# CS.make_CS_subtraction('daughter', 'Ni', 10, WABC_file, Ni_56Ni(), 'Ni_56Ni', 'Ni_56Ni.csv', '28', '56',  Ni_56Co(), 'Ni_56Co', 'Ni_56Co.csv', '27', '56', BR_daughter=1.0, ylimit=80, isomer_state=None, independent=False, file_ending='.tot', save_text=True, feeding='beta+', CS_colonne_ALICE=5)  # Necessary when subtracting
+# CS.make_CS(Ni_56Ni(), 'Ni', 'Ni_56Ni.csv', 10, 'Ni_56Ni', WABC_file, '28', '56', ylimit=2.0, independent=False, BR=None, CS_colonne_ALICE=5) # first in decay chain)
+# CS.make_CS_subtraction('daughter', 'Ni', 10, WABC_file, Ni_56Ni(), 'Ni_56Ni', 'Ni_56Ni.csv', '28', '56',  Ni_56Co(), 'Ni_56Co', 'Ni_56Co.csv', '27', '56', BR_daughter=1.0, ylimit=80, isomer_state=None, independent=False, file_ending='.tot', save_text=True, feeding='beta+', CS_colonne_ALICE=5, force_legend="upper center")  # Necessary when subtracting
 # CS.make_CS(Ni_56Co(), 'Ni', 'Ni_56Co.csv', 10, 'Ni_56Co', WABC_file, '27', '56', independent=True, CS_colonne_ALICE=5, ylimit=80) # first in decay chain)
 
 
@@ -146,20 +146,21 @@ WABC_file = 'WABC_'+ ziegler_filename[10:-11] + '.csv'
 # CS.make_CS(Cu_59Fe(), 'Cu', 'Cu_59Fe.csv', 10, 'Cu_59Fe', WABC_file, '26', '59', ylimit=1, independent=False, CS_colonne_ALICE=5) # first in decay chain
 # CS.make_CS(Cu_60Co(), 'Cu', 'Cu_60Co.csv', 10, 'Cu_60Co', WABC_file, '27', '60', ylimit=25, independent=False, CS_colonne_ALICE=5) # first in decay chain)   
 # CS.make_CS(Cu_61Co(), 'Cu', 'Cu_61Co.csv', 10, 'Cu_61Co', WABC_file, '27', '61', ylimit=4, independent=False,CS_colonne_ALICE=5) # first in decay chain)  
-CS.make_CS(Cu_65Ni(), 'Cu', 'Cu_65Ni.csv', 10, 'Cu_65Ni', WABC_file, '28', '65', CS_colonne_ALICE=5)
+# CS.make_CS(Cu_65Ni(), 'Cu', 'Cu_65Ni.csv', 10, 'Cu_65Ni', WABC_file, '28', '65', CS_colonne_ALICE=5)
 # CS.make_CS(Cu_61Cu(), 'Cu', 'Cu_61Cu.csv', 10, 'Cu_61Cu', WABC_file, '29', '61', ylimit=110, independent=False, CS_colonne_ALICE=5) # first in decay chain)   
-# CS.make_CS(Cu_64Cu(), 'Cu', 'Cu_64Cu.csv', 10, 'Cu_64Cu', WABC_file, '29', '64', CS_colonne_ALICE=5)
+# CS.make_CS(Cu_64Cu(), 'Cu', 'Cu_64Cu.csv', 10, 'Cu_64Cu', WABC_file, '29', '64', CS_colonne_ALICE=5, ylimit=300, force_legend="upper center")
 
 ### Fe reactions 
 # CS.make_CS(Fe_48V(), 'Fe', 'Fe_48V.csv', 3, 'Fe_48V', WABC_file, '23', '48', independent=False, file_ending='.tot', ylimit=0.176, CS_colonne_ALICE=5)   
 # CS.make_CS(Fe_51Cr(), 'Fe', 'Fe_51Cr.csv', 3, 'Fe_51Cr', WABC_file, '24', '51', independent=False, ylimit=20, CS_colonne_ALICE=5)   
 # CS.make_CS(Fe_52Mn(), 'Fe', 'Fe_52Mn.csv', 3, 'Fe_52Mn', WABC_file, '25', '52', ylimit=50, independent=False, CS_colonne_ALICE=5)   
-# CS.make_CS(Fe_53Fe(), 'Fe', 'Fe_53Fe.csv', 3, 'Fe_53Fe', WABC_file, '26', '53', independent=False, CS_colonne_ALICE=5)   
 # CS.make_CS(Fe_54Mn(), 'Fe', 'Fe_54Mn.csv', 3, 'Fe_54Mn', WABC_file, '25', '54', independent=True, ylimit=125, CS_colonne_ALICE=5)   
+# CS.make_CS(Fe_53Fe(), 'Fe', 'Fe_53Fe.csv', 3, 'Fe_53Fe', WABC_file, '26', '53', independent=False, CS_colonne_ALICE=5)   
+# CS.make_CS(Fe_59Fe(), 'Fe', 'Fe_59Fe.csv', 3, 'Fe_59Fe', WABC_file, '26', '59', independent=True, CS_colonne_ALICE=5)   # only produced via 58Fe(d,n). abundance is low so had to redo energy. Ask Andrew about energy. 
 # CS.make_CS(Fe_55Co(), 'Fe', 'Fe_55Co.csv', 3, 'Fe_55Co', WABC_file, '27', '55', independent=True, CS_colonne_ALICE=5)   
 # CS.make_CS(Fe_57Co(), 'Fe', 'Fe_57Co.csv', 3, 'Fe_57Co', WABC_file, '27', '57', independent=True, CS_colonne_ALICE=5)   
 # CS.make_CS(Fe_58Co(), 'Fe', 'Fe_58Co.csv', 3, 'Fe_58Co', WABC_file, '27', '58', independent=False, CS_colonne_ALICE=5)   
-# CS.make_CS(Fe_59Fe(), 'Fe', 'Fe_59Fe.csv', 3, 'Fe_59Fe', WABC_file, '26', '59', independent=True, CS_colonne_ALICE=5)   # only produced via 58Fe(d,n). abundance is low so had to redo energy. Ask Andrew about energy. 
+
 
 
 ### Ir reactions
