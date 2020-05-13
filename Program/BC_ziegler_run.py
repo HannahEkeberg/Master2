@@ -158,15 +158,25 @@ class Run_Ziegler:
 
         
         csv_save = np.vstack((list_of_names, list_of_chi)).T
+
+        def find_index(list, element):
+            return list.index(element)
+
+        opt = find_index(self.names, 'B_+2_D_+4,25')  # looks good but downside: weird ziegler flux distribution 
+        original = find_index(self.names, 'B_0_D_0')  # looks good but downside: weird ziegler flux distribution 
         #print(type(csv_save))
         
-        np.savetxt('BeamCurrent/chisq_dir_new/min_chi_comp{}.csv'.format(compartment), csv_save, delimiter='|', header='Filename, Chi^2', fmt="%s"  )#, %.6f, %.6f")
+        #np.savetxt('BeamCurrent/chisq_dir_new/min_chi_comp{}.csv'.format(compartment), csv_save, delimiter='|', header='Filename, Chi^2', fmt="%s"  )#, %.6f, %.6f")
 
         #plt.axvline(E_Ni_list[index], color=colors[0], label=zf+r' -$\chi^2=${:.2f} '.format(chi_sq_list[index])
+        plt.axvline(E_Ni_list[opt], label=r'Beamenergy: 2%, density: 4.5%', linestyle='--', color='red', linewidth=0.5)
+        #plt.axvline(E_Ni_list[original], label=r'Beamenergy: 0%, density: 0%', linestyle='--', color='blue', linewidth=0.5)
+        
         plt.plot(E_Ni_list, chi_sq_list,'.')
         plt.title('Variance minimization of compartment {}'.format(compartment))
         plt.ylabel(r'$\chi^2$')
-        plt.legend(fontsize='xx-small', loc='best')
+        #plt.legend(fontsize='xx-small', loc='best')
+        plt.legend()
         plt.xlabel('Deuteron energy entering stack compartment number {} (MeV)'.format(compartment))
         plt.savefig('BeamCurrent/chisq_dir_new/chi_squared_comp_{}'.format(compartment), dpi=300)
 

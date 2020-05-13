@@ -49,13 +49,13 @@ unc_fe_rhodrs = [0.110,0.034,0.114];
 clc;
 
 % Choose files for analysis
-fitzpeaks_reports = cu_fn;
-key_energies = cu_key_energies;
-glines = cu_glines;
+fitzpeaks_reports = fe_fn;
+key_energies = fe_key_energies;
+glines = fe_glines;
 EoB_Time = '26-Feb-2019 00:32:00'
-rhodrs = cu_rhodrs;
-mu_attenuation = load('cu_xcom.txt');
-unc_rhodrs = unc_cu_rhodrs;
+rhodrs = fe_rhodrs;
+mu_attenuation = load('fe_xcom.txt');
+unc_rhodrs = unc_fe_rhodrs;
 
 
 % Test new fitzpeaks_parser wrapper function
@@ -121,7 +121,7 @@ rows_Ni_59Fe = [61];%check
 % rows_Ni_60Cu = [14,17,23,36,43,44,48,52,62,83,85,88,89,93,96,99,101,102]; %check
 %rows_Ni_60Cu = [14,17,23,43,48,52,62,83,85,89,93,96,99,101,102]; %check
 %rows_Ni_60Co = [1]; %check
-rows_Ni_60Co = [109, 110]; %check
+%rows_Ni_60Co = [109, 110]; %check
 
 
 % rows_Ni_61Cu = [2,9,11,19,20,22,24,33,37,39,47,50,51,54,56,72,76,79,94]; %check
@@ -158,7 +158,7 @@ rows_Cu_54Mn = [49];
 
 
 % % 33MeV Iron foils:
-rows_Fe_48V = [24,26,37];  %check
+rows_Fe_48V = [24];%,26,37];  %check
 rows_Fe_51Cr = [5]; %check
 rows_Fe_51Mn = [12]; %check
 rows_Fe_52mMn = [44]; %check
@@ -227,8 +227,8 @@ rows_Ir_193Os = [112, 113, 116, 117]; %check
 
 % Select rows to plot
 % varToStr = @(x) inputname(1);
-rows = rows_Cu_65Ni;
-outName = '../csv/Cu_65Ni';
+rows = rows_Fe_48V;
+outName = '../csv/Fe_48V';
 % rows = 12;
 % Find rows for the desired decay product
 selected_rows = data(rows,:);
@@ -244,7 +244,7 @@ selected_rows = data(rows,:);
 % for energy = 126:100:326   % Just Iron
 % for energy = 177:100:1077   % Just Iridium
 % 
- for energy = 129   % debug mode
+ for energy = 126   % debug mode
     if energy==0
         % Return all rows for plotting
         gammas = selected_rows;
@@ -303,5 +303,5 @@ selected_rows = data(rows,:);
     
     %     Dump to csv for python / gnuplot
     %     Turn this line on to write files out!
-%     csvwrite([outName '_' num2str(energy) '.dat'],outfile);  %Saving the csv file 
+    csvwrite([outName '_' num2str(energy) '.dat'],outfile);  %Saving the csv file 
 end

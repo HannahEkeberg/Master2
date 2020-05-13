@@ -703,8 +703,8 @@ class SimCrossSectionData:
 			product = product + isomer
 		if foil == 'Ir':
 			abund_191Ir = 0.373 ; abund_193Ir = 0.627
-			f_191Ir = self.path + '/../Coh/' + foil + '/191Ir/' + Z  + '-' + A + product + '_coh.txt'
-			f_193Ir = self.path + '/../Coh/' + foil + '/193Ir/' + Z  + '-' + A + product + '_coh.txt'
+			f_191Ir = self.path + '/../Coh/IrridiumCoH/' + foil + '/191Ir/' + Z  + '-' + A + product + '_coh.txt'
+			f_193Ir = self.path + '/../Coh/IrridiumCoH/' + foil + '/193Ir/' + Z  + '-' + A + product + '_coh.txt'
 			print(f_191Ir)
 			if os.path.isfile(f_191Ir): 
 				CS_191Ir = np.genfromtxt(f_191Ir, delimiter='\t', usecols=[1])
@@ -726,11 +726,11 @@ class SimCrossSectionData:
 			abund_58Ni = 0.68077; abund_60Ni = 0.26233; abund_61Ni = 0.011399; abund_62Ni = 0.036346; abund_64Ni = 0.009255;
 
 
-			f_58Ni = self.path + '/../Coh/' + foil + '/58Ni/' + Z  + '-' + A + product + '_coh.txt'
-			f_60Ni = self.path + '/../Coh/' + foil + '/60Ni/' + Z  + '-' + A + product + '_coh.txt'
-			f_61Ni = self.path + '/../Coh/' + foil + '/61Ni/' + Z  + '-' + A + product + '_coh.txt'
-			f_62Ni = self.path + '/../Coh/' + foil + '/62Ni/' + Z  + '-' + A + product + '_coh.txt'
-			f_64Ni = self.path + '/../Coh/' + foil + '/64Ni/' + Z  + '-' + A + product + '_coh.txt'
+			f_58Ni = self.path + '/../Coh/IrridiumCoH/' + foil + '/58Ni/' + Z  + '-' + A + product + '_coh.txt'
+			f_60Ni = self.path + '/../Coh/IrridiumCoH/' + foil + '/60Ni/' + Z  + '-' + A + product + '_coh.txt'
+			f_61Ni = self.path + '/../Coh/IrridiumCoH/' + foil + '/61Ni/' + Z  + '-' + A + product + '_coh.txt'
+			f_62Ni = self.path + '/../Coh/IrridiumCoH/' + foil + '/62Ni/' + Z  + '-' + A + product + '_coh.txt'
+			f_64Ni = self.path + '/../Coh/IrridiumCoH/' + foil + '/64Ni/' + Z  + '-' + A + product + '_coh.txt'
 
 			if os.path.isfile(f_58Ni): 
 				CS_58Ni = np.genfromtxt(f_58Ni, delimiter='\t', usecols=[1])
@@ -784,8 +784,8 @@ class SimCrossSectionData:
 
 		elif foil == 'Cu':
 			abund_63Cu = 0.6915 ; abund_65Cu = 0.3085
-			f_63Cu = self.path + '/../Coh/' + foil + '/63Cu/' + Z  + '-' + A + product + '_coh.txt'
-			f_65Cu = self.path + '/../Coh/' + foil + '/65Cu/' + Z  + '-' + A + product + '_coh.txt'
+			f_63Cu = self.path + '/../Coh/IrridiumCoH/' + foil + '/63Cu/' + Z  + '-' + A + product + '_coh.txt'
+			f_65Cu = self.path + '/../Coh/IrridiumCoH/' + foil + '/65Cu/' + Z  + '-' + A + product + '_coh.txt'
 			#f_63Cu = self.path + '/../Tendl/' + foil + '/rp029063_' + Z + A + file_ending + '.txt'
 			#f_65Cu = self.path + '/../Tendl/' + foil + '/rp029065_' + Z + A + file_ending + '.txt'
 			#print(f_63Cu)
@@ -815,10 +815,10 @@ class SimCrossSectionData:
 
 		elif foil == 'Fe':
 			abund_54Fe=0.0545; abund_56Fe=0.91754; abund_57Fe=0.02119; abund_58Fe=0.00282
-			f_54Fe = self.path + '/../Coh/' + foil + '/54Fe/' + Z  + '-' + A + product + '_coh.txt'
-			f_56Fe = self.path + '/../Coh/' + foil + '/56Fe/' + Z  + '-' + A + product + '_coh.txt'
-			f_57Fe = self.path + '/../Coh/' + foil + '/57Fe/' + Z  + '-' + A + product + '_coh.txt'
-			f_58Fe = self.path + '/../Coh/' + foil + '/58Fe/' + Z  + '-' + A + product + '_coh.txt'
+			f_54Fe = self.path + '/../Coh/IrridiumCoH/' + foil + '/54Fe/' + Z  + '-' + A + product + '_coh.txt'
+			f_56Fe = self.path + '/../Coh/IrridiumCoH/' + foil + '/56Fe/' + Z  + '-' + A + product + '_coh.txt'
+			f_57Fe = self.path + '/../Coh/IrridiumCoH/' + foil + '/57Fe/' + Z  + '-' + A + product + '_coh.txt'
+			f_58Fe = self.path + '/../Coh/IrridiumCoH/' + foil + '/58Fe/' + Z  + '-' + A + product + '_coh.txt'
 			#f_54Fe = self.path + '/../Tendl/' + foil + '/rp026054_' + Z + A + file_ending + '.txt'
 			#f_56Fe = self.path + '/../Tendl/' + foil + '/rp026056_' + Z + A + file_ending + '.txt'
 			#f_57Fe = self.path + '/../Tendl/' + foil + '/rp026057_' + Z + A + file_ending + '.txt'

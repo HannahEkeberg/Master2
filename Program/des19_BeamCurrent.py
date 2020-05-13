@@ -710,6 +710,7 @@ class BeamCurrent:
         # turn on for weighted average... 
         plt.errorbar(WE_Ir, weighted_average_beam, color='black', marker='P', linewidth=0.001, xerr=sigma_WE_Ir, yerr=sigma_weighted_average_beam, elinewidth=0.5, capthick=0.5, capsize=3.0,label='weighted average beam current' )
         plt.legend(fontsize='x-small')
+        plt.gca().set_ylim(bottom=100, top=250)
         plt.savefig('BeamCurrent/Comparing_BC/comp_compared_{}.png'.format(name), dpi=300)
         plt.show()
         plt.close()

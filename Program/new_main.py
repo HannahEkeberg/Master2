@@ -34,7 +34,7 @@ good_files=['B_+1_D_+1,25', 'B_+1,25_D_+2', 'B_+1,5_D_+2,75', 'B_+2,25_D_+5','B_
 #index = find_index(names, 'B_+0,5_D_+1,25')
 index = find_index(names, 'B_+2_D_+4,25')  # looks good but downside: weird ziegler flux distribution
 #index = find_index(names, 'B_+0,75_D_-2,75')
-#index = find_index(names, 'B_0_D_0')
+# index = find_index(names, 'B_0_D_0')
 #index = find_index(names, good_files[-2])
 #index= find_index(names, good_files[0])
 
@@ -46,6 +46,11 @@ BC = BeamCurrent(files[index])
 CS = CrossSections(files[index])
 #BC.plot_distribution('all', files[index])
 #BC.plot_distribution('Ir', files[index])
+
+
+
+# RZ = Run_Ziegler(files, names)
+# RZ.plot_ChiSq(6)
 
 
 #BC.CurrentPlot_compartment(name=name, WABC = 'averaged_currents.csv', title='Beam current - after variance minimization')
@@ -87,8 +92,8 @@ ziegler_filename = './' + files[index]
 WABC_file = 'WABC_'+ ziegler_filename[10:-11] + '.csv'
 
 #print(WABC_file)
-#BC.CurrentPlot_compartment(names[index], WABC=WABC_file, title='After variance minimization')
-#BC.CurrentPlot_compartment(names[index], WABC=WABC_file, title='Before variance minimization')
+# BC.CurrentPlot_compartment(names[index], WABC=WABC_file, title='After variance minimization')
+# BC.CurrentPlot_compartment(names[index], WABC=WABC_file, title='Before variance minimization')
 #BC.plot_distribution('all', name)
 #BC.plot_distribution('all', name)
 #BC.variance_minimization(3, name, include_56Co=True, MakePlot=True)
@@ -132,7 +137,7 @@ WABC_file = 'WABC_'+ ziegler_filename[10:-11] + '.csv'
 # CS.make_CS_subtraction('daughter', 'Ni', 10, WABC_file, Ni_58mCo(), 'Ni_58mCo', 'Ni_58mCo.csv', '28', '58',  Ni_58Co(), 'Ni_58Co', 'Ni_58Co.csv', '27', '58', BR_daughter=1.0, ylimit=None, isomer_state=None, independent=False, file_ending='.tot', save_text=True, feeding=None, CS_colonne_ALICE=5, force_legend='upper right')  # Necessary when subtracting
 
 # CS.make_CS(Ni_57Co(), 'Ni', 'Ni_57Co.csv', 10, 'Ni_57Co', WABC_file, '27', '57', ylimit=600, independent=True,CS_colonne_ALICE=5, file_ending='.tot', feeding='beta+') # first in decay chain)
-CS.make_CS(Ni_57Ni(), 'Ni', 'Ni_57Ni.csv', 10, 'Ni_57Ni', WABC_file, '28', '57', ylimit=125, independent=False,CS_colonne_ALICE=5, file_ending='.tot') # first in decay chain)
+# CS.make_CS(Ni_57Ni(), 'Ni', 'Ni_57Ni.csv', 10, 'Ni_57Ni', WABC_file, '28', '57', ylimit=125, independent=False,CS_colonne_ALICE=5, file_ending='.tot') # first in decay chain)
 # CS.make_CS_subtraction('daughter', 'Ni', 10, WABC_file, Ni_57Ni(), 'Ni_57Ni', 'Ni_57Ni.csv', '28', '57',  Ni_57Co(), 'Ni_57Co', 'Ni_57Co.csv', '27', '57', BR_daughter=1.0, ylimit=None, isomer_state=None, independent=False, file_ending='.tot', save_text=True, feeding='beta+', CS_colonne_ALICE=5)  # Necessary when subtracting
 
 
@@ -322,5 +327,29 @@ def plot_WABC():
 
 plot_WABC()
 """
+
+"""
+
+def read_XCOM(file, foil):
+	path = os.getcwd() 
+	f = path + '/../matlab/'+ file
+	
+	E = np.genfromtxt(f, usecols=[0], skip_header=4)
+	E*=1e3
+	A = np.genfromtxt(f, usecols=[1], skip_header=4)
+
+	plt.plot(E,A)
+	plt.title('Attenuation curve for {}'.format(foil))
+	#plt.gca().set_ylim(bottom=0, top=500)
+	plt.gca().set_xlim(left=0, right=500)
+	plt.ylabel(r'Total attenuation coefficienct (cm$^2$)/g')
+	plt.xlabel('Photon energy (keV)')
+	plt.show()
+
+# read_XCOM('ir_xcom.txt', 'Ir')
+# read_XCOM('ni_xcom.txt', 'Ni')
+"""
+
+
 
 ####

@@ -145,7 +145,7 @@ CS = CrossSections(files[index])
 #RZ.plot_ChiSq(3, chi_tol=2)
 #RZ.plot_ChiSq(7, chi_tol=2)
 #RZ.plot_ChiSq(9, chi_tol=2)
-#RZ.plot_ChiSq(6, chi_tol=1)
+RZ.plot_ChiSq(6, chi_tol=1)
 
 #path_to_Chisq = os.getcwd() + '/BeamCurrent/chisq_dir_new/'
 

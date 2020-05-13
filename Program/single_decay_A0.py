@@ -63,13 +63,20 @@ def plot_function(decay_type, foil, title, react_func, react_func_parent=None):
 
 
         def twostep_kp_decay(t, A0_daughter_guess):  #if there are no gammas to be detected from parent
+            #print("in function: ", A0_parent)
             A_est  = A0_parent  *lamb_d / (lamb_p-lamb_d) * (np.exp(-lamb_d*t)-np.exp(-lamb_p*t)) + A0_daughter_guess*np.exp(-lamb_d*t)
+            #print(A_est)
             return A_est
+        
         #A_est = A0_parent *lambda_daughter / (lambda_daughter-lambda_parent) * (np.exp(-lambda_daughter*time)-np.exp(-lambda_parent*time)) + A0_daughter_guess*np.exp(-lambda_daughter*time)
         #A_est = A0_parent_guess*lambda_daughter / (lambda_parent-lambda_daughter) *( np.exp(-lambda_daughter*time)-np.exp(-lambda_parent*time)) + A0_daughter_guess*np.exp(-lambda_daughter *time)
         #return A_est
     elif decay_type == 'twostep_up':
         filelist_d,lamb_p, lamb_d = react_func
+
+        def onestep_decay(t, A0):
+            A_est=A0*np.exp(-lamb_p*t)
+            return A_est
 
         def twostep_up_decay(t, A0_parent_guess, A0_daughter_guess):  #if there are no gammas to be detected from parent
             A_est = A0_parent_guess*lamb_d / (lamb_p-lamb_d) *( np.exp(-lamb_d*t)-np.exp(-lamb_p*t)) + A0_daughter_guess*np.exp(-lamb_d *t)
@@ -121,43 +128,78 @@ def plot_function(decay_type, foil, title, react_func, react_func_parent=None):
 
                 #print_stuff = np.vstack((, dE_tot, new_CS, new_dCS)).T
             elif decay_type=='twostep_kp':
-                A0_daughter_guess=3000; A0_parent_guess=6000
+                A0_daughter_guess=7500; A0_parent_guess=250000
                 popt1, pcov1 = curve_fit(onestep_decay, t[index]*3600, A[index], p0=A0_parent_guess, sigma=dA[index], absolute_sigma=True)
-                A0_parent = popt1
-                popt, pcov = curve_fit(twostep_kp_decay, t[index]*3600, A[index], p0=A0_daughter_guess, sigma=dA[index], absolute_sigma=True)
+                A0_parent = popt1; sigma_activity_estimated_parent = np.sqrt(np.diagonal(pcov1))
+                popt, pcov = curve_fit(twostep_kp_decay, t[index]*3600, A[index], p0=[A0_daughter_guess], sigma=dA[index], absolute_sigma=True)
                 sigma_activity_estimated = np.sqrt(np.diagonal(pcov))   #Uncertainty in the fitting parameters
-                plt.plot(xplot, twostep_kp_decay(xplot*3600,*popt), 'r-', color='red')
+
+                plt.plot(xplot, twostep_kp_decay(xplot*3600,*popt), 'r-', color='red', label='Fit')
                 plt.plot(xplot, twostep_kp_decay(xplot*3600,*(popt+sigma_activity_estimated)), color='blue', linewidth=0.4)
                 plt.plot(xplot, twostep_kp_decay(xplot*3600,*(popt-sigma_activity_estimated)), color='blue', linewidth=0.4)
+                
+                plt.plot(xplot, onestep_decay(xplot*3600,*popt1), color='black', linestyle='--', label=r'Feeding from $^{56}$Ni', linewidth=0.7)
+                plt.plot(xplot, onestep_decay(xplot*3600,*(popt1+sigma_activity_estimated_parent)), color='blue', linewidth=0.4)
+                plt.plot(xplot, onestep_decay(xplot*3600,*(popt1-sigma_activity_estimated_parent)), color='blue', linewidth=0.4)
+
                 plt.plot(t[index],A[index], '.')
                 plt.errorbar(t[index], A[index], color='green', linewidth=0.001,yerr=dA[index], elinewidth=0.5, ecolor='k', capthick=0.5)   # cap thickness for error bar color='blue')
                 #plt.title('Activity for foil {} nucleus {}'.format(ID, Nucleus) )
                 plt.xlabel('time since eob, hours')
                 plt.ylabel('Activity, Bq')
                 plt.title(title + " for foil {}".format(i+1), fontsize=12)
-                plt.legend(['Fit', r'1$\sigma$ uncertainty'] )
+                plt.legend()
+                #plt.legend(['Fit', r'1$\sigma$ uncertainty'] )
                 #plt.show()
                 #print(len(xplot), len(twostep_kp_decay(xplot*3600, *popt)))
                 #print(popt)
             elif decay_type =='twostep_up':
                 A0_daughter_guess=3000; A0_parent_guess=6000
                 popt, pcov = curve_fit(twostep_up_decay, t[index]*3600, A[index], p0=[A0_parent_guess, A0_daughter_guess], sigma=dA[index], absolute_sigma=True)
-                #print(len(xplot), len(twostep_up_decay(xplot*3600, *popt)))
-                #print(popt)popt = popt[-1]
+                #A0_parent = popt[0]; sigma_activity_parent = np.sqrt(np.diagonal(pcov[0]))
+
+                A0_estimated_isomer = popt[0]
+                A0_estimated_ground_state = popt[1]
+                #sigma_A0_estimated = full_width/2 #for 1: isomer, 2: gs of 58Co
+                A0_estimated = twostep_up_decay(0, popt[0], popt[1])  #58Co  #for 1: isomer, 2: gs of 58Co
+
+                def uncertainty_cov_A0(popt,pcov, lambda_parent, lambda_daughter, time):
+                    #Analytical derivations. can also use numerical
+                    #dA0_d = np.zeros(len(time))
+                    #for i in time:
+                    deriv_Ad_Ap = lambda_daughter/(lamb_p-lamb_d)*(np.exp(-lamb_d*time)-np.exp(-lamb_p*time))
+                    deriv_Ad_Ad = np.exp(-lamb_d*time)
+                    J = np.array((deriv_Ad_Ap, deriv_Ad_Ad)) #Jacobian
+
+                    dA0_d = np.sqrt( np.dot(np.dot(J,pcov),J.T ) )
+                    #print(dA0_d)
+                    return dA0_d
+
+                sigma_A0_estimated_ground_state=np.zeros(len(xplot))
+                for i in range(len(xplot)):
+                    sigma_A0_estimated_ground_state[i] = uncertainty_cov_A0(popt, pcov, lamb_p, lamb_d, i)
+
+
+                #A_est_parent = onestep_decay(xplot, A0_parent)
+                #plt.plot(xplot*3600, onestep_decay(xplot*3600, *A0_parent))
+                #plt.plot(xplot*)
+                """
                 sigma_activity_estimated = np.sqrt(np.diagonal(pcov))   #Uncertainty in the fitting parameters
-                plt.plot(xplot, twostep_up_decay(xplot*3600,*popt), 'r-', color='red')
-                #plt.plot(xplot, twostep_up_decay(xplot*3600,*popt), 'r-', color='red')
-                #print(len(xplot), len(twostep_up_decay(xplot*3600, *popt)))
-                #print(popt)
+                plt.plot(xplot, twostep_up_decay(xplot*3600,*popt), 'r-', color='red', label='Fit')
+
                 plt.plot(xplot, twostep_up_decay(xplot*3600,*(popt+sigma_activity_estimated)), color='blue', linewidth=0.4)
                 plt.plot(xplot, twostep_up_decay(xplot*3600,*(popt-sigma_activity_estimated)), color='blue', linewidth=0.4)
+                #plt.plot(xplot, func, color='black', linestyle='--', label=r'Feeding from $^{58m}$Co', linewidth=0.7)
                 plt.plot(t[index],A[index], '.')
+                plt.gca().set_ylim(bottom=0,top=18000)
                 plt.errorbar(t[index], A[index], color='green', linewidth=0.001,yerr=dA[index], elinewidth=0.5, ecolor='k', capthick=0.5)   # cap thickness for error bar color='blue')
                 plt.xlabel('time since eob, hours')
                 plt.ylabel('Activity, Bq')
                 plt.title(title + " for foil {}".format(i+1), fontsize=12)
                 plt.legend(['Fit', r'1$\sigma$ uncertainty'] )
+                plt.legend()
                 #plt.show()
+                """
             plt.show()
             
             print("foil ", i+1, ": ", popt[0], " Bq")
@@ -174,14 +216,16 @@ def plot_function(decay_type, foil, title, react_func, react_func_parent=None):
 
 # plot_function('single', None, r'Activity curve for $^{nat}$Ni(d,x)$^{57}$Ni', Ni_57Ni())
 # plot_function('twostep_kp', None, r'Activity curve for $^{nat}$Ni(d,x)$^{57}$Co', Ni_57Co(), Ni_57Ni())
+# plot_function('twostep_up', None, r'Activity curve for $^{nat}$Ni(d,x)$^{57}$Co', Ni_57Co())
 
+plot_function('single', None, r'title', Fe_48V())
 #plot_function('single', None, r'Activity curve for $^{nat}$Ni(d,x)$^{52}$Mn', Ni_52Mn())
 #plot_function('single', None, r'Activity curve for $^{nat}$Ni(d,x)$^{59}$Fe', Ni_59Fe())
 #plot_function('single', None, r'Activity curve for $^{nat}$Ni(d,x)$^{55}$Co', Ni_55Co())
 #plot_function('single', None, r'Activity curve for $^{nat}$Ir(d,x)$^{193m}$Pt', Ir_193mPt())
-#plot_function('twostep_up', None, r'Activity curve for $^{nat}$Ni(d,x)$^{58}$Co', Ni_58Co())
-#plot_function('twostep_up', None, 'title', Ni_58Co())
-#plot_function('twostep_kp', None, r'Activity curve for $^{nat}$Ni(d,x)$^{56}Co$', Ni_56Co_old(), Ni_56Ni())
+# plot_function('twostep_up', None, r'Activity curve for $^{nat}$Ni(d,x)$^{58}$Co', Ni_58Co()))
+# plot_function('twostep_up', None, 'title', Ni_58Co())
+# plot_function('twostep_kp', None, r'Activity curve for $^{nat}$Ni(d,x)$^{56}Co$', Ni_56Co_old(), Ni_56Ni())
 
 
 def A0_single_decay(filename_activity_time, lambda_, makePlot=False, title_plot=None):
@@ -381,7 +425,7 @@ def A0_double_decay_known_parent(filename_activity_time, A0_parent, lambda_paren
     if makePlot == True:
         plt.plot(xplot, non_direct_decay_known_parent(xplot*3600,*popt), 'r-', color='red')
         plt.plot(xplot,non_direct_decay_known_parent(xplot*3600,*(popt+sigma_activity_estimated)), color='blue', linewidth=0.4)
-        plt.plot(xplot,non_direct_decay_known_parent(xplot*3600,*(popt-sigma_activity_estimated)), color='green', linewidth=0.4)
+        plt.plot(xplot,non_direct_decay_known_parent(xplot*3600,*(popt-sigma_activity_estimated)), color='blue', linewidth=0.4)
         plt.plot(time[index],A[index], '.')
         plt.errorbar(time[index], A[index], color='green', linewidth=0.001,yerr=sigma_A[index], elinewidth=0.5, ecolor='k', capthick=0.5)   # cap thickness for error bar color='blue')
         #plt.title('Activity for foil {} nucleus {}'.format(ID, Nucleus) )
@@ -389,6 +433,7 @@ def A0_double_decay_known_parent(filename_activity_time, A0_parent, lambda_paren
         plt.ylabel('Activity, Bq')
         save_curves_to = os.getcwd()+'/activity_curves/'
         plt.title(name)
+        #plt.title(r"Activity curve for $^{nat}$Ni(d,x)$^{57}$Co for foil 1", fontsize=12)
         #np.savetxt("{}.csv".format(save_results_to +  reaction), np.array((A0, sigma_A0)), delimiter=",")
         #plt.savefig('{}foil_{}.png'.format(save_results_to, Nucleus+ID), dpi=300)
         plt.savefig(save_curves_to + '_activity_{}.png'.format(name), dpi=300)
@@ -688,7 +733,7 @@ np.savetxt("{}.csv".format(save_results_to +  'Ni_56Co'), np.array((A0, sigma_A0
 #single_decay_data(Cu_60Co(), "Cu_60Co", 10, Save_csv=True)  #REporing as cumulative instead
 
 # two_step_up_data(Cu_61Co(), "Cu_61Fe", "Cu_61Co", 10, Save_csv = True)   #OK
-single_decay_data(Cu_61Co(), "Cu_61Co", 10, Save_csv=True)
+# single_decay_data(Cu_61Co(), "Cu_61Co", 10, Save_csv=True)
 
 #single_decay_data(Cu_61Cu(), "Cu_61Cu", 10, Save_csv=True)      #some weird values
 
@@ -702,7 +747,7 @@ single_decay_data(Cu_61Co(), "Cu_61Co", 10, Save_csv=True)
 
 # single_decay_data(Ni_57Ni(), "Ni_57Ni", 10, Save_csv=True)      #EXCELLENT
 
-#two_step_kp_data(Ni_57Ni(), Ni_57Co(), "Ni_57Co", 10, Save_csv= True)
+# two_step_kp_data(Ni_57Ni(), Ni_57Co(), "Ni_57Co", 10, Save_csv= False)
 
 
 #single_decay_data(Ni_55Co(), "Ni_55Co", 10, Save_csv=True)      #EXCELLENT

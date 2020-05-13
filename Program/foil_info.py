@@ -320,7 +320,7 @@ def Ni_56Co_old(return_two_list=False): #mon, two step, known parent activity 56
 
 
     #return list, lambda_parent, lambda_daughter#[lambda_parent, lambda_daughter]
-    return list,lambda_daughter#[lambda_parent, lambda_daughter]
+    return list,lambda_daughter, lambda_parent#[lambda_parent, lambda_daughter]
     #return list, [lambda_parent, lambda_daughter]#[lambda_parent, lambda_daughter]
 
 def Ni_56Co(two_step=False):  #only use foil 1-3 for two step decay with 56Ni.   
