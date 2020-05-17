@@ -19,6 +19,10 @@ names = np.genfromtxt(f_list_FilesNames, dtype="str", delimiter='|', usecols=[1]
 files = list(files)
 names = list(names)
 
+
+# RZ = Run_Ziegler(files, names)
+# RZ.plot_ChiSq(6)
+
 good_beamcurrents = ['B_+10_D_-2', 'B_+0,75_D_-3,25', 'B_+1_D_-1,75', 'B_+0,75_D_-2,75', 'B_+0,75_D_-3', 'B_+0,5_D_-4,25',
 					'B_+0,5_D_-3,75', 'B_+0,25_D_-4,75', 'B_+0,5_D_-4', 'B_+0,25_D_-5', 'B_-2,5_D_+4', 'B_+1_D_+1,25', 'B_+1,25_D_+2',
 					'B_+1,5_D_+2,5', 'B_+1,5_D_+2,75', 'B_+2,25_D_+5', 'B_+2_D_+3,75', 'B_+1,75_D_+3,25', 'B_+2,5_D_+4,5', 'B_+2,25_D_+4,75',
@@ -38,19 +42,19 @@ index = find_index(names, 'B_+2_D_+4,25')  # looks good but downside: weird zieg
 #index = find_index(names, good_files[-2])
 #index= find_index(names, good_files[0])
 
+
 print(names[index])
 name = names[index]
 
 
 BC = BeamCurrent(files[index])
 CS = CrossSections(files[index])
+
 #BC.plot_distribution('all', files[index])
 #BC.plot_distribution('Ir', files[index])
 
 
 
-# RZ = Run_Ziegler(files, names)
-# RZ.plot_ChiSq(6)
 
 
 #BC.CurrentPlot_compartment(name=name, WABC = 'averaged_currents.csv', title='Beam current - after variance minimization')
@@ -101,6 +105,11 @@ WABC_file = 'WABC_'+ ziegler_filename[10:-11] + '.csv'
 #BC.variance_minimization(9, name, include_56Co=True, MakePlot=True)
 
 
+
+
+
+
+
 #MONITOR REACTIONS
 
 # CS.mon_CS_test(Fe_56Co(), 'Fe', 'Fe_56Co.csv', 3, 'Fe_56Co', names[index], WABC_file)
@@ -133,10 +142,10 @@ WABC_file = 'WABC_'+ ziegler_filename[10:-11] + '.csv'
 
 
 # CS.make_CS(Ni_58mCo(), 'Ni', 'Ni_58mCo.csv', 10, 'Ni_58mCo', WABC_file, '27', '58', ylimit=270, independent=True,CS_colonne_ALICE=7, isomer_state='m', file_ending='.L01')
-# CS.make_CS(Ni_58Co(), 'Ni', 'Ni_58Co.csv', 10, 'Ni_58Co', WABC_file, '27', '58', ylimit=200, independent=True,CS_colonne_ALICE=6, isomer_state=None, file_ending='.L00')
+# CS.make_CS(Ni_58Co(), 'Ni', 'Ni_58Co.csv', 10, 'Ni_58Co', WABC_file, '27', '58', ylimit=250, independent=True,CS_colonne_ALICE=6, isomer_state=None, file_ending='.L00')
 # CS.make_CS_subtraction('daughter', 'Ni', 10, WABC_file, Ni_58mCo(), 'Ni_58mCo', 'Ni_58mCo.csv', '28', '58',  Ni_58Co(), 'Ni_58Co', 'Ni_58Co.csv', '27', '58', BR_daughter=1.0, ylimit=None, isomer_state=None, independent=False, file_ending='.tot', save_text=True, feeding=None, CS_colonne_ALICE=5, force_legend='upper right')  # Necessary when subtracting
 
-# CS.make_CS(Ni_57Co(), 'Ni', 'Ni_57Co.csv', 10, 'Ni_57Co', WABC_file, '27', '57', ylimit=600, independent=True,CS_colonne_ALICE=5, file_ending='.tot', feeding='beta+') # first in decay chain)
+# CS.make_CS(Ni_57Co(), 'Ni', 'Ni_57Co.csv', 10, 'Ni_57Co', WABC_file, '27', '57', ylimit=600, independent=False,CS_colonne_ALICE=5, file_ending='.tot', feeding='beta+', isomer_state=None, reaction_parent='Ni_57Ni') # first in decay chain)
 # CS.make_CS(Ni_57Ni(), 'Ni', 'Ni_57Ni.csv', 10, 'Ni_57Ni', WABC_file, '28', '57', ylimit=125, independent=False,CS_colonne_ALICE=5, file_ending='.tot') # first in decay chain)
 # CS.make_CS_subtraction('daughter', 'Ni', 10, WABC_file, Ni_57Ni(), 'Ni_57Ni', 'Ni_57Ni.csv', '28', '57',  Ni_57Co(), 'Ni_57Co', 'Ni_57Co.csv', '27', '57', BR_daughter=1.0, ylimit=None, isomer_state=None, independent=False, file_ending='.tot', save_text=True, feeding='beta+', CS_colonne_ALICE=5)  # Necessary when subtracting
 
@@ -169,13 +178,13 @@ WABC_file = 'WABC_'+ ziegler_filename[10:-11] + '.csv'
 
 
 ### Ir reactions
-#CS.make_CS(Ir_188Pt(), 'Ir', 'Ir_188Pt.csv', 10, 'Ir_188Pt', WABC_file, '78', '188', ylimit=300, independent=True)   
-#CS.make_CS(Ir_188Ir(), 'Ir', 'Ir_188Ir.csv', 10, 'Ir_188Ir', WABC_file, '77', '188', ylimit=15, independent=False, isomer_state='m1+g', CS_colonne_ALICE=4, feeding='beta+', BR=1.0, reaction_parent='Ir_188Pt')
-#CS.make_CS_subtraction('daughter', 'Ir', 10, WABC_file, Ir_188Pt(), 'Ir_188Pt', 'Ir_188Pt.csv', '78', '188',  Ir_188Ir(), 'Ir_188Ir', 'Ir_188Ir.csv', '77', '188', ylimit=15, BR_daughter=1.0, isomer_state='m1+g', independent=True, file_ending='.tot', CS_colonne_ALICE=4, save_text=True, feeding=None)  # Necessary when subtracting
+# CS.make_CS(Ir_188Pt(), 'Ir', 'Ir_188Pt.csv', 10, 'Ir_188Pt', WABC_file, '78', '188', ylimit=300, independent=True)   
+# CS.make_CS(Ir_188Ir(), 'Ir', 'Ir_188Ir.csv', 10, 'Ir_188Ir', WABC_file, '77', '188', ylimit=15, independent=False, isomer_state='m1+g', CS_colonne_ALICE=4, feeding='beta+', BR=1.0, reaction_parent='Ir_188Pt')
+# CS.make_CS_subtraction('daughter', 'Ir', 10, WABC_file, Ir_188Pt(), 'Ir_188Pt', 'Ir_188Pt.csv', '78', '188',  Ir_188Ir(), 'Ir_188Ir', 'Ir_188Ir.csv', '77', '188', ylimit=15, BR_daughter=1.0, isomer_state='m1+g', independent=True, file_ending='.tot', CS_colonne_ALICE=4, save_text=True, feeding=None)  # Necessary when subtracting
 
 
-#CS.make_CS(Ir_189Pt(), 'Ir', 'Ir_189Pt.csv', 10, 'Ir_189Pt', WABC_file, '78', '189', ylimit=520, independent=True)    # 
-#CS.make_CS(Ir_189Ir(), 'Ir', 'Ir_189Ir.csv', 10, 'Ir_189Ir', WABC_file, '77', '189', independent=False, feeding='beta+', BR=1.0, reaction_parent='Ir_189Pt')    # need work on activity 
+# CS.make_CS(Ir_189Pt(), 'Ir', 'Ir_189Pt.csv', 10, 'Ir_189Pt', WABC_file, '78', '189', ylimit=520, independent=True)    # 
+# CS.make_CS(Ir_189Ir(), 'Ir', 'Ir_189Ir.csv', 10, 'Ir_189Ir', WABC_file, '77', '189', independent=False, feeding='beta+', BR=1.0, reaction_parent='Ir_189Pt')    # need work on activity 
 
 #CS.make_CS_subtraction('daughter', 'Ir', 10, WABC_file, Ir_189Pt(), 'Ir_189Pt', 'Ir_189Pt.csv', '78', '189',  Ir_189Ir(), 'Ir_189Ir', 'Ir_189Ir.csv', '77', '189', ylimit=500, independent=True, file_ending='.tot', CS_colonne_ALICE=4, BR_daughter=1.0)  # Necessary when subtracting
 
@@ -183,15 +192,15 @@ WABC_file = 'WABC_'+ ziegler_filename[10:-11] + '.csv'
 
 # CS.make_CS(Ir_190Ir(), 'Ir', 'Ir_190Ir.csv', 10, 'Ir_190Ir', WABC_file, '77', '190', independent=False, CS_colonne_ALICE=4)     # file_ending=.tot because of decay from m1 m2 isomer. 
 # CS.make_CS(Ir_190m2Ir(), 'Ir', 'Ir_190m2Ir.csv', 10, 'Ir_190m2Ir', WABC_file, '77', '190', file_ending='.L37', isomer_state='m2', independent=True, CS_colonne_ALICE=6)   # 0.0860   
-#CS.make_CS_subtraction('daughter', 'Ir', 10, WABC_file, Ir_190m2Ir(), 'Ir_190m2Ir', 'Ir_190m2Ir.csv', '77', '190',  Ir_190Ir(), 'Ir_190Ir', 'Ir_190Ir.csv', '77', '190', BR_daughter=0.0860, ylimit=None, isomer_state='m1+g', independent=True)#independent='_cumulative_190m1+190Ir', file_ending='.tot')  # Necessary when subtracting
+# CS.make_CS_subtraction('daughter', 'Ir', 10, WABC_file, Ir_190m2Ir(), 'Ir_190m2Ir', 'Ir_190m2Ir.csv', '77', '190',  Ir_190Ir(), 'Ir_190Ir', 'Ir_190Ir.csv', '77', '190', BR_daughter=0.0860, ylimit=None, isomer_state='m1+g', independent=True)#independent='_cumulative_190m1+190Ir', file_ending='.tot')  # Necessary when subtracting
 
 # CS.make_CS(Ir_191Pt(), 'Ir', 'Ir_191Pt.csv', 10, 'Ir_191Pt', WABC_file, '78', '191', independent=True, ylimit=800) 
 
 # CS.make_CS(Ir_192Ir(), 'Ir', 'Ir_192Ir.csv', 10, 'Ir_192Ir', WABC_file, '77', '192', file_ending='.tot', independent=False)    
 
-# CS.make_CS(Ir_194Ir(), 'Ir', 'Ir_194Ir.csv', 10, 'Ir_194Ir', WABC_file, '77', '194', file_ending='.L00', independent=False)    
-# CS.make_CS(Ir_194m2Ir(), 'Ir', 'Ir_194m2Ir.csv', 10, 'Ir_194m2Ir', WABC_file, '77', '194', file_ending='not', isomer_state='m2', independent=True, CS_colonne_ALICE=6)     #talys=.L34
-# CS.make_CS(Ir_193mPt(), 'Ir', 'Ir_193mPt.csv', 10, 'Ir_193mPt', WABC_file, '78', '193', file_ending='.L05', isomer_state='m', independent=True, CS_colonne_ALICE=6, ylimit=300)   
+CS.make_CS(Ir_194Ir(), 'Ir', 'Ir_194Ir.csv', 10, 'Ir_194Ir', WABC_file, '77', '194', file_ending='.L00', independent=False)    
+CS.make_CS(Ir_194m2Ir(), 'Ir', 'Ir_194m2Ir.csv', 10, 'Ir_194m2Ir', WABC_file, '77', '194', file_ending='not', isomer_state='m2', independent=True, CS_colonne_ALICE=6)     #talys=.L34
+CS.make_CS(Ir_193mPt(), 'Ir', 'Ir_193mPt.csv', 10, 'Ir_193mPt', WABC_file, '78', '193', file_ending='.L05', isomer_state='m', independent=True, CS_colonne_ALICE=6, ylimit=300)   
 
 
 

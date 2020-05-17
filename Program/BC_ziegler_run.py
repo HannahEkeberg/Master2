@@ -4,6 +4,9 @@ import numpy as np
 
 
 import matplotlib.pyplot as plt
+from scipy import interpolate
+import scipy as sp
+#from scipy.interpolate import interp1d
 
 import os
 
@@ -162,21 +165,48 @@ class Run_Ziegler:
         def find_index(list, element):
             return list.index(element)
 
-        opt = find_index(self.names, 'B_+2_D_+4,25')  # looks good but downside: weird ziegler flux distribution 
-        original = find_index(self.names, 'B_0_D_0')  # looks good but downside: weird ziegler flux distribution 
+        #opt = find_index(self.names, 'B_+2_D_+4,25')  # looks good but downside: weird ziegler flux distribution 
+        #original = find_index(self.names, 'B_0_D_0')  # looks good but downside: weird ziegler flux distribution 
         #print(type(csv_save))
         
         #np.savetxt('BeamCurrent/chisq_dir_new/min_chi_comp{}.csv'.format(compartment), csv_save, delimiter='|', header='Filename, Chi^2', fmt="%s"  )#, %.6f, %.6f")
 
         #plt.axvline(E_Ni_list[index], color=colors[0], label=zf+r' -$\chi^2=${:.2f} '.format(chi_sq_list[index])
-        plt.axvline(E_Ni_list[opt], label=r'Beamenergy: 2%, density: 4.5%', linestyle='--', color='red', linewidth=0.5)
+        #plt.axvline(E_Ni_list[opt], label=r'Beamenergy: 2%, density: 4.5%', linestyle='--', color='red', linewidth=0.5)
         #plt.axvline(E_Ni_list[original], label=r'Beamenergy: 0%, density: 0%', linestyle='--', color='blue', linewidth=0.5)
         
+
+        #print(E_Ni_list)
+        #print(chi_sq_list)
+
+
+
         plt.plot(E_Ni_list, chi_sq_list,'.')
+
+        x1,y1 = zip(*sorted(zip(E_Ni_list, chi_sq_list)))
+        #print(x, y)
+        # Combine lists into list of tuples
+        # points = zip(E_Ni_list, chi_sq_list)
+
+        # Sort list of tuples by x-value
+        # points = sorted(points, key=lambda point: point[0])
+
+        # Split list of tuples into two list of x values any y values
+        # x1, y1 = zip(*points)
+
+        new_length = 1000
+        new_x = np.linspace(min(x1), max(x1), new_length)
+        tck = interpolate.splrep(x1, y1, s=0)
+        #x_new = np.linspace(np.min(E_Ni_list), np.max(E_Ni_list), len(E_Ni_list))
+        new_y = interpolate.splev(new_x, tck, der=0)
+
+        # new_y = sp.interpolate.interp1d(x1, y1, kind='linear')(new_x)
+
+        plt.plot(new_x, new_y)
         plt.title('Variance minimization of compartment {}'.format(compartment))
-        plt.ylabel(r'$\chi^2$')
+        plt.ylabel(r'Reduced $\chi^2$')
         #plt.legend(fontsize='xx-small', loc='best')
-        plt.legend()
+        #plt.legend()
         plt.xlabel('Deuteron energy entering stack compartment number {} (MeV)'.format(compartment))
         plt.savefig('BeamCurrent/chisq_dir_new/chi_squared_comp_{}'.format(compartment), dpi=300)
 

@@ -33,7 +33,7 @@ if not os.path.exists(dir_csv):
 csfont = {'fontname':'Georgia'}
 
 
-def plot_function(decay_type, foil, title, react_func, react_func_parent=None):
+def plot_function(decay_type, foil, title, react_func, react_func_parent=None, plot_function=False):
     ### Just for plotting nicely
     # print("*****")
     # print(decay_type)
@@ -127,6 +127,8 @@ def plot_function(decay_type, foil, title, react_func, react_func_parent=None):
                 #plt.show()
 
                 #print_stuff = np.vstack((, dE_tot, new_CS, new_dCS)).T
+
+                dA0 = sigma_A0_estimated
             elif decay_type=='twostep_kp':
                 A0_daughter_guess=7500; A0_parent_guess=250000
                 popt1, pcov1 = curve_fit(onestep_decay, t[index]*3600, A[index], p0=A0_parent_guess, sigma=dA[index], absolute_sigma=True)
@@ -153,6 +155,7 @@ def plot_function(decay_type, foil, title, react_func, react_func_parent=None):
                 #plt.show()
                 #print(len(xplot), len(twostep_kp_decay(xplot*3600, *popt)))
                 #print(popt)
+                dA0 = sigma_activity_estimated
             elif decay_type =='twostep_up':
                 A0_daughter_guess=3000; A0_parent_guess=6000
                 popt, pcov = curve_fit(twostep_up_decay, t[index]*3600, A[index], p0=[A0_parent_guess, A0_daughter_guess], sigma=dA[index], absolute_sigma=True)
@@ -179,7 +182,7 @@ def plot_function(decay_type, foil, title, react_func, react_func_parent=None):
                 for i in range(len(xplot)):
                     sigma_A0_estimated_ground_state[i] = uncertainty_cov_A0(popt, pcov, lamb_p, lamb_d, i)
 
-
+                #dA0=sigma_A0_estimated_
                 #A_est_parent = onestep_decay(xplot, A0_parent)
                 #plt.plot(xplot*3600, onestep_decay(xplot*3600, *A0_parent))
                 #plt.plot(xplot*)
@@ -200,9 +203,12 @@ def plot_function(decay_type, foil, title, react_func, react_func_parent=None):
                 plt.legend()
                 #plt.show()
                 """
-            plt.show()
+            if plot_function==True:
+                plt.show()
             
             print("foil ", i+1, ": ", popt[0], " Bq")
+            print("rel uncertainty: ", dA0*100/popt[0], '%' )
+
     #else:
     #    file = filelist_d[foil-1] # indexing correctly
     #    t = np.genfromtxt(file, delimiter=',', usecols=[0]) #hours since e.o.b
@@ -218,7 +224,7 @@ def plot_function(decay_type, foil, title, react_func, react_func_parent=None):
 # plot_function('twostep_kp', None, r'Activity curve for $^{nat}$Ni(d,x)$^{57}$Co', Ni_57Co(), Ni_57Ni())
 # plot_function('twostep_up', None, r'Activity curve for $^{nat}$Ni(d,x)$^{57}$Co', Ni_57Co())
 
-plot_function('single', None, r'title', Fe_48V())
+# plot_function('single', None, r'title', Fe_48V())
 #plot_function('single', None, r'Activity curve for $^{nat}$Ni(d,x)$^{52}$Mn', Ni_52Mn())
 #plot_function('single', None, r'Activity curve for $^{nat}$Ni(d,x)$^{59}$Fe', Ni_59Fe())
 #plot_function('single', None, r'Activity curve for $^{nat}$Ni(d,x)$^{55}$Co', Ni_55Co())
@@ -226,6 +232,8 @@ plot_function('single', None, r'title', Fe_48V())
 # plot_function('twostep_up', None, r'Activity curve for $^{nat}$Ni(d,x)$^{58}$Co', Ni_58Co()))
 # plot_function('twostep_up', None, 'title', Ni_58Co())
 # plot_function('twostep_kp', None, r'Activity curve for $^{nat}$Ni(d,x)$^{56}Co$', Ni_56Co_old(), Ni_56Ni())
+#plot_function('single', None, r'Activity curve for $^{nat}$Ni(d,x)$^{55}$Co', Ni_55Co())
+
 
 
 def A0_single_decay(filename_activity_time, lambda_, makePlot=False, title_plot=None):

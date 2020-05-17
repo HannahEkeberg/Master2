@@ -248,10 +248,14 @@ class CrossSections:
             self.modelling('Talys', foil, Z, A, reaction, file_ending, independent=independent, feeding=feeding, BR=BR, CS_colonne=CS_colonne_ALICE, isomer_state=isomer_state)
             self.modelling('Exfor', foil, Z, A, reaction, file_ending, independent=independent, feeding=feeding, BR=BR, CS_colonne=CS_colonne_ALICE, isomer_state=isomer_state)
             self.modelling('Alice', foil, Z, A, reaction, file_ending, independent=independent, feeding=feeding, BR=BR, CS_colonne=CS_colonne_ALICE, isomer_state=isomer_state)
+
             if reaction_parent!=False:
                 self.modelling('CoH', foil, Z, A, reaction, file_ending, independent=independent, feeding=feeding, BR=BR, CS_colonne=CS_colonne_ALICE, isomer_state=isomer_state, reaction_parent=reaction_parent)
+                self.modelling('Empire', foil, Z, A, reaction, file_ending, independent=independent, feeding=feeding, BR=BR, CS_colonne=CS_colonne_ALICE, isomer_state=isomer_state, reaction_parent=reaction_parent)
+                
             else:
                 self.modelling('CoH', foil, Z, A, reaction, file_ending, independent=independent, feeding=feeding, BR=BR, CS_colonne=CS_colonne_ALICE, isomer_state=isomer_state, reaction_parent=None)
+                self.modelling('Empire', foil, Z, A, reaction, file_ending, independent=independent, feeding=feeding, BR=BR, CS_colonne=CS_colonne_ALICE, isomer_state=isomer_state, reaction_parent=None)
             self.plot_CrossSections(reaction, title, A, foil, ylimit, legend_force=force_legend)
         #print(E)
         #print("in cs calc, print force_legend")
@@ -373,6 +377,7 @@ class CrossSections:
             #self.modelling('Exfor', foil, Z, A, reaction, file_ending, independent=independent, feeding=None, BR=BR_daughter)
             self.modelling('Exfor', foil, Z, A, reaction, file_ending, independent=independent, feeding=feeding, BR=BR_daughter, CS_colonne=CS_colonne_ALICE, isomer_state=isomer_state)
             self.modelling('CoH', foil, Z, A, reaction, file_ending, independent=independent, feeding=feeding, BR=BR_daughter, CS_colonne=CS_colonne_ALICE, isomer_state=isomer_state, reaction_parent=reaction_parent)
+            self.modelling('Empire', foil, Z, A, reaction, file_ending, independent=independent, feeding=feeding, BR=BR_daughter, CS_colonne=CS_colonne_ALICE, isomer_state=isomer_state, reaction_parent=reaction_parent)
             self.plot_CrossSections(reaction, title, A, foil, ylimit, subtract='yes', legend_force=force_legend)
 
 
@@ -551,6 +556,78 @@ class CrossSections:
             except:
                 print("no Alice file found")
                 pass
+        
+        elif model == 'Empire':
+            print("EMPIRE")
+            print(Z, A)
+            try:
+                #print("INDEPENDENT")
+                #print("coh feeding: ", feeding)
+                if isomer_state=='m':
+                    isomer_state='M'
+                elif isomer_state=='g':
+                    isomer_state='G'
+                elif isomer_state=='m1+g': 
+                    isomer_state=None
+                elif isomer_state==None:
+                    isomer_state=None
+
+                #if independent==True or feeding==None:
+                #rint(feeding)
+                if feeding==None:
+                    #print("runs feeding=None")
+                    #print(foil)
+                    #print(A)
+                    #print(Z)
+                    #print(reaction)
+                    #print(isomer_state)
+
+                    E, CS = SimCS.EMPIRE(foil, A, Z, reaction, isomer=isomer_state)
+                    #print(E)
+                    plt.plot(E, CS, label='EMPIRE-3.2.3', linestyle='--', color='red', linewidth=0.7)
+                    #print(E)
+                elif independent==False and feeding!=None:
+                    #print("EMPIRE RUNS IF TEST")
+                    E, CS = SimCS.EMPIRE(foil, A, Z, reaction, isomer=isomer_state)
+                    #print(E)
+                    #E, CS = SimCS.EMPIRE('Ni', '52', '25', 'Ni_52Mn', isomer=None)
+                    #print("works:")
+                    #print(foil)
+                    #print(A)
+                    #print(Z)
+                    #print(reaction)
+                    #print(isomer_state)
+                    #print(E)
+                    if feeding=='beta+':
+                        Z_p = int(Z)+1; A_p = A
+                        Z_p = str(Z_p)
+                        if foil=='Ir':    # BAD LINE; SHOULD CHANGE IF POSSIBLE. 
+                            reaction_new = reaction[:-2] + 'Pt'
+                        #elif foil == 'Ni':
+                    elif feeding=='beta-':
+                        Z_p = int(Z)-1; A_p = A
+                        Z_p =  str(Z_p)
+                        #reaction_new = reaction[:-2] + 'Pt'
+                    #print("Not working:")
+                    #print(foil)
+                    #print(A_p)
+                    #print(Z_p)
+                    #print(reaction_parent)
+                    #print(isomer_state)    
+                    #print("Z_p: ", Z_p, "A_p: ", A_p)
+                    #print(reaction_parent)
+                    #print(foil)
+                    E_p, CS_p = SimCS.EMPIRE(foil, A_p, Z_p, reaction=reaction_parent, isomer=isomer_state)
+
+                    CS_tot = CS+ CS_p*BR
+                    plt.plot(E, CS_tot, label='EMPIRE-3.2.3', linestyle='--', color='red', linewidth=0.7)
+
+
+            except:
+                print("EMPIRE file not found")
+                pass
+            #label=EMPIRE-3.2.3
+
         if len(Z)==2: 
             Z = '0'+Z
         if len(A)==2: 
@@ -636,9 +713,7 @@ class CrossSections:
             except: 
                 print("Tendl files not found. Check file ending or fileproblem")
                 pass
-        elif model == 'Empire':
-            pass 
-            #label=EMPIRE-3.2.3
+
         elif model == 'CoH':
 
             try:
