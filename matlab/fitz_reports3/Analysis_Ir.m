@@ -49,13 +49,13 @@ unc_fe_rhodrs = [0.110,0.034,0.114];
 clc;
 
 % Choose files for analysis
-fitzpeaks_reports = fe_fn;
-key_energies = fe_key_energies;
-glines = fe_glines;
+fitzpeaks_reports = ni_fn;
+key_energies = ni_key_energies;
+glines = ni_glines;
 EoB_Time = '26-Feb-2019 00:32:00'
-rhodrs = fe_rhodrs;
-mu_attenuation = load('fe_xcom.txt');
-unc_rhodrs = unc_fe_rhodrs;
+rhodrs = ni_rhodrs;
+mu_attenuation = load('ni_xcom.txt');
+unc_rhodrs = unc_ni_rhodrs;
 
 
 % Test new fitzpeaks_parser wrapper function
@@ -118,6 +118,8 @@ rows_Ni_57Co = [4,6]; %check
 rows_Ni_57Ni = [81,87,103]; 
 rows_Ni_58Co = [31,38,77];   %check
 rows_Ni_59Fe = [61];%check
+
+rows_Ni_61Co = [111,112,113];
 % rows_Ni_60Cu = [14,17,23,36,43,44,48,52,62,83,85,88,89,93,96,99,101,102]; %check
 %rows_Ni_60Cu = [14,17,23,43,48,52,62,83,85,89,93,96,99,101,102]; %check
 %rows_Ni_60Co = [1]; %check
@@ -126,9 +128,11 @@ rows_Ni_59Fe = [61];%check
 
 % rows_Ni_61Cu = [2,9,11,19,20,22,24,33,37,39,47,50,51,54,56,72,76,79,94]; %check
 rows_Ni_61Cu = [9,11,19,20,22,24,33,37,39,47,51,54,56,72]; %check
+
 rows_Ni_64Cu = [65]; %check
 %rows_Ni_65Ni = [10,21,53,73,75,78]; %check
 rows_Ni_65Ni = [10,73,75,78]; %check
+
 
 
 
@@ -158,7 +162,7 @@ rows_Cu_54Mn = [49];
 
 
 % % 33MeV Iron foils:
-rows_Fe_48V = [24];%,26,37];  %check
+rows_Fe_48V = [24,26,37];  %check
 rows_Fe_51Cr = [5]; %check
 rows_Fe_51Mn = [12]; %check
 rows_Fe_52mMn = [44]; %check
@@ -166,11 +170,16 @@ rows_Fe_52Mn = [6,11,19,23,35,39,45]; %check
 rows_Fe_53Fe = [7]; %check
 rows_Fe_54Mn = [17]; %check
 rows_Fe_55Co = [1,8,14,22,38,42,43,55,16,50,54]; %check
+
 rows_Fe_56Co = [4,9,10,13,18,20,21,25,27,28,30,31,32,33,34,40,41,46,47,48,49,51,52,53]; %check
+% rows_Fe_56Co = [10,13,18,25,27,28,30,32,34,40,41,46,47,48,49,51,52,53];
+% rows_Fe_56Co = [4,9,10,20,21,25,27,30,31,32,33,40,41,46,47,48,49,51,52,53]; %check
 rows_Fe_57Co = [2,3];%check
 rows_Fe_58Co = [15]; %check
 rows_Fe_59Fe = [29,36]; %check
 %rows_55Co = [];
+
+rows_Fe_56Mn = [57,58,59];
 
 
 % % 33MeV Iridium foils:
@@ -190,7 +199,8 @@ rows_Ir_188Pt = [17,42]; %check
 rows_Ir_188Re = [77,82]; %check
 %rows_Ir_188Re = [77, 106]; %check
 %rows_Ir_189Ir = [3,21, 100, 101, 102]; %check
-rows_Ir_189Ir = [3,21, 100, 102]; %check
+rows_Ir_189Ir = [21,102]; %check
+% rows_Ir_189Ir = [21, 102]; %check
 %rows_Ir_189Pt = [2,6,22,31,35,60,75]; %check
 rows_Ir_189Pt = [2,6,22,35,75]; %check
 %rows_Ir_189Re = [13,14,16,62]; %check
@@ -207,18 +217,24 @@ rows_Ir_190mRe = [7,72]; %check
 rows_Ir_190Re = [50,79,88]; %check
 %rows_Ir_191Pt = [4,15,25,37,39,45,51,59,70]; %check
 rows_Ir_191Pt = [15,37,45,51,59,70]; %check
-%rows_Ir_192Ir = [11,18,19,26,30,33,34,40,46,52,56,57,63,66,67,81,85]; %check
-rows_Ir_192Ir = [18,30,40,46,52,57,67,85]; %check
+% rows_Ir_192Ir = [11,18,19,26,30,33,34,40,46,52,56,57,63,66,67,81,85]; %check
+% rows_Ir_192Ir = [18,30,40,46,52,57,67,85]; %check
+rows_Ir_192Ir = [18,40,46,52,57,67,85]; %check
+% rows_Ir_192Ir = [52]; %check
 rows_Ir_193mPt = [10,98]; %check
 % rows_Ir_193mPt = [10]; %check
+
 %rows_Ir_194Ir = [28,32,64,69,71,83,86,87,91];%check
-rows_Ir_194Ir = [28,32,64,83,86,91];%check
-%rows_Ir_194m2Ir = [36,43,55,61,65,74]; %check
-rows_Ir_194m2Ir = [43]; %check
+% rows_Ir_194Ir = [28,32,64,83,86,91];%check
+rows_Ir_194Ir = [28,83,91];%check
+
+
+rows_Ir_194m2Ir = [55,61,74]; %check
+% rows_Ir_194m2Ir = [43]; %check
 % rows_Ir_194m2Ir = [61,74]; %check
 rows_Ir_191Os = [107]; %check
 %rows_Ir_190m2Ir = [108, 109, 110, 111]; %check
-rows_Ir_190m2Ir = [109,110, 111]; %check
+rows_Ir_190m2Ir = [109,110]; %check
 
 %rows_Ir_193Os = [112, 113, 114, 115, 116, 117, 118]; %check
 rows_Ir_193Os = [112, 113, 116, 117]; %check
@@ -227,8 +243,8 @@ rows_Ir_193Os = [112, 113, 116, 117]; %check
 
 % Select rows to plot
 % varToStr = @(x) inputname(1);
-rows = rows_Fe_48V;
-outName = '../csv/Fe_48V';
+rows = rows_Ni_61Cu;
+outName = '../csv/Ni_61Cu';
 % rows = 12;
 % Find rows for the desired decay product
 selected_rows = data(rows,:);
@@ -239,12 +255,12 @@ selected_rows = data(rows,:);
 % energy = 0; % Show all foils in one plot (not for analysis!)
 % 
 % loop over all energies for a foil type
-% for energy = 128:100:1028   % Just Nickel
+for energy = 128:100:1028   % Just Nickel
 % for energy = 129:100:1029   % Just Copper
 % for energy = 126:100:326   % Just Iron
 % for energy = 177:100:1077   % Just Iridium
 % 
- for energy = 126   % debug mode
+%  for energy = 126   % debug mode
     if energy==0
         % Return all rows for plotting
         gammas = selected_rows;

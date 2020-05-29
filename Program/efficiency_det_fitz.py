@@ -262,17 +262,60 @@ def plot_efficiency_from_matlab(detector, numb=None, distance=None):   # since t
     #E = np.genfromtxt(xplot)
     #print(E.shape)
     eps = np.genfromtxt(efficiency)
-    deps = np.genfromtxt(unc_efficiency)
-    E = np.linspace(30,2500, len(eps))#np.linspace(20, 1600, len(eps)) #np.linspace(0,2000, len(eps))
-    #print(eps)
-    #E= np.linspace(20,2500, len(eps))#30:2500;
+    #print(eps[0,:])
 
+
+    deps = np.genfromtxt(unc_efficiency)
+
+    #print(type(eps))
+    #print(len(eps))
+    # print(numb, distance)
+    if detector == 'IDM1_53' or detector=='room131_10':
+        eps = eps[0,:]
+        deps = deps[0,:]
+
+    #eps = eps[0]#; deps=deps[0]
+    E = np.linspace(30,2500, len(eps))#np.linspace(20, 1600, len(eps)) #np.linspace(0,2000, len(eps))
+    #print(E)
+    #print(eps.shape)
+    #E= np.linspace(20,2500, len(eps))#30:2500;
+    # plt.plot(E, eps)
+
+    eps_av = np.mean(eps); deps_av = np.mean(deps)
+    print(detector)
+    print(deps_av/eps_av*100, '%')
+
+
+    rel_uncertainty =deps /eps *100
+    # print(type(rel_uncertainty))
+
+    # print(len(rel_uncertainty))
+
+    # print(np.min(rel_uncertainty))
+    # print(np.max(rel_uncertainty))
+
+    #x  = np.linspace(np.min(rel_uncertainty), np.max(rel_uncertainty), len(rel_uncertainty))
+
+
+    #x  = np.linspace(np.min(rel_uncertainty), np.max(rel_uncertainty, len(rel_uncertainty)))
+    
+    # plt.title('Relative uncertainty for detector {} at {} cm'.format(numb, distance))
+    # plt.plot(E,rel_uncertainty)
+    # plt.xlabel('Gamma-ray energy (MeV)')
+    # plt.ylabel('Relative uncertainty (%)')
+    # plt.show()
+    
+
+    
+    """
     Efficiency_calculations(detector).only_calibration_plot()
 
     plt.plot(E,eps, color='red', label='Curvefit')
     plt.plot(E, eps+deps, color='blue', linewidth=0.4)
     plt.plot(E, eps-deps, color='blue', linewidth=0.4)
-    plt.legend()
+    plt.xlabel('Gamma-ray energy (MeV)')
+    plt.ylabel('Absolute efficiency')
+    # plt.legend(loc='upper center')
     if numb==None and distance==None:
         plt.title('Efficiency curve for detector {}'.format(detector))
         plt.savefig(os.getcwd()+ '/Efficiency_curves/new_'+detector+'png',  dpi=300)
@@ -281,9 +324,60 @@ def plot_efficiency_from_matlab(detector, numb=None, distance=None):   # since t
         plt.savefig(os.getcwd()+ '/Efficiency_curves/new_det'+ numb +  '_' + "numb" + distance+ 'cm.png', dpi=300)
 
     plt.show()
+    """
+
+    return E, rel_uncertainty
+    
 
 
 
-#plot_efficiency_from_matlab('HPGE1_10', '1', '10')
-plot_efficiency_from_matlab('HPGE1_30', '1', '30')    
-#plot_efficiency_from_matlab('room131_5', '7', '5')    
+['HPGE1_10','HPGE1_30','HPGE2_10','HPGE2_30', 'IDM1_53','IDM2_32','IDM3_40','IDM4_25', 'room131_5', 'room131_10', 'room131_15', 'room131_18', 'room131_22', 'room131_30', 'room131_40', 'room131_50', 'room131_60'] # ['HPGE', 'HPGE2', 'IDM1', 'IDM2', 'IDM3', 'IDM4', 'room_131_5cm', 'room_131_10cm', 'room_131_15cm', 'room_131_18cm', 'room_131_22cm', 'room_131_30cm', 'room_131_40cm', 'room_131_50cm', 'room_131_60cm']
+
+
+# E1, rel_unc1 = plot_efficiency_from_matlab('HPGE1_10', '1', '10')
+# plt.plot(E1, rel_unc1, label='Det 1 (10 cm)')
+# E2, rel_unc2 = plot_efficiency_from_matlab('HPGE1_30', '1', '30')    
+# plt.plot(E2, rel_unc2, label='Det 1 (30 cm)')
+# E, rel_unc = plot_efficiency_from_matlab('HPGE2_10', '2', '10')   
+# plt.plot(E, rel_unc, label='Det 2 (10 cm)') 
+# E, rel_unc = plot_efficiency_from_matlab('HPGE2_30', '2', '30')  
+# plt.plot(E, rel_unc, label='Det 2 (30 cm)')
+
+# E, rel_unc = plot_efficiency_from_matlab('IDM1_53', '3', '53')  
+# plt.plot(E, rel_unc, label='Det 3 (53 cm)')
+
+# E, rel_unc = plot_efficiency_from_matlab('IDM2_32', '4', '32') 
+# plt.plot(E, rel_unc, label='Det 4 (32 cm)')
+# E, rel_unc = plot_efficiency_from_matlab('IDM3_40', '5', '40') 
+# plt.plot(E, rel_unc, label='Det 5 (40 cm)') 
+# E, rel_unc = plot_efficiency_from_matlab('IDM4_25', '6', '25')
+# plt.plot(E, rel_unc, label='Det 6 (25 cm)') 
+
+# plt.title('Relative uncertainty for detector 1-6')
+
+
+E, rel_unc = plot_efficiency_from_matlab('room131_5', '7', '5')   
+plt.plot(E, rel_unc, label='Det 7 (5 cm)')
+E, rel_unc = plot_efficiency_from_matlab('room131_10', '7', '10')    
+plt.plot(E, rel_unc, label='Det 7 (10 cm)')
+E, rel_unc = plot_efficiency_from_matlab('room131_15', '7', '15')    
+plt.plot(E, rel_unc, label='Det 7 (15 cm)')
+E, rel_unc = plot_efficiency_from_matlab('room131_18', '7', '18')
+plt.plot(E, rel_unc, label='Det 7 (18 cm)')  
+E, rel_unc = plot_efficiency_from_matlab('room131_22', '7', '22') 
+plt.plot(E, rel_unc, label='Det 7 (22 cm)')  
+E, rel_unc = plot_efficiency_from_matlab('room131_30', '7', '30')   
+plt.plot(E, rel_unc, label='Det 7 (30 cm)')  
+E, rel_unc = plot_efficiency_from_matlab('room131_40', '7', '40')   
+plt.plot(E, rel_unc, label='Det 7 (40 cm)')  
+E, rel_unc = plot_efficiency_from_matlab('room131_50', '7', '50')   
+plt.plot(E, rel_unc, label='Det 7 (50 cm)')  
+E, rel_unc = plot_efficiency_from_matlab('room131_60', '7', '60')
+plt.plot(E, rel_unc, label='Det 7 (60 cm)')  
+#plt.title('Relative uncertainty for detector {} at {} cm'.format(numb, distance))
+plt.title('Relative uncertainty for detector 7')
+
+plt.xlabel('Gamma-ray energy (MeV)')
+plt.ylabel('Relative uncertainty (%)')
+plt.legend(loc='upper center')
+plt.show()      

@@ -377,7 +377,11 @@ class BeamCurrent:
         I = np.array(I)
 
 
+        # print(I)
+        #print("**")
 
+        #relative_unc = dI*100/I 
+        #print(relative_unc.shape)
         return I, dI
 
     def WABE(self, foil): #weighted average beam energy
@@ -555,6 +559,7 @@ class BeamCurrent:
             plt.fill_between(xplot, I_model(E,*(popt+sigma_I_est)),I_model(E,*(popt-sigma_I_est)), color='blue', alpha=0.1)
             plt.xlabel('Energy, MeV')
             plt.ylabel('Beam Current, nA')
+            plt.gca().set_ylim(bottom=120, top=180)
 
             #plt.title(r'Linear fit for foils compartment {} - {}. $\chi^2$={:.2f} '.format(compartment+1, name, chi_sq))
             plt.title(r'Linear fit for foils compartment {}, $\chi^2$={:.2f} '.format(compartment+1,chi_sq))

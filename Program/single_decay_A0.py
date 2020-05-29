@@ -33,7 +33,7 @@ if not os.path.exists(dir_csv):
 csfont = {'fontname':'Georgia'}
 
 
-def plot_function(decay_type, foil, title, react_func, react_func_parent=None, plot_function=False):
+def plot_function(decay_type, foil, title, react_func, react_func_parent=None, plot_function=False, plot_rel_unc=False, reaction=None):
     ### Just for plotting nicely
     # print("*****")
     # print(decay_type)
@@ -83,15 +83,20 @@ def plot_function(decay_type, foil, title, react_func, react_func_parent=None, p
             return A_est
 
     n = len(filelist_d)
+    # print(filelist_d)
+
     if foil == None:
         A = np.zeros(n)
         dA = np.zeros(n)
         t = np.zeros(n)
+
+        rel_uncertainty = []
+
         for i in range(len(filelist_d)):
             t = np.genfromtxt(filelist_d[i], delimiter=',', usecols=[0]) #hours since e.o.b
             A = np.genfromtxt(filelist_d[i], delimiter=',', usecols=[1]) 
             dA = np.genfromtxt(filelist_d[i], delimiter=',', usecols=[2])
-            
+            #print(A)
             index = ~(np.isnan(A) | np.isnan(dA))  #if either eps OR sigma eps is NaN
             time = np.max(t[index])
             xplot = np.linspace(0,time,1000)
@@ -182,6 +187,8 @@ def plot_function(decay_type, foil, title, react_func, react_func_parent=None, p
                 for i in range(len(xplot)):
                     sigma_A0_estimated_ground_state[i] = uncertainty_cov_A0(popt, pcov, lamb_p, lamb_d, i)
 
+
+                #print()
                 #dA0=sigma_A0_estimated_
                 #A_est_parent = onestep_decay(xplot, A0_parent)
                 #plt.plot(xplot*3600, onestep_decay(xplot*3600, *A0_parent))
@@ -205,9 +212,27 @@ def plot_function(decay_type, foil, title, react_func, react_func_parent=None, p
                 """
             if plot_function==True:
                 plt.show()
+            else:
+                plt.close()
             
             print("foil ", i+1, ": ", popt[0], " Bq")
             print("rel uncertainty: ", dA0*100/popt[0], '%' )
+
+            rel_uncertainty.append(dA0/popt[0]*100)
+        #print(rel_uncertainty)
+        """
+        if plot_rel_unc == True:
+            if rel_uncertainty != 10:
+                print("nope")
+            E_pt = [30.65, 28.40, 26.03, 23.54, 21.38, 19.03, 16.43, 13.51, 10.09, 5.63]
+            plt.plot(E_pt, rel_uncertainty)
+            plt.title('Relative uncertainty in activity for {}'.format(reaction))
+            plt.xlabel('Deuteron energy (MeV)')
+            plt.ylabel('Relative uncertainty (%)')
+            plt.show()
+        """
+        #return time 
+        #return rel_uncertainty
 
     #else:
     #    file = filelist_d[foil-1] # indexing correctly
@@ -217,8 +242,18 @@ def plot_function(decay_type, foil, title, react_func, react_func_parent=None, p
 
 
 
+# plot_function('single', None, r'Activity curve for $^{nat}$Ir(d,x)$^{193m}$Pt', Ir_193mPt(), plot_function=False, plot_rel_unc=True, reaction=r'$^{nat}$Ir(d,x)$^{193}$Pt')
 
-#plot_function('single', None, r'Activity curve for $^{nat}$Ni(d,x)$^{61}$Cu', Ni_61Cu())
+#print(rel_unc)
+
+
+# plot_function('single', None, r'Activity curve for $^{nat}$Ni(d,x)$^{61}$Cu', Ni_61Cu(), plot_rel_unc=True, reaction=r'$^{nat}$Ni(d,x)$^{61}$Cu'))
+# plot_function('single', None, r'Activity curve for $^{nat}$Fe(d,x)$^{56}$Co', Fe_56Co(), plot_function=True, plot_rel_unc=True, reaction=r'$^{nat}$Ni(d,x)$^{61}$Cu')
+# plot_function('single', None, r'Activity curve for $^{nat}$Cu(d,x)$^{62}$Zn', Cu_62Zn(), plot_rel_unc=True, reaction=r'$^{nat}$Cu(d,x)$^{62}$Zn')
+# plot_function('single', None, r'Activity curve for $^{nat}$Cu(d,x)$^{63}$Zn', Cu_63Zn(), plot_rel_unc=True, reaction=r'$^{nat}$Cu(d,x)$^{63}$Zn')
+# plot_function('single', None, r'Activity curve for $^{nat}$Cu(d,x)$^{65}$Zn', Cu_65Zn(), plot_rel_unc=True, reaction=r'$^{nat}$Cu(d,x)$^{65}$Zn'))
+
+
 
 # plot_function('single', None, r'Activity curve for $^{nat}$Ni(d,x)$^{57}$Ni', Ni_57Ni())
 # plot_function('twostep_kp', None, r'Activity curve for $^{nat}$Ni(d,x)$^{57}$Co', Ni_57Co(), Ni_57Ni())
@@ -229,7 +264,7 @@ def plot_function(decay_type, foil, title, react_func, react_func_parent=None, p
 #plot_function('single', None, r'Activity curve for $^{nat}$Ni(d,x)$^{59}$Fe', Ni_59Fe())
 #plot_function('single', None, r'Activity curve for $^{nat}$Ni(d,x)$^{55}$Co', Ni_55Co())
 #plot_function('single', None, r'Activity curve for $^{nat}$Ir(d,x)$^{193m}$Pt', Ir_193mPt())
-# plot_function('twostep_up', None, r'Activity curve for $^{nat}$Ni(d,x)$^{58}$Co', Ni_58Co()))
+# plot_function('twostep_up', None, r'Activity curve for $^{nat}$Ni(d,x)$^{58}$Co', Ni_58Co())
 # plot_function('twostep_up', None, 'title', Ni_58Co())
 # plot_function('twostep_kp', None, r'Activity curve for $^{nat}$Ni(d,x)$^{56}Co$', Ni_56Co_old(), Ni_56Ni())
 #plot_function('single', None, r'Activity curve for $^{nat}$Ni(d,x)$^{55}$Co', Ni_55Co())
@@ -337,7 +372,7 @@ def A0_double_decay_unknown_parent(filename_activity_time, lambda_parent, lambda
     def non_direct_decay(time, A0_parent_guess, A0_daughter_guess):  #if there are no gammas to be detected from parent
         A_est = A0_parent_guess*lambda_daughter / (lambda_parent-lambda_daughter) *( np.exp(-lambda_daughter*time)-np.exp(-lambda_parent*time)) + A0_daughter_guess*np.exp(-lambda_daughter *time)
         return A_est
-
+# 
 
 
 
@@ -351,6 +386,11 @@ def A0_double_decay_unknown_parent(filename_activity_time, lambda_parent, lambda
     A0_estimated_ground_state = popt[1]
     sigma_A0_estimated = full_width/2 #for 1: isomer, 2: gs of 58Co
     A0_estimated = non_direct_decay(0, popt[0], popt[1])  #58Co  #for 1: isomer, 2: gs of 58Co
+
+
+
+
+
 
     def uncertainty_cov_A0(popt,pcov, lambda_parent, lambda_daughter, time):
         #Analytical derivations. can also use numerical
@@ -647,6 +687,11 @@ def two_step_up_data(func, reaction_parent, reaction_daughter, n, Save_csv=False
     A0_parent = np.zeros(n); sigma_A0_parent = np.zeros(n)
     A0_daughter = np.zeros(n); sigma_A0_daughter = np.zeros(n)
     for i, e in enumerate(list):
+        
+
+        
+
+        # THIS IS THE ONE WHICH HAVE BEEN USED!!!!!!!
         A0_estimated_parent, sigma_A0_estimated_parent, A0_estimated_daughter, sigma_A0_estimated_daughter = A0_double_decay_unknown_parent(e, lambda_parent, lambda_daughter, makePlot=True)
         A0_parent[i] = A0_estimated_parent
         sigma_A0_parent[i] = sigma_A0_estimated_parent
@@ -673,7 +718,7 @@ def two_step_up_data(func, reaction_parent, reaction_daughter, n, Save_csv=False
 #single_decay_data(Cu_62Zn(), "Cu_62Zn", 10, Save_csv=True)
 #single_decay_data(Cu_63Zn(), "Cu_63Zn", 10, Save_csv=True)
 #single_decay_data(Cu_65Zn(), "Cu_65Zn", 10, Save_csv=True)
-#single_decay_data(Ni_61Cu(), "Ni_61Cu", 10, Save_csv=True)
+single_decay_data(Ni_61Cu(), "Ni_61Cu", 10, Save_csv=True)
 #two_step_kp_data(Ni_56Ni(), Ni_56Co(), "Ni_56Co", 10, Save_csv= True)
 #two_step_up_npat(Ni_58Co(), "Ni_58mCo_npat", "Ni_58Co_npat", 10, '58COm', '58COg', Save_csv=True)
 #two_step_up_npat(Ni_56Co(return_two_list=True), "Ni_56Ni_npat", "Ni_56Co_npat", 10, '56NI', '56CO', Save_csv=True)
@@ -713,7 +758,7 @@ np.savetxt("{}.csv".format(save_results_to +  'Ni_56Co'), np.array((A0, sigma_A0
 #single_decay_data(Ni_61Cu(), "Ni_61Cu", 10, Save_csv=True)
 #single_decay_data(Cu_65Zn(), "Cu_65Zn", 10, Save_csv=True)
 #two_step_kp_data(Ni_56Ni(), Ni_56Co(), "Ni_56Co", 10, Save_csv= True)
-#two_step_up_data(Ni_58Co(), "Ni_58mCo", "Ni_58Co", 10, Save_csv = True)
+# two_step_up_data(Ni_58Co(), "Ni_58mCo", "Ni_58Co", 10, Save_csv = True)
 #two_step_up_data(Cu_52Mn(), "Cu_52mMn", "Cu_52Mn", 10, Save_csv = True)
 #single_decay_data(Fe_56Co(), "Fe_56Co", 3, Save_csv=True)
 
@@ -774,13 +819,15 @@ np.savetxt("{}.csv".format(save_results_to +  'Ni_56Co'), np.array((A0, sigma_A0
 #single_decay_data(Ni_52gMn(), "Ni_52gMn", 10, Save_csv=True)   Removed 1434 from matlab, since shared with 52mMn. This way maybe we can get independent and cumulative measurement
 
 
-#single_decay_data(Ni_54Mn(), "Ni_54Mn", 10, Save_csv=True)      #done
+# single_decay_data(Ni_54Mn(), "Ni_54Mn", 10, Save_csv=True)      #done
+
+# single_decay_data(Ni_61Co(), "Ni_61Co", 10, Save_csv=True)      #done
 
 #single_decay_data(Ni_59Fe(), "Ni_59Fe", 10, Save_csv=True)      #only in foil number 1, 3, 5
 
 #single_decay_data(Ni_60Cu(), "Ni_60Cu", 10, Save_csv=True)      #EXCELLENT
 
-#single_decay_data(Ni_60Cu(), "Ni_60Cu", 10, Save_csv=True)      #EXCELLENT
+# single_decay_data(Ni_60Cu(), "Ni_60Cu", 10, Save_csv=True)      #EXCELLENT
 
 #single_decay_data(Ni_60mCo(), "Ni_60mCo", 10, Save_csv=True)     NOT PRODUCED 
 
@@ -788,7 +835,7 @@ np.savetxt("{}.csv".format(save_results_to +  'Ni_56Co'), np.array((A0, sigma_A0
 #single_decay_data(Ni_60Co(), "Ni_60Co", 10, Save_csv=True)     #Report cumulative cross section with isomer + gs
 
 #single_decay_data(Ni_56Ni(), "Ni_56Ni", 10, Save_csv=True)     #not produced?
-#single_decay_data(Ni_65Ni(), "Ni_65Ni", 10, Save_csv=True)     #not produced?
+# single_decay_data(Ni_65Ni(), "Ni_65Ni", 10, Save_csv=True)     #not produced?
 #single_decay_data(Ni_55Co(), "Ni_55Co", 10, Save_csv=True)     #not produced?
 # single_decay_data(Ni_56Mn(), "Ni_56Mn", 10, Save_csv=True)     #not produced?
 #single_decay_data(Ni_57Ni(), "Ni_57Ni", 10, Save_csv=True)     #not produced?
@@ -797,18 +844,21 @@ np.savetxt("{}.csv".format(save_results_to +  'Ni_56Co'), np.array((A0, sigma_A0
 ###Fe
 
 #single_decay_data(Fe_48V(), "Fe_48V", 3, Save_csv=True)     #EXCELLENT, but could not save fig..
-#single_decay_data(Fe_51Mn(), "Fe_51Mn", 3, Save_csv=True)     # not produced?
-#single_decay_data(Fe_51Cr(), "Fe_51Cr", 3, Save_csv=True)     #EXCELLENT
+# single_decay_data(Fe_51Mn(), "Fe_51Mn", 3, Save_csv=True)     # not produced?
+# single_decay_data(Fe_51Cr(), "Fe_51Cr", 3, Save_csv=False)     #EXCELLENT
 
 #single_decay_data(Fe_52mMn(), "Fe_52mMn", 3, Save_csv=True)     #not produced?
 #single_decay_data(Fe_52Mn(), "Fe_52Mn", 3, Save_csv=True)     #EXCELLENT
-#single_decay_data(Fe_53Fe(), "Fe_53Fe", 3, Save_csv=True)     #EXCELLENT
+# single_decay_data(Fe_53Fe(), "Fe_53Fe", 3, Save_csv=False)     #EXCELLENT
 
 #single_decay_data(Fe_54Mn(), "Fe_54Mn", 3, Save_csv=True)     #EXCELLENT
+# single_decay_data(Fe_56Mn(), "Fe_56Mn", 3, Save_csv=True)     #EXCELLENT
 #single_decay_data(Fe_55Co(), "Fe_55Co", 3, Save_csv=True)     #EXCELLENT
 
 #single_decay_data(Fe_57Co(), "Fe_57Co", 3, Save_csv=True)     #EXCELLENT
-#single_decay_data(Fe_58Co(), "Fe_58Co", 3, Save_csv=True)     #EXCELLENT
+# single_decay_data(Fe_58Co(), "Fe_58Co", 3, Save_csv=True)     #EXCELLENT
+
+# two_step_up_data(Fe_58Co(), "Fe_58mCo", "Fe_58Co", 3, Save_csv = True)
 
 #single_decay_data(Fe_59Fe(), "Fe_59Fe", 3, Save_csv=True)     #EXCELLENT
 
@@ -826,7 +876,7 @@ np.savetxt("{}.csv".format(save_results_to +  'Ni_56Co'), np.array((A0, sigma_A0
 #single_decay_data(Ir_188Pt(), "Ir_188Pt", 10, Save_csv=True)    #USED
 #two_step_kp_data(Ir_188Pt(), Ir_188Ir(), "Ir_188Ir", 10, Save_csv= False)   #ok
 #two_step_up_npat(Ir_188Ir(return_two_list=True), "Ir_188Pt", "Ir_188Ir", 10, '188PT', '188IR', Save_csv=True)
-#single_decay_data(Ir_188Ir(), "Ir_188Ir", 10, Save_csv=False)    #USED
+# single_decay_data(Ir_188Ir(), "Ir_188Ir", 10, Save_csv=False)    #USED
 
 #single_decay_data(Ir_188mRe(), "Ir_188mRe", 10, Save_csv=True)    #WEIRD, prob not produced?
 #single_decay_data(Ir_188Re(), "Ir_188Re", 10, Save_csv=True)    #ok
@@ -837,7 +887,7 @@ np.savetxt("{}.csv".format(save_results_to +  'Ni_56Co'), np.array((A0, sigma_A0
 #single_decay_data(Ir_189Pt(), "Ir_189Pt", 10, Save_csv=True)    #EXCELLENT
 
 #two_step_kp_data(Ir_189Pt(), Ir_189Ir(), "Ir_189Ir", 10, Save_csv= True)   #try single instead
-#single_decay_data(Ir_189Ir(), "Ir_189Ir", 10, Save_csv=True)    #works but gives wrong result. 
+# single_decay_data(Ir_189Ir(), "Ir_189Ir", 10, Save_csv=True)    #works but gives wrong result. 
 #try: npat
 #two_step_up_npat(Ir_189Ir(), "Ir_189Pt_npat", "Ir_189Ir_npat", 10, '189PT', '189IR', Save_csv=False)   #crashes after first plot.
 
@@ -849,17 +899,17 @@ np.savetxt("{}.csv".format(save_results_to +  'Ni_56Co'), np.array((A0, sigma_A0
 #single_decay_data(Ir_190Re(), "Ir_190Re", 10, Save_csv=True)    #must go through false peaks
 
 #single_decay_data(Ir_190Ir(), "Ir_190Ir", 10, Save_csv=True)  
-#single_decay_data(Ir_190m2Ir(), "Ir_190m2Ir", 10, Save_csv=True)  
+# single_decay_data(Ir_190m2Ir(), "Ir_190m2Ir", 10, Save_csv=True)  
 
 #single_decay_data(Ir_191Pt(), "Ir_191Pt", 10, Save_csv=True)    #two gamma lines, does not agree
-#single_decay_data(Ir_192Ir(), "Ir_192Ir", 10, Save_csv=False)    #must go through false peaks
+# single_decay_data(Ir_192Ir(), "Ir_192Ir", 10, Save_csv=True)    #must go through false peaks
 #single_decay_data(Ir_191Os(), "Ir_191Os", 10, Save_csv=True)    
 
 #single_decay_data(Ir_193Os(), "Ir_193Os", 10, Save_csv=True)    
 
 ###    single_decay_data(Ir_193mPt(), "Ir_193mPt", 10, Save_csv=True)   
-#single_decay_data(Ir_194m2Ir(), "Ir_194m2Ir", 10, Save_csv=True)    #ok, must go through false peaks
+# single_decay_data(Ir_194m2Ir(), "Ir_194m2Ir", 10, Save_csv=True)    #ok, must go through false peaks
 #two_step_kp_data(Ir_194m2Ir(), Ir_194Ir(), "Ir_194Ir", 10, Save_csv= True)  
-
+# single_decay_data(Ir_194Ir(), "Ir_194Ir", 10, Save_csv=True) 
 
 #HH

@@ -708,6 +708,7 @@ class SimCrossSectionData:
 			f_191Ir = self.path + '/../EMPIRE/' + foil + '/191Ir/' + Z  + '-' +  product + '-'  + A  + '_empire.txt'
 			f_193Ir = self.path + '/../EMPIRE/' + foil + '/193Ir/' + Z  + '-' +  product + '-'  + A  + '_empire.txt'
 			#print(f_191Ir)
+			#print(f_191Ir)
 			#print(f_193Ir)
 			#print(f_191Ir)
 			if os.path.isfile(f_191Ir): 
@@ -716,6 +717,7 @@ class SimCrossSectionData:
 				#print(E)
 			else: 
 				#print("Heelo")
+				print("EMPIRE does not plot for 191Ir")
 				CS_191Ir = 0
 				E_191Ir =  0 #np.genfromtxt(f_191Ir, delimiter=' ', usecols=[0],skip_header=5)
 
@@ -724,10 +726,12 @@ class SimCrossSectionData:
 				CS_193Ir = np.genfromtxt(f_193Ir, delimiter='\t', usecols=[1])
 				E = np.genfromtxt(f_193Ir, delimiter='\t', usecols=[0])
 			else: 
+				print("EMPIRE does not plot for 193Ir")
 				CS_193Ir = 0
 				E_193Ir = 0#np.genfromtxt(f_193Ir, delimiter=' ', usecols=[0],skip_header=5)
 			CS = CS_191Ir*abund_191Ir + CS_193Ir*abund_193Ir
-	
+			# print(CS)
+			# print(E)
 		elif foil == 'Ni':
 			abund_58Ni = 0.68077; abund_60Ni = 0.26233; abund_61Ni = 0.011399; abund_62Ni = 0.036346; abund_64Ni = 0.009255;
 
@@ -737,12 +741,13 @@ class SimCrossSectionData:
 			f_61Ni = self.path + '/../EMPIRE/' + foil + '/61Ni/' + Z  + '-' +  product + '-'  + A  + '_empire.txt'
 			f_62Ni = self.path + '/../EMPIRE/' + foil + '/62Ni/' + Z  + '-' +  product + '-'  + A  + '_empire.txt'
 			f_64Ni = self.path + '/../EMPIRE/' + foil + '/64Ni/' + Z  + '-' +  product + '-'  + A  + '_empire.txt'
-			print(f_58Ni)
+			#print(f_58Ni)
 			if os.path.isfile(f_58Ni): 
 				CS_58Ni = np.genfromtxt(f_58Ni, delimiter='\t', usecols=[1])
 				E_58Ni = np.genfromtxt(f_58Ni, delimiter='\t', usecols=[0])
 				E = E_58Ni
 			else: 
+				print("EMPIRE does not plot for 58Ni")
 				CS_58Ni = 0
 				E_58Ni =  0 #np.genfromtxt(f_191Ir, delimiter=' ', usecols=[0],skip_header=5)
 
@@ -754,6 +759,7 @@ class SimCrossSectionData:
 				E = E_60Ni
 			else: 
 				#print("Ni 58 file does not exist")
+				print("EMPIRE does not plot for 60Ni")
 				CS_60Ni = 0
 				E_60Ni =  0 #np.genfromtxt(f_191Ir, delimiter=' ', usecols=[0],skip_header=5)
 
@@ -762,6 +768,7 @@ class SimCrossSectionData:
 				E_61Ni = np.genfromtxt(f_61Ni, delimiter='\t', usecols=[0])
 				E = E_61Ni
 			else: 
+				print("EMPIRE does not plot for 61Ni")
 				CS_61Ni = 0
 				E_61Ni =  0 #np.genfromtxt(f_191Ir, delimiter=' ', usecols=[0],skip_header=5)
 
@@ -773,6 +780,7 @@ class SimCrossSectionData:
 				E = E_62Ni
 			else: 
 				#print("Ni 58 file does not exist")
+				print("EMPIRE does not plot for 62Ni")
 				CS_62Ni = 0
 				E_62Ni =  0 #np.genfromtxt(f_191Ir, delimiter=' ', usecols=[0],skip_header=5)
 			if os.path.isfile(f_64Ni): 
@@ -783,6 +791,7 @@ class SimCrossSectionData:
 				E = E_64Ni
 			else: 
 				#print("Ni 58 file does not exist")
+				print("EMPIRE does not plot for 64Ni")
 				CS_64Ni = 0
 				E_64Ni =  0 #np.genfromtxt(f_191Ir, delimiter=' ', usecols=[0],skip_header=5)
 
@@ -802,6 +811,7 @@ class SimCrossSectionData:
 				E = np.genfromtxt(f_63Cu, delimiter='\t', usecols=[0])
 			else: 
 				#print("Cu 63 file does not exist")
+				print("EMPIRE does not plot for 63Cu")
 				CS_63Cu = 0
 				E_63Cu =  0 #np.genfromtxt(f_191Ir, delimiter=' ', usecols=[0],skip_header=5)
 
@@ -811,7 +821,8 @@ class SimCrossSectionData:
 				CS_65Cu = np.genfromtxt(f_65Cu, delimiter='\t', usecols=[1])
 				E = np.genfromtxt(f_65Cu, delimiter='\t', usecols=[0])
 			else: 
-				print("Cu 65 file does not exist")
+				#print("Cu 65 file does not exist")
+				print("EMPIRE does not plot for 65Cu")
 				CS_65Cu = 0
 				E_65Cu =  0 #np.genfromtxt(f_191Ir, delimiter=' ', usecols=[0],skip_header=5)
 
@@ -837,6 +848,7 @@ class SimCrossSectionData:
 				E = np.genfromtxt(f_54Fe, delimiter='\t', usecols=[0])
 			else: 
 				#print("Fe 54 file does not exist")
+				print("EMPIRE does not plot for 54Fe")
 				CS_54Fe = 0
 				E_54Fe =  0 #np.genfromtxt(f_191Ir, delimiter=' ', usecols=[0],skip_header=5)
 
@@ -847,6 +859,7 @@ class SimCrossSectionData:
 				E = np.genfromtxt(f_56Fe, delimiter='\t', usecols=[0])
 			else: 
 				#print("Fe 56 file does not exist")
+				print("EMPIRE does not plot for 56Fe")
 				CS_56Fe = 0
 				E_56Fe =  0 #np.genfromtxt(f_191Ir, delimiter=' ', usecols=[0],skip_header=5)
 
@@ -857,6 +870,7 @@ class SimCrossSectionData:
 				E = np.genfromtxt(f_57Fe, delimiter='\t', usecols=[0])
 			else: 
 				#print("Fe 57 file does not exist")
+				print("EMPIRE does not plot for 57Fe")
 				CS_57Fe = 0
 				E_57Fe =  0 #np.genfromtxt(f_191Ir, delimiter=' ', usecols=[0],skip_header=5)
 
@@ -867,6 +881,7 @@ class SimCrossSectionData:
 				E = np.genfromtxt(f_58Fe, delimiter='\t', usecols=[0])
 			else: 
 				#print("Fe 58 file does not exist")
+				print("EMPIRE does not plot for 58Fe")
 				CS_58Fe = 0
 				E_58Fe =  0 #np.genfromtxt(f_191Ir, delimiter=' ', usecols=[0],skip_header=5)
 
@@ -904,11 +919,12 @@ class SimCrossSectionData:
 			abund_191Ir = 0.373 ; abund_193Ir = 0.627
 			f_191Ir = self.path + '/../Coh/IrridiumCoH/' + foil + '/191Ir/' + Z  + '-' + A + product + '_coh.txt'
 			f_193Ir = self.path + '/../Coh/IrridiumCoH/' + foil + '/193Ir/' + Z  + '-' + A + product + '_coh.txt'
-			print(f_191Ir)
+			#print(f_191Ir)
 			if os.path.isfile(f_191Ir): 
 				CS_191Ir = np.genfromtxt(f_191Ir, delimiter='\t', usecols=[1])
 				E = np.genfromtxt(f_191Ir, delimiter='\t', usecols=[0])
 			else: 
+				print("Coh file not found for 191Ir")
 				CS_191Ir = 0
 				E_191Ir =  0 #np.genfromtxt(f_191Ir, delimiter=' ', usecols=[0],skip_header=5)
 
@@ -917,6 +933,7 @@ class SimCrossSectionData:
 				CS_193Ir = np.genfromtxt(f_193Ir, delimiter='\t', usecols=[1])
 				E = np.genfromtxt(f_193Ir, delimiter='\t', usecols=[0])
 			else: 
+				print("Coh file not found for 193Ir")
 				CS_193Ir = 0
 				E_193Ir = 0#np.genfromtxt(f_193Ir, delimiter=' ', usecols=[0],skip_header=5)
 			CS = CS_191Ir*abund_191Ir + CS_193Ir*abund_193Ir
@@ -936,6 +953,7 @@ class SimCrossSectionData:
 				E_58Ni = np.genfromtxt(f_58Ni, delimiter='\t', usecols=[0])
 				E = E_58Ni
 			else: 
+				print("Coh file not found for 58Ni")
 				CS_58Ni = 0
 				E_58Ni =  0 #np.genfromtxt(f_191Ir, delimiter=' ', usecols=[0],skip_header=5)
 
@@ -947,6 +965,7 @@ class SimCrossSectionData:
 				E = E_60Ni
 			else: 
 				#print("Ni 58 file does not exist")
+				print("Coh file not found for 60Ni")
 				CS_60Ni = 0
 				E_60Ni =  0 #np.genfromtxt(f_191Ir, delimiter=' ', usecols=[0],skip_header=5)
 
@@ -955,6 +974,7 @@ class SimCrossSectionData:
 				E_61Ni = np.genfromtxt(f_61Ni, delimiter='\t', usecols=[0])
 				E = E_61Ni
 			else: 
+				print("Coh file not found for 61Ni")
 				CS_61Ni = 0
 				E_61Ni =  0 #np.genfromtxt(f_191Ir, delimiter=' ', usecols=[0],skip_header=5)
 
@@ -966,6 +986,7 @@ class SimCrossSectionData:
 				E = E_62Ni
 			else: 
 				#print("Ni 58 file does not exist")
+				print("Coh file not found for 62Ni")
 				CS_62Ni = 0
 				E_62Ni =  0 #np.genfromtxt(f_191Ir, delimiter=' ', usecols=[0],skip_header=5)
 			if os.path.isfile(f_64Ni): 
@@ -976,6 +997,7 @@ class SimCrossSectionData:
 				E = E_64Ni
 			else: 
 				#print("Ni 58 file does not exist")
+				print("Coh file not found for 64Ni")
 				CS_64Ni = 0
 				E_64Ni =  0 #np.genfromtxt(f_191Ir, delimiter=' ', usecols=[0],skip_header=5)
 
@@ -995,6 +1017,7 @@ class SimCrossSectionData:
 				E = np.genfromtxt(f_63Cu, delimiter='\t', usecols=[0])
 			else: 
 				#print("Cu 63 file does not exist")
+				print("Coh file not found for 63Cu")
 				CS_63Cu = 0
 				E_63Cu =  0 #np.genfromtxt(f_191Ir, delimiter=' ', usecols=[0],skip_header=5)
 
@@ -1004,7 +1027,8 @@ class SimCrossSectionData:
 				CS_65Cu = np.genfromtxt(f_65Cu, delimiter='\t', usecols=[1])
 				E = np.genfromtxt(f_65Cu, delimiter='\t', usecols=[0])
 			else: 
-				print("Cu 65 file does not exist")
+				# print("Cu 65 file does not exist")
+				print("Coh file not found for 65Cu")
 				CS_65Cu = 0
 				E_65Cu =  0 #np.genfromtxt(f_191Ir, delimiter=' ', usecols=[0],skip_header=5)
 
@@ -1030,6 +1054,7 @@ class SimCrossSectionData:
 				E = np.genfromtxt(f_54Fe, delimiter='\t', usecols=[0])
 			else: 
 				#print("Fe 54 file does not exist")
+				print("Coh file not found for 54Fe")
 				CS_54Fe = 0
 				E_54Fe =  0 #np.genfromtxt(f_191Ir, delimiter=' ', usecols=[0],skip_header=5)
 
@@ -1040,6 +1065,7 @@ class SimCrossSectionData:
 				E = np.genfromtxt(f_56Fe, delimiter='\t', usecols=[0])
 			else: 
 				#print("Fe 56 file does not exist")
+				print("Coh file not found for 56Fe")
 				CS_56Fe = 0
 				E_56Fe =  0 #np.genfromtxt(f_191Ir, delimiter=' ', usecols=[0],skip_header=5)
 
@@ -1050,6 +1076,7 @@ class SimCrossSectionData:
 				E = np.genfromtxt(f_57Fe, delimiter='\t', usecols=[0])
 			else: 
 				#print("Fe 57 file does not exist")
+				print("Coh file not found for 57Fe")
 				CS_57Fe = 0
 				E_57Fe =  0 #np.genfromtxt(f_191Ir, delimiter=' ', usecols=[0],skip_header=5)
 
@@ -1060,6 +1087,7 @@ class SimCrossSectionData:
 				E = np.genfromtxt(f_58Fe, delimiter='\t', usecols=[0])
 			else: 
 				#print("Fe 58 file does not exist")
+				print("Coh file not found for 58Fe")
 				CS_58Fe = 0
 				E_58Fe =  0 #np.genfromtxt(f_191Ir, delimiter=' ', usecols=[0],skip_header=5)
 
@@ -1104,7 +1132,7 @@ class SimCrossSectionData:
 
 		#if os.
 		if os.path.isfile(filename): 
-
+			#print(filename)
 			#print("file exists")
 
 			with open(filename) as f:
@@ -1132,16 +1160,36 @@ class SimCrossSectionData:
 				E = []; dE=[]; CS = []; dCS=[]; author=[]
 				#print(len(content))
 				for ind in range(len(content)):
+					
 					string= content[ind]
 					#print(string)
 					string = (string.lstrip()).split()
-					#print(string[0])
+					#print(string[5])
+
+					#if string[5]=='1995,Zhao':
+					#	author.append(string[5])
+					#	print("YES")
+					#print(author)
 					#print(ind)
+					#print(string)
 					E.append(float(string[0]))
 					dE.append(float(string[1]))
 					CS.append(float(string[2])*1e3) # in mb
 					dCS.append(float(string[3])*1e3) # in mb
-					author.append(string[5]) #index 4 is equal to #
+					#print(string[5])
+					try:	
+						author.append(string[5]) #index 4 is equal to #
+						#print("Should add ", string[5])
+						#if author[ind]==string[5]:
+						#	print("Success")
+						#else:
+							#print("Not adding")
+					except:
+						print(string[5], "not included in exfor data")
+						pass
+						#print("did not add ", string[5])
+			#print("**")
+			#print(author)
 			#print(author)
 			author_new  = []
 			for auth in author:
@@ -1157,6 +1205,82 @@ class SimCrossSectionData:
 
 
 	def multiple_reactions(self):
+
+		
+		colors = ['mediumpurple', 'cyan', 'palevioletred', 'darkorange', 'forestgreen', 'orchid', 'dodgerblue', 'navy', 'crimson', 'indianred', 'blue', 'black', 'yellow', 'green', 'red']
+
+		E_194Pt, CS_194Pt = self.TALYS('Ir', '194', '078', file_ending='.tot')
+		#E_193mPt, CS_193mPt = self.TALYS('Ir', '193', '078', file_ending='.L05')
+		E_193Pt, CS_193Pt = self.TALYS('Ir', '193', '078', file_ending='.tot')
+		E_192Pt, CS_192Pt = self.TALYS('Ir', '192', '078', file_ending='.tot')
+		E_191Pt, CS_191Pt = self.Tendl('Ir', '191', '078', file_ending='.tot')
+		E_190Pt, CS_190Pt = self.TALYS('Ir', '190', '078', file_ending='.tot')
+		E_189Pt, CS_189Pt = self.Tendl('Ir', '189', '078', file_ending='.tot')
+		E_188Pt, CS_188Pt = self.TALYS('Ir', '188', '078', file_ending='.tot')
+
+		E_188Ir, CS_188Ir = self.TALYS('Ir', '188', '077', file_ending='.tot')
+		E_189Ir, CS_189Ir = self.TALYS('Ir', '189', '077', file_ending='.tot')
+		E_190Ir, CS_190Ir = self.TALYS('Ir', '190', '077', file_ending='.tot')
+		E_191Ir, CS_191Ir = self.TALYS('Ir', '191', '077', file_ending='.tot')
+		E_192Ir, CS_192Ir = self.TALYS('Ir', '192', '077', file_ending='.tot')
+		E_193Ir, CS_193Ir = self.TALYS('Ir', '193', '077', file_ending='.tot')
+		E_194Ir, CS_194Ir = self.TALYS('Ir', '194', '077', file_ending='.tot')
+
+		#for i in colors:
+
+		for i in range(len(E_188Ir)):
+			print(CS_194Pt[i]+CS_193Pt[i]+CS_192Pt[i]+CS_191Pt[i]+CS_190Pt[i]+CS_189Pt[i]+CS_188Pt[i]+CS_194Ir[i]+CS_193Ir[i]+CS_192Ir[i]+CS_191Ir[i]+CS_190Ir[i]+CS_189Ir[i]+CS_188Ir[i])
+
+			print((CS_194Pt[i]+CS_193Pt[i]+CS_192Pt[i]+CS_191Pt[i]+CS_190Pt[i]+CS_189Pt[i]+CS_188Pt[i]+CS_194Ir[i]+CS_193Ir[i]+CS_192Ir[i]+CS_191Ir[i]+CS_190Ir[i]+CS_189Ir[i]+CS_188Ir[i])/14)
+			
+		plt.plot(E_194Pt, CS_194Pt, label=r"$^{194}$Pt", color=colors[0])
+		plt.plot(E_193Pt, CS_193Pt, label=r"$^{193m}$Pt", color=colors[1])
+		plt.plot(E_193Pt, CS_193Pt, label=r"$^{193m}$Pt", color=colors[2])
+		plt.plot(E_192Pt, CS_192Pt, label=r"$^{192}$Pt", color=colors[3])
+		plt.plot(E_191Pt, CS_191Pt, label=r"$^{191}$Pt", color=colors[4])
+		plt.plot(E_190Pt, CS_190Pt, label=r"$^{190}$Pt", color=colors[5])
+		plt.plot(E_189Pt, CS_189Pt, label=r"$^{189}$Pt", color=colors[6])
+		plt.plot(E_188Pt, CS_188Pt, label=r"$^{188}$Pt", color=colors[7])
+		"""
+		plt.plot(E_194Ir, CS_194Ir, label=r"$^{194}$Ir", color=colors[8])
+		plt.plot(E_193Ir, CS_193Ir, label=r"$^{193}$Ir", color=colors[9])
+		plt.plot(E_192Ir, CS_192Ir, label=r"$^{192}$Ir", color=colors[10])
+		plt.plot(E_191Ir, CS_191Ir, label=r"$^{191}$Ir", color=colors[11])
+		plt.plot(E_190Ir, CS_190Ir, label=r"$^{190}$Ir", color=colors[12])
+		plt.plot(E_189Ir, CS_189Ir, label=r"$^{189}$Ir", color=colors[13])
+		plt.plot(E_188Ir, CS_188Ir, label=r"$^{188}$Ir", color=colors[14])
+		"""
+
+		"""
+		plt.text(12, 170, r'$^{193}$Ir(d,2n)$^{193m}$Pt', color='orange', fontsize=9)
+		
+		plt.text(10, 300, r'$^{191}$Ir(d,2n)$^{191}$Pt', color='red', fontsize=9)
+		plt.text(25, 700, r'$^{193}$Ir(d,4n)$^{191}$Pt', color='red', fontsize=9)
+
+		plt.text(15, 500, r'$^{193}$Ir(d,3n)$^{192}$Pt', color='green', fontsize=9)
+
+		plt.text(9, 40, r'$^{191}$Ir(d,n)$^{192}$Pt', color='green', fontsize=9)
+
+
+		plt.text(17, 310, r'$^{191}$Ir(d,3n)$^{190}$Pt', color='purple', fontsize=9)
+		plt.text(30, 450, r'$^{191}$Ir(d,5n)$^{190}$Pt', color='purple', fontsize=9)
+
+		plt.text(9, 60, r'$^{193}$Ir(d,n)$^{194}$Pt', color='blue', fontsize=9)
+
+		plt.text(25, 400, r'$^{191}$Ir(d,4n)$^{189}$Pt', color='brown', fontsize=9) 
+		plt.text(33, 200, r'$^{191}$Ir(d,5n)$^{188}$Pt', color='pink', fontsize=9) 
+		"""
+
+		#plt.title(r"Excitation functionsfor isotopes of Pt from $^\text{nat}$Ir(d,x) (TALYS-1.9)")
+		plt.title(r'Excitation functions for isotopes of Pt from $^{nat}$Ir(d,x) (TALYS-1.9)')
+		plt.xlabel('Deuteron beam energy, MeV')
+		plt.ylabel('Cross section, mb')
+		plt.legend()
+		plt.show()
+
+
+
+		"""
 		E_193Pt, CS_193Pt = self.Tendl('Ir', '193', '078', file_ending='.L05')
 		#E_193Pt, CS_193Pt = self.TALYS('Ir', '193', '078', file_ending='.L05')
 		E_191Pt, CS_191Pt = self.Tendl('Ir', '191', '078', file_ending='.tot')
@@ -1185,19 +1309,60 @@ class SimCrossSectionData:
 		plt.legend()
 		plt.savefig('reactionchannels_pt.png', dpi=300)
 		plt.show()
+		"""
+		"""
+		E_191Pt, CS_191Pt = self.Tendl('Ir', '191', '078', file_ending='.tot')
+		
+		E_189Pt, CS_189Pt = self.Tendl('Ir', '189', '078', file_ending='.tot')
+		E_189Ir, CS_189Ir = self.Tendl('Ir', '189', '077', file_ending='.tot')
+	
+		E_188Pt, CS_188Pt = self.Tendl('Ir', '188', '078', file_ending='.tot')
+		E_188Ir, CS_188Ir = self.Tendl('Ir', '188', '077', file_ending='.tot')
 
+		plt.plot(E_191Pt, CS_191Pt, label='191Pt')
+		plt.plot(E_189Pt, CS_189Pt, label='189Pt')
+		plt.plot(E_189Ir, CS_189Ir, label='189Ir')
+		plt.plot(E_188Pt, CS_188Pt, label='188Pt')
+		plt.plot(E_188Ir, CS_188Ir, label='188Ir')
+		plt.legend()
+		plt.show()
+		"""
 
 	def Cumulative_CS(self):
 		pass 
 
 		
 
-
+# SimCS = SimCrossSectionData()
+# # E, CS = SimCS.ALICE('Fe', '51', '25', 4)
+# E, CS= SimCS.TALYS('Fe', '051', '025')
+# # E, CS= SimCS.TALYS('Fe', '052', '026')
+# plt.plot(E, CS)
+# plt.show()
+#SimCS.multiple_reactions()
 #print(path)
 
+"""
 
-SimCS = SimCrossSectionData()
 
+# E, dE, CS, dCS, author= SimCS.EXFOR(reaction='Fe_56Co', independent=True )
+E, dE, CS, dCS, author= SimCS.EXFOR(reaction='Fe_57Co', independent=True )
+unique_author=[]
+for a in author:
+	#print(a)
+	if a not in unique_author:
+		#print("add*")
+		unique_author.append(a)
+#print(unique_author)
+#print(len(author))
+#print(author)
+
+#plt.plot(E, CS, '.')
+#plt.show()
+"""
+
+#plt.plot(E,CS, '.')
+#plt.show()
 # E,CS= SimCS.EMPIRE('Ni', '58', '27', 'Ni_58Co', isomer='M')
 
 # plt.plot(E,CS)

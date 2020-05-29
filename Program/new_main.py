@@ -11,6 +11,8 @@ from foil_info import *
 
 from simulated_CrossSectionData import SimCrossSectionData
 
+from scipy import interpolate
+
 
 
 f_list_FilesNames = 'ziegler_FilesNames.csv'
@@ -38,11 +40,11 @@ good_files=['B_+1_D_+1,25', 'B_+1,25_D_+2', 'B_+1,5_D_+2,75', 'B_+2,25_D_+5','B_
 #index = find_index(names, 'B_+0,5_D_+1,25')
 index = find_index(names, 'B_+2_D_+4,25')  # looks good but downside: weird ziegler flux distribution
 #index = find_index(names, 'B_+0,75_D_-2,75')
-# index = find_index(names, 'B_0_D_0')
+# index =  find_index(names, 'B_0_D_0')
 #index = find_index(names, good_files[-2])
 #index= find_index(names, good_files[0])
-
-
+index_old = find_index(names, 'B_0_D_0')
+# index_old = 20
 print(names[index])
 name = names[index]
 
@@ -92,32 +94,108 @@ for i in good_files:
 
 ### Ziegler filenames
 ziegler_filename = './' + files[index] 
+ziegler_filename_old = './' + files[index_old] 
 
 WABC_file = 'WABC_'+ ziegler_filename[10:-11] + '.csv'
+WABC_file_old = 'WABC_'+ ziegler_filename_old[10:-11] + '.csv'
+# print(WABC_file_old)
+"""
+E_pt = [30.65, 28.40, 26.03, 23.54, 21.38, 19.03, 16.43, 13.51, 10.09, 5.63]
+rel_unc = [2.758681103660816536e+00, 2.809093032396464018e+00, 2.714226822684477458e+00, 3.104415177223454059e+00, 3.071366146293604160e+00,3.297698527860441597e+00,3.130010352836921861e+00,3.199428816996481739e+00,3.947721918770076943e+00,5.465334907100279693e+00]
+plt.plot(E_pt, rel_unc)
+plt.title("Relative uncertainty in the weighted average beam current")
+plt.xlabel("Deuteron energy in irridium foils (MeV)")
+plt.ylabel("Percent uncertainty (%)")
+plt.show()
+"""
+#rel_unc_BC = np.genfromtxt(WABC_file, usecols=[3], skip_header=1)
+#print(rel_unc_BC)
+
 
 #print(WABC_file)
 # BC.CurrentPlot_compartment(names[index], WABC=WABC_file, title='After variance minimization')
-# BC.CurrentPlot_compartment(names[index], WABC=WABC_file, title='Before variance minimization')
+# BC.CurrentPlot_compartment(names[index_old], WABC=WABC_file_old, title='Before variance minimization')
 #BC.plot_distribution('all', name)
 #BC.plot_distribution('all', name)
-#BC.variance_minimization(3, name, include_56Co=True, MakePlot=True)
-#BC.variance_minimization(6, name, include_56Co=True, MakePlot=True)
-#BC.variance_minimization(9, name, include_56Co=True, MakePlot=True)
+# BC.variance_minimization(3, name, include_56Co=True, MakePlot=True)
+# BC.variance_minimization(6, name, include_56Co=True, MakePlot=True)
+# BC.variance_minimization(9, name, include_56Co=True, MakePlot=True)
+
+
+"""
+E_Fe = BC.WABE('Fe')[0]
+E_Ni = BC.WABE('Ni')[0]
+E_Cu = BC.WABE('Cu')[0]
+E_Ir = BC.WABE('Ir')[0]
+rel_unc_BC = [2.758681103660816536e+00, 2.809093032396464018e+00, 2.714226822684477458e+00, 3.104415177223454059e+00, 3.071366146293604160e+00,3.297698527860441597e+00,3.130010352836921861e+00,3.199428816996481739e+00,3.947721918770076943e+00,5.465334907100279693e+00]
+
+#plt.plot(E_Ir, rel_unc_BC, label='Weighted average beam current')
+def interpolation(x,y):	
+	#if isinstance(y, list):
+	#	y.reverse()
+	#else:
+		
+	x=x[::-1]; y = y[::-1]
+	#print(x,y)
+	#x = np.array((x)); y=np.array((y))
+	tck = interpolate.splrep(x, y, s=0)
+
+	x_new = np.linspace(0,33, 100)
+	y_new = interpolate.splev(x_new, tck, der=0)
+
+
+	return x_new, y_new
+
+x_new, y_new = interpolation(E_Ir, rel_unc_BC)
+plt.plot(x_new, y_new,label='Weighted average beam current')
+
+I, dI = BC.calculate_beam_current('Fe', 'Fe_56Co')
+print(dI/I*100)
+#x = E_Fe; y = dI/I*100
+#x_new, y_new = interpolation(x,y)
+#plt.plot(x_new, y_new, label=r'$^{nat}Fe(d,x)^{56}$Co')
+plt.plot(E_Fe, (dI*100/I), '--', label=r'$^{nat}Fe(d,x)^{56}$Co',)
+I, dI = BC.calculate_beam_current('Ni', 'Ni_56Co')
+print(dI/I*100)
+plt.plot(E_Ni, (dI*100/I),'--', label=r'$^{nat}Ni(d,x)^{56}$Co')
+I, dI = BC.calculate_beam_current('Ni', 'Ni_58Co')
+print(dI/I*100)
+plt.plot(E_Ni, (dI*100/I),'--', label=r'$^{nat}Ni(d,x)^{58}$Co')
+I, dI = BC.calculate_beam_current('Ni', 'Ni_61Cu')
+print(dI/I*100)
+plt.plot(E_Ni, (dI*100/I), '--',label=r'$^{nat}Ni(d,x)^{61}$Cu')
+I, dI = BC.calculate_beam_current('Cu', 'Cu_62Zn')
+print(dI/I*100)
+plt.plot(E_Cu, (dI*100/I),'--', label=r'$^{nat}Cu(d,x)^{62}$Zn')
+I, dI = BC.calculate_beam_current('Cu', 'Cu_63Zn')
+print(dI/I*100)
+plt.plot(E_Cu, (dI*100/I),'--', label=r'$^{nat}Cu(d,x)^{63}$Zn')
+I, dI = BC.calculate_beam_current('Cu', 'Cu_65Zn')
+print(dI/I*100)
+plt.plot(E_Cu, (dI*100/I),'--', label=r'$^{nat}Cu(d,x)^{65}$Zn')
+#print(I)
+#print(E_Ni)
+plt.title('Relative uncertainty in each estimated beamcurrent')
+plt.xlabel('Deuteron energy (MeV)')
+plt.ylabel('Relative uncertainty (%)')
+plt.gca().set_ylim(bottom=0, top=50)
+plt.legend(fontsize='small')
+plt.show() 
+
+"""
 
 
 
 
+#MONITOR REACTIONSprint("groundstate: {:.1f}".format(sigma_A0[i]/A0[i]*100))
 
-
-
-#MONITOR REACTIONS
 
 # CS.mon_CS_test(Fe_56Co(), 'Fe', 'Fe_56Co.csv', 3, 'Fe_56Co', names[index], WABC_file)
 # CS.mon_CS_test(Ni_61Cu(), 'Ni', 'Ni_61Cu.csv', 10, 'Ni_61Cu', names[index], WABC_file)
 # CS.mon_CS_test(Ni_56Co(), 'Ni', 'Ni_56Co.csv', 10, 'Ni_56Co', names[index], WABC_file)
 # CS.mon_CS_test(Ni_58Co(), 'Ni', 'Ni_58Co.csv', 10, 'Ni_58Co', names[index], WABC_file)
 # CS.mon_CS_test(Cu_62Zn(), 'Cu', 'Cu_62Zn.csv', 10, 'Cu_62Zn', names[index], WABC_file)
-# CS.mon_CS_test(Cu_63Zn(), 'Cu', 'Cu_63Zn.csv', 10, 'Cu_63Zn', names[index], WABC_file)
+# CS.mon_CS_test(Cu_63Zn(), 'Cu', 'Cu_63Zn.csv', 10, 'Cu_63Zn', names[index], WABC_file)  # FINISHED
 # CS.mon_CS_test(Cu_65Zn(), 'Cu', 'Cu_65Zn.csv', 10, 'Cu_65Zn', names[index], WABC_file)
 
 
@@ -143,16 +221,20 @@ WABC_file = 'WABC_'+ ziegler_filename[10:-11] + '.csv'
 
 # CS.make_CS(Ni_58mCo(), 'Ni', 'Ni_58mCo.csv', 10, 'Ni_58mCo', WABC_file, '27', '58', ylimit=270, independent=True,CS_colonne_ALICE=7, isomer_state='m', file_ending='.L01')
 # CS.make_CS(Ni_58Co(), 'Ni', 'Ni_58Co.csv', 10, 'Ni_58Co', WABC_file, '27', '58', ylimit=250, independent=True,CS_colonne_ALICE=6, isomer_state=None, file_ending='.L00')
-# CS.make_CS_subtraction('daughter', 'Ni', 10, WABC_file, Ni_58mCo(), 'Ni_58mCo', 'Ni_58mCo.csv', '28', '58',  Ni_58Co(), 'Ni_58Co', 'Ni_58Co.csv', '27', '58', BR_daughter=1.0, ylimit=None, isomer_state=None, independent=False, file_ending='.tot', save_text=True, feeding=None, CS_colonne_ALICE=5, force_legend='upper right')  # Necessary when subtracting
+# CS.make_CS_subtraction('daughter', 'Ni', 10, WABC_file, Ni_58mCo(), 'Ni_58mCo', 'Ni_58mCo.csv', '28', '58',  Ni_58Co(), 'Ni_58Co', 'Ni_58Co.csv', '27', '58', BR_daughter=1.0, ylimit=None, isomer_state=None, independent=False, file_ending='.tot', save_text=True, feeding='isomer_M', CS_colonne_ALICE=5, force_legend='upper right')  # Necessary when subtracting
 
 # CS.make_CS(Ni_57Co(), 'Ni', 'Ni_57Co.csv', 10, 'Ni_57Co', WABC_file, '27', '57', ylimit=600, independent=False,CS_colonne_ALICE=5, file_ending='.tot', feeding='beta+', isomer_state=None, reaction_parent='Ni_57Ni') # first in decay chain)
 # CS.make_CS(Ni_57Ni(), 'Ni', 'Ni_57Ni.csv', 10, 'Ni_57Ni', WABC_file, '28', '57', ylimit=125, independent=False,CS_colonne_ALICE=5, file_ending='.tot') # first in decay chain)
-# CS.make_CS_subtraction('daughter', 'Ni', 10, WABC_file, Ni_57Ni(), 'Ni_57Ni', 'Ni_57Ni.csv', '28', '57',  Ni_57Co(), 'Ni_57Co', 'Ni_57Co.csv', '27', '57', BR_daughter=1.0, ylimit=None, isomer_state=None, independent=False, file_ending='.tot', save_text=True, feeding='beta+', CS_colonne_ALICE=5)  # Necessary when subtracting
+# CS.make_CS_subtraction('daughter', 'Ni', 10, WABC_file, Ni_57Ni(), 'Ni_57Ni', 'Ni_57Ni.csv', '28', '57',  Ni_57Co(), 'Ni_57Co', 'Ni_57Co.csv', '27', '57', BR_daughter=1.0, ylimit=None, isomer_state=None, independent=True, file_ending='.tot', save_text=True, feeding='beta+', CS_colonne_ALICE=5)  # Necessary when subtracting
 
 
-# CS.make_CS(Ni_56Ni(), 'Ni', 'Ni_56Ni.csv', 10, 'Ni_56Ni', WABC_file, '28', '56', ylimit=2.0, independent=False, BR=None, CS_colonne_ALICE=5) # first in decay chain)
+# CS.make_CS(Ni_56Ni(), 'Ni', 'Ni_56Ni.csv', 10, 'Ni_56Ni', WABC_file, '28', '56', ylimit=2.0, independent=True, BR=None, CS_colonne_ALICE=5) # first in decay chain)
 # CS.make_CS_subtraction('daughter', 'Ni', 10, WABC_file, Ni_56Ni(), 'Ni_56Ni', 'Ni_56Ni.csv', '28', '56',  Ni_56Co(), 'Ni_56Co', 'Ni_56Co.csv', '27', '56', BR_daughter=1.0, ylimit=80, isomer_state=None, independent=False, file_ending='.tot', save_text=True, feeding='beta+', CS_colonne_ALICE=5, force_legend="upper center")  # Necessary when subtracting
 # CS.make_CS(Ni_56Co(), 'Ni', 'Ni_56Co.csv', 10, 'Ni_56Co', WABC_file, '27', '56', independent=True, CS_colonne_ALICE=5, ylimit=80) # first in decay chain)
+
+#Monitor: 
+# CS.make_CS(Ni_58Co(), 'Ni', 'Ni_58Co.csv', 10, 'Ni_58Co', WABC_file, '27', '58', ylimit=250, independent=True,CS_colonne_ALICE=6, isomer_state=None, file_ending='.L00')
+
 
 
 ### Cu reactions
@@ -164,46 +246,56 @@ WABC_file = 'WABC_'+ ziegler_filename[10:-11] + '.csv'
 # CS.make_CS(Cu_61Cu(), 'Cu', 'Cu_61Cu.csv', 10, 'Cu_61Cu', WABC_file, '29', '61', ylimit=110, independent=False, CS_colonne_ALICE=5) # first in decay chain)   
 # CS.make_CS(Cu_64Cu(), 'Cu', 'Cu_64Cu.csv', 10, 'Cu_64Cu', WABC_file, '29', '64', CS_colonne_ALICE=5, ylimit=300, force_legend="upper center")
 
+#Montor:
+# CS.make_CS(Cu_62Zn(), 'Cu', 'Cu_62Zn.csv', 10, 'Cu_62Zn', WABC_file, '29', '62', ylimit=None, independent=True, CS_colonne_ALICE=5) # first in decay chain
+# CS.make_CS(Cu_63Zn(), 'Cu', 'Cu_63Zn.csv', 10, 'Cu_63Zn', WABC_file, '29', '63', ylimit=None, independent=True, CS_colonne_ALICE=5) # first in decay chain
+# CS.make_CS(Cu_65Zn(), 'Cu', 'Cu_65Zn.csv', 10, 'Cu_65Zn', WABC_file, '29', '65', ylimit=None, independent=True, CS_colonne_ALICE=5) # first in decay chain
+
+
 ### Fe reactions 
 # CS.make_CS(Fe_48V(), 'Fe', 'Fe_48V.csv', 3, 'Fe_48V', WABC_file, '23', '48', independent=False, file_ending='.tot', ylimit=0.176, CS_colonne_ALICE=5)   
 # CS.make_CS(Fe_51Cr(), 'Fe', 'Fe_51Cr.csv', 3, 'Fe_51Cr', WABC_file, '24', '51', independent=False, ylimit=20, CS_colonne_ALICE=5)   
 # CS.make_CS(Fe_52Mn(), 'Fe', 'Fe_52Mn.csv', 3, 'Fe_52Mn', WABC_file, '25', '52', ylimit=50, independent=False, CS_colonne_ALICE=5)   
-# CS.make_CS(Fe_54Mn(), 'Fe', 'Fe_54Mn.csv', 3, 'Fe_54Mn', WABC_file, '25', '54', independent=True, ylimit=125, CS_colonne_ALICE=5)   
+# CS.make_CS(Fe_54Mn(), 'Fe', 'Fe_54Mn.csv', 3, 'Fe_54Mn', WABC_file, '25', '54', independent=True, ylimit=150, CS_colonne_ALICE=5)   
+# CS.make_CS(Fe_56Mn(), 'Fe', 'Fe_56Mn.csv', 3, 'Fe_56Mn', WABC_file, '25', '56', independent=False, ylimit=30, CS_colonne_ALICE=5)   
 # CS.make_CS(Fe_53Fe(), 'Fe', 'Fe_53Fe.csv', 3, 'Fe_53Fe', WABC_file, '26', '53', independent=False, CS_colonne_ALICE=5)   
 # CS.make_CS(Fe_59Fe(), 'Fe', 'Fe_59Fe.csv', 3, 'Fe_59Fe', WABC_file, '26', '59', independent=True, CS_colonne_ALICE=5)   # only produced via 58Fe(d,n). abundance is low so had to redo energy. Ask Andrew about energy. 
-# CS.make_CS(Fe_55Co(), 'Fe', 'Fe_55Co.csv', 3, 'Fe_55Co', WABC_file, '27', '55', independent=True, CS_colonne_ALICE=5)   
+# CS.make_CS(Fe_55Co(), 'Fe', 'Fe_55Co.csv', 3, 'Fe_55Co', WABC_fil() '27', '55', independent=True, CS_colonne_ALICE=5)   
 # CS.make_CS(Fe_57Co(), 'Fe', 'Fe_57Co.csv', 3, 'Fe_57Co', WABC_file, '27', '57', independent=True, CS_colonne_ALICE=5)   
 # CS.make_CS(Fe_58Co(), 'Fe', 'Fe_58Co.csv', 3, 'Fe_58Co', WABC_file, '27', '58', independent=False, CS_colonne_ALICE=5)   
+
+#MONITOR REACTION
+# CS.make_CS(Fe_56Co(), 'Fe', 'Fe_56Co.csv', 3, 'Fe_56Co', WABC_file, '27', '56', independent=True, CS_colonne_ALICE=5)   
 
 
 
 ### Ir reactions
 # CS.make_CS(Ir_188Pt(), 'Ir', 'Ir_188Pt.csv', 10, 'Ir_188Pt', WABC_file, '78', '188', ylimit=300, independent=True)   
 # CS.make_CS(Ir_188Ir(), 'Ir', 'Ir_188Ir.csv', 10, 'Ir_188Ir', WABC_file, '77', '188', ylimit=15, independent=False, isomer_state='m1+g', CS_colonne_ALICE=4, feeding='beta+', BR=1.0, reaction_parent='Ir_188Pt')
-# CS.make_CS_subtraction('daughter', 'Ir', 10, WABC_file, Ir_188Pt(), 'Ir_188Pt', 'Ir_188Pt.csv', '78', '188',  Ir_188Ir(), 'Ir_188Ir', 'Ir_188Ir.csv', '77', '188', ylimit=15, BR_daughter=1.0, isomer_state='m1+g', independent=True, file_ending='.tot', CS_colonne_ALICE=4, save_text=True, feeding=None)  # Necessary when subtracting
+# CS.make_CS(Ir_188Ir(), 'Ir', 'Ir_188Ir.csv', 10, 'Ir_188Ir', WABC_file, '77', '188', ylimit=15, independent=False, isomer_state=None, CS_colonne_ALICE=4, feeding='beta+', BR=1.0, reaction_parent='Ir_188Pt')
+# title_188Ir=r'$^{nat}$Ir(d,x)$^{188m1+g}$Ir - Cumulative' 
+# CS.make_CS_subtraction('daughter', 'Ir', 10, WABC_file, Ir_188Pt(), 'Ir_188Pt', 'Ir_188Pt.csv', '78', '188',  Ir_188Ir(), 'Ir_188Ir', 'Ir_188Ir.csv', '77', '188', ylimit=15, BR_daughter=1.0, isomer_state='m1+g', independent=True, file_ending='.tot', CS_colonne_ALICE=4, save_text=True, feeding=None, title_on_plot=title_188Ir)
 
 
 # CS.make_CS(Ir_189Pt(), 'Ir', 'Ir_189Pt.csv', 10, 'Ir_189Pt', WABC_file, '78', '189', ylimit=520, independent=True)    # 
 # CS.make_CS(Ir_189Ir(), 'Ir', 'Ir_189Ir.csv', 10, 'Ir_189Ir', WABC_file, '77', '189', independent=False, feeding='beta+', BR=1.0, reaction_parent='Ir_189Pt')    # need work on activity 
 
-#CS.make_CS_subtraction('daughter', 'Ir', 10, WABC_file, Ir_189Pt(), 'Ir_189Pt', 'Ir_189Pt.csv', '78', '189',  Ir_189Ir(), 'Ir_189Ir', 'Ir_189Ir.csv', '77', '189', ylimit=500, independent=True, file_ending='.tot', CS_colonne_ALICE=4, BR_daughter=1.0)  # Necessary when subtracting
+# CS.make_CS_subtraction('daughter', 'Ir', 10, WABC_file, Ir_189Pt(), 'Ir_189Pt', 'Ir_189Pt.csv', '78', '189',  Ir_189Ir(), 'Ir_189Ir', 'Ir_189Ir.csv', '77', '189', ylimit=500, independent=True, file_ending='.tot', CS_colonne_ALICE=4, BR_daughter=1.0)  # Necessary when subtracting
 
 
 
 # CS.make_CS(Ir_190Ir(), 'Ir', 'Ir_190Ir.csv', 10, 'Ir_190Ir', WABC_file, '77', '190', independent=False, CS_colonne_ALICE=4)     # file_ending=.tot because of decay from m1 m2 isomer. 
-# CS.make_CS(Ir_190m2Ir(), 'Ir', 'Ir_190m2Ir.csv', 10, 'Ir_190m2Ir', WABC_file, '77', '190', file_ending='.L37', isomer_state='m2', independent=True, CS_colonne_ALICE=6)   # 0.0860   
-# CS.make_CS_subtraction('daughter', 'Ir', 10, WABC_file, Ir_190m2Ir(), 'Ir_190m2Ir', 'Ir_190m2Ir.csv', '77', '190',  Ir_190Ir(), 'Ir_190Ir', 'Ir_190Ir.csv', '77', '190', BR_daughter=0.0860, ylimit=None, isomer_state='m1+g', independent=True)#independent='_cumulative_190m1+190Ir', file_ending='.tot')  # Necessary when subtracting
+# CS.make_CS(Ir_190m2Ir(), 'Ir', 'Ir_190m2Ir.csv', 10, 'Ir_190m2Ir', WABC_file, '77', '190', file_ending='.L37', isomer_state='m2', independent=True, CS_colonne_ALICE=6, )   # 0.0860   
+# title_190Ir=r'$^{nat}$Ir(d,x)$^{190m1+g}$Ir - Cumulative')
+# CS.make_CS_subtraction('daughter', 'Ir', 10, WABC_file, Ir_190m2Ir(), 'Ir_190m2Ir', 'Ir_190m2Ir.csv', '77', '190',  Ir_190Ir(), 'Ir_190Ir', 'Ir_190Ir.csv', '77', '190', BR_daughter=0.0860, ylimit=None, isomer_state='m1+g', independent=True, title_on_plot=title_190Ir, feeding='isomer_M')#independent='_cumulative_190m1+190Ir', file_ending='.tot')  # Necessary when subtracting
 
 # CS.make_CS(Ir_191Pt(), 'Ir', 'Ir_191Pt.csv', 10, 'Ir_191Pt', WABC_file, '78', '191', independent=True, ylimit=800) 
 
-# CS.make_CS(Ir_192Ir(), 'Ir', 'Ir_192Ir.csv', 10, 'Ir_192Ir', WABC_file, '77', '192', file_ending='.tot', independent=False)    
+# CS.make_CS(Ir_192Ir(), 'Ir', 'Ir_192Ir.csv', 10, 'Ir_192Ir', WABC_file, '77', '192', file_ending='.tot', independent=False, ylimit=380)
 
-CS.make_CS(Ir_194Ir(), 'Ir', 'Ir_194Ir.csv', 10, 'Ir_194Ir', WABC_file, '77', '194', file_ending='.L00', independent=False)    
+# CS.make_CS(Ir_194Ir(), 'Ir', 'Ir_194Ir.csv', 10, 'Ir_194Ir', WABC_file, '77', '194', file_ending='.L00', independent=False, ylimit=200)    
 CS.make_CS(Ir_194m2Ir(), 'Ir', 'Ir_194m2Ir.csv', 10, 'Ir_194m2Ir', WABC_file, '77', '194', file_ending='not', isomer_state='m2', independent=True, CS_colonne_ALICE=6)     #talys=.L34
-CS.make_CS(Ir_193mPt(), 'Ir', 'Ir_193mPt.csv', 10, 'Ir_193mPt', WABC_file, '78', '193', file_ending='.L05', isomer_state='m', independent=True, CS_colonne_ALICE=6, ylimit=300)   
-
-
-
+# CS.make_CS(Ir_193mPt(), 'Ir', 'Ir_193mPt.csv', 10, 'Ir_193mPt', WABC_file, '78', '193', file_ending='.L05', isomer_state='m', independent=True, CS_colonne_ALICE=6, ylimit=550)   
 
 
 
@@ -340,6 +432,9 @@ plot_WABC()
 """
 
 def read_XCOM(file, foil):
+
+	
+
 	path = os.getcwd() 
 	f = path + '/../matlab/'+ file
 	
@@ -347,15 +442,29 @@ def read_XCOM(file, foil):
 	E*=1e3
 	A = np.genfromtxt(f, usecols=[1], skip_header=4)
 
-	plt.plot(E,A)
+	print(len(E))
+	print(len(A))
+	#tck = interpolate.splrep(E[:100], A[:100], s=0)
+	#x_new = np.linspace(0, 2500, 1000)
+	#x_new = np.linspace(0, len(E[:100]), 100)
+
+	# x_new = np.linspace(0, 40, 1000)
+	#for i in range(len(x_new)):
+	#y_new = interpolate.splev(x_new[i], tck, der=0)
+	#y_new = interpolate.splev(x_new, tck, der=0)
+
+	plt.plot(E,A,'-')
+	#plt.plot(x_new, y_new, label='new')
+	plt.plot
 	plt.title('Attenuation curve for {}'.format(foil))
-	#plt.gca().set_ylim(bottom=0, top=500)
-	plt.gca().set_xlim(left=0, right=500)
+	#plt.gca().set_ylim(bottom=0, top=10)
+	plt.gca().set_xlim(left=0, right=100)
 	plt.ylabel(r'Total attenuation coefficienct (cm$^2$)/g')
 	plt.xlabel('Photon energy (keV)')
+	plt.legend()
 	plt.show()
 
-# read_XCOM('ir_xcom.txt', 'Ir')
+read_XCOM('ir_xcom.txt', 'Irirdium')
 # read_XCOM('ni_xcom.txt', 'Ni')
 """
 

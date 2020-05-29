@@ -562,6 +562,22 @@ def Ni_56Mn():   #single
     return list, lambda_
 
 
+def Ni_61Co():   #single
+    foil1 = path + 'Ni_61Co_128.dat'
+    foil2 = path + 'Ni_61Co_228.dat'
+    foil3 = path + 'Ni_61Co_328.dat'
+    foil4 = path + 'Ni_61Co_428.dat'
+    foil5 = path + 'Ni_61Co_528.dat'
+    foil6 = path + 'Ni_61Co_628.dat'
+    foil7 = path + 'Ni_61Co_728.dat'
+    foil8 = path + 'Ni_61Co_828.dat'
+    foil9 = path + 'Ni_61Co_928.dat'
+    foil10 = path + 'Ni_61Co_1028.dat'
+    list = [foil1, foil2, foil3, foil4, foil5, foil6, foil7, foil8, foil9, foil10]
+    lambda_ = np.log(2)/(1.649*h)
+    return list, lambda_
+
+
 """
 def Ni_60mCo():     # ONE STEP
     foil1 = path + 'Ni_60mCo_128.dat'
@@ -706,6 +722,15 @@ def Fe_54Mn():   #single decay
     lambda_ = np.log(2)/(312.20*d)
     return list, lambda_
 
+def Fe_56Mn():   #single decay
+    foil1 = path + 'Fe_56Mn_126.dat'
+    foil2 = path + 'Fe_56Mn_226.dat'
+    foil3 = path + 'Fe_56Mn_326.dat'
+
+    list = [foil1, foil2, foil3]
+    lambda_ = np.log(2)/(2.5789*h)
+    return list, lambda_    
+
 
 def Fe_55Co():  #single decay
     foil1 = path + 'Fe_55Co_126.dat'
@@ -730,10 +755,22 @@ def Fe_58Co():   #single decay
     foil1 = path + 'Fe_58Co_126.dat'
     foil2 = path + 'Fe_58Co_226.dat'
     foil3 = path + 'Fe_58Co_326.dat'
-
+    
     list = [foil1, foil2, foil3]
     lambda_ = np.log(2)/(70.86*d)
     return list, lambda_
+    """
+    list = [foil1, foil2, foil3]
+    lambda_isomer = np.log(2)/(9.10*h)
+    #lambda_ground_state = np.log(2)/(77.236*d)  #Wrote wrong at first
+    lambda_ground_state = np.log(2)/(70.86*d)
+    #print(lambda_ground_state)
+    return list, lambda_isomer, lambda_ground_state
+    """
+
+def Fe_58mCo():
+    lamb_ = np.log(2)/(9.10*h)
+    return 'fake' ,lamb_    
 
 
 def Fe_59Fe(): #single decay
@@ -1117,6 +1154,7 @@ def Ir_194Ir():    #two step from 194m2Ir (193m1Ir too short half life)
     foil9 = path + 'Ir_194Ir_977.dat'
     foil10 = path + 'Ir_194Ir_1077.dat'
     list = [foil1, foil2, foil3, foil4, foil5, foil6, foil7, foil8, foil9, foil10]
-    lambda_parent = np.log(2)/(171.0*d)
+    #lambda_parent = np.log(2)/(171.0*d)
     lambda_daughter = np.log(2)/(19.28*h)
-    return list, lambda_parent, lambda_daughter
+    #return list, lambda_parent, lambda_daughter
+    return list,  lambda_daughter

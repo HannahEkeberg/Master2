@@ -74,6 +74,10 @@ print(b2)
 print(b3)
 print(b4)
 print(b5)
+
+b5 = coulomb_barrier(2, 79, 4, 193)
+print("***", b5)
+
 #print(r"alpha barrier height for $^{60*}$Cu: ", b)
 
 
@@ -89,25 +93,29 @@ print(b5)
 
 
 
-"""
+
 #proton, 193Ir
 b1 = coulomb_barrier(1, 78, 1, 193)
 b2 = coulomb_barrier(1, 78, 1, 195)
+b3 = coulomb_barrier(2, 78, 4, 195)
 print("mean:", np.mean((b1, b2)))
 print("Coulomb barrier for compound nucleus 193Pt: ", b1, "MeV")  
 print("Coulomb barrier for compound nucleus 195t: ", b2, "MeV") 
+print(b3)
 print("***")
 b1 = coulomb_barrier(1, 29, 1, 60)
 b2 = coulomb_barrier(1, 29, 1, 62)
 b3 = coulomb_barrier(1, 29, 1, 63)
 b4 = coulomb_barrier(1, 29, 1, 64)
 b5 = coulomb_barrier(1, 29, 1, 66)
+b6 = coulomb_barrier(2, 20, 4, 62)
 print("mean:", np.mean((b1, b2, b3, b4)))
 print("Coulomb barrier for compound nucleus 60Cu: ", b1, "MeV")  
 print("Coulomb barrier for compound nucleus 62Cu: ", b2, "MeV")  
 print("Coulomb barrier for compound nucleus 63Cu: ", b3, "MeV")  
 print("Coulomb barrier for compound nucleus 64Cu: ", b4, "MeV")  
 print("Coulomb barrier for compound nucleus 66Cu: ", b5, "MeV")  
+print(b6)
 print("***")
 b1 = coulomb_barrier(1, 30, 1, 65)
 b2 = coulomb_barrier(1, 30, 1, 67)
@@ -124,4 +132,4 @@ print("Coulomb barrier for compound nucleus 56Co: ", b1, "MeV")
 print("Coulomb barrier for compound nucleus 58Co: ", b2, "MeV")  
 print("Coulomb barrier for compound nucleus 59Co: ", b3, "MeV")  
 print("Coulomb barrier for compound nucleus 60Co: ", b4, "MeV")  
-"""
+

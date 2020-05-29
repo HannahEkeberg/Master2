@@ -5,6 +5,8 @@ from scipy.constants import N_A, elementary_charge
 import pandas as pd
 import os
 
+
+import math 
 #from simulated_CrossSectionData im
 
 from foil_info import *
@@ -129,6 +131,7 @@ class CrossSections:
             #if math.isnan(A0[i]):
             #if isinstance(A0[i], NaN):
                 #A0[i]=0
+        #print("Relative uncertainty in activity:", sigma_A0/A0*100)
 
         return lamb, mass_density, sigma_mass_density, E, dE, A0, sigma_A0
 
@@ -149,11 +152,12 @@ class CrossSections:
 
 
 
-    def make_CS(self, react_func, foil, filename, n ,reaction, BC_csv_filename, Z, A,  feeding=None, file_ending='.tot', save_text=True, independent=True, ylimit=None, isomer_state=None, CS_colonne_ALICE=4,BR=0, reaction_parent=None, force_legend=False):
+    def make_CS(self, react_func, foil, filename, n ,reaction, BC_csv_filename, Z, A,  feeding=None, file_ending='.tot', save_text=True, independent=True, ylimit=None, isomer_state=None, CS_colonne_ALICE=4,BR=0, reaction_parent=None, force_legend=False, title_on_plot=False):
         lamb, mass_density, sigma_mass_density, E, dE, A0, dA0 = self.get_var(react_func, foil, filename, n, reaction)
         #lamb, mass_density, sigma_mass_density, E, dE, A0, sigma_A0 = self.get_var(react_func, foil, filename, n, reaction)
 
-        
+        print("Relative uncertainty in activity: ", dA0/A0*100)
+        print("Relative uncertainty in m.d: ", sigma_mass_density/mass_density*100)
 
 
         #I, dI = self.current_class.current_for_CS()   #nA
@@ -172,12 +176,15 @@ class CrossSections:
         #weighted_average_beam = weighted_average_beam[::-1]
         dI = np.genfromtxt(BC_csv_filename, delimiter=',', usecols=[2])
 
+        print("Relative uncertainty in beam current: ", dI/I*100)
+
 
         #print("I after", I)
         #print("I_Ni after", I_Ni)
         #I = self.I; dI = self.sigma_I_est
         CS, dCS= self.cross_section_calc(n, A0, dA0, mass_density, sigma_mass_density, I, dI, lamb, reaction)
-            
+        
+        print("Relative uncertainty in cross section: ", dCS/CS*100)
         #self.modelling('Tendl', foil, Z, A, reaction, file_ending)
         #self.modelling('Talys', foil, Z, A, reaction, file_ending)
         #self.modelling('Exfor', foil, Z, A, reaction, file_ending)
@@ -193,9 +200,21 @@ class CrossSections:
             E = self.E_Fe; dE = self.dE_Fe
 
 
+
         print("     E     ", "    CS    " )
-        print(np.vstack((E,CS)).T)
-        #print(dE)
+
+        for i in range(len(CS)):
+
+            # print("E: {:.2f} {:.2f}".format(E[i], dE[0,1]))
+
+            print("{:.1f} ({:.1f})".format(CS[i], dCS[i]))
+
+        # print(np.vstack(({:.2f}, {:.2f}, {:.2f}).format(E, CS, dCS)).T)
+    
+        #print(E)
+        #print(np.vstack((E, CS)).T)
+        #print(np.vstack((dE, dCS)).T)
+        print(np.vstack((E, dE)).T)
 
         dE_tot = dE[0]+dE[1]
         csv_save_array = np.vstack((E, dE[0], dE[1], CS, dCS)).T
@@ -239,6 +258,7 @@ class CrossSections:
                 title = r'$^{nat}$' + foil + '(d,x)' + r'$^{{ {} }}$'.format(A+state) + reaction[-1:]  + ' - Cumulative' 
             else:
                 title = r'$^{nat}$' + foil + '(d,x)' + r'$^{{ {} }}$'.format(A+state) + reaction[-2:]  + ' - Cumulative' 
+        
         #print(A+state)
         #print(force_legend)
         #print(dE)
@@ -262,7 +282,7 @@ class CrossSections:
         return E, dE, CS, dCS
 
 
-    def make_CS_subtraction(self, end_reaction,  foil, n, csv_filename, react_func_parent, reaction_parent, filename_parent, Z_parent, A_parent, react_func_daughter, reaction_daughter, filename_daughter, Z_daughter, A_daughter, ylimit, independent, BR_daughter=1.0, isomer_state=None, file_ending='.tot', CS_colonne_ALICE=4, save_text=True, feeding=None, force_legend=False):  # Necessary when subtracting
+    def make_CS_subtraction(self, end_reaction,  foil, n, csv_filename, react_func_parent, reaction_parent, filename_parent, Z_parent, A_parent, react_func_daughter, reaction_daughter, filename_daughter, Z_daughter, A_daughter, ylimit, independent, BR_daughter=1.0, isomer_state=None, file_ending='.tot', CS_colonne_ALICE=4, save_text=True, feeding=None, force_legend=False, title_on_plot=False):  # Necessary when subtracting
         
         E, dE, CS_parent, dCS_parent = self.make_CS(react_func_parent, foil, filename_parent, n, reaction_parent, csv_filename, Z_parent, A_parent, save_text=False)
         E, dE, CS_daughter, dCS_daughter = self.make_CS(react_func_daughter, foil, filename_daughter, n, reaction_daughter, csv_filename, Z_daughter, A_daughter,  save_text=False)
@@ -293,8 +313,19 @@ class CrossSections:
                     new_CS.append(0)
                     new_dCS.append(0)
                 else:
-                    new_CS.append(CS_daughter[i]-CS_parent[i]*BR_daughter)       #here daughter is cumulative. Want independent CS
-                    new_dCS.append(dCS_daughter[i]-dCS_parent[i]*BR_daughter)
+                    if np.isnan(CS_parent[i]):
+                        #print("Yes")
+                        #print(i, CS_parent[i], "1")
+                        #CS_parent[i]==0
+                        new_CS.append(CS_daughter[i])       #here daughter is cumulative. Want independent CS
+                    elif np.isnan(CS_daughter[i]):
+                        #print(i, CS_daughter[i], "2")
+                        new_CS.append(CS_parent[i]*BR_daughter) 
+                    else:
+                        print(i, CS_parent[i])
+                        new_CS.append(CS_daughter[i]-CS_parent[i]*BR_daughter)       #here daughter is cumulative. Want independent CS
+                    # new_dCS.append(dCS_daughter[i]-dCS_parent[i]*BR_daughter)
+                    new_dCS.append(np.sqrt(dCS_daughter[i]**2+ (dCS_parent[i])**2*BR_daughter))
                     #print(CS_daughter[i], CS_parent[i]*BR_daughter) 
                     #print(CS_daughter[i]-CS_parent[i]*BR_daughter)
         elif independent==False:  
@@ -302,7 +333,7 @@ class CrossSections:
                 #new_CS.append(CS_parent[i]-CS_daughter[i]*BR_daughter)
                 #new_dCS.append(dCS_parent[i]-dCS_daughter[i]*BR_daughter)
                 new_CS.append(CS_daughter[i]+CS_parent[i]*BR_daughter)        # here daughter is independent. Want cumulative CS
-                new_dCS.append(dCS_daughter[i]+dCS_parent[i]*BR_daughter) 
+                new_dCS.append(np.sqrt(dCS_daughter[i]**2+ (dCS_parent[i])**2*BR_daughter))
 
         if end_reaction == 'daughter':
             reaction = reaction_daughter
@@ -329,7 +360,8 @@ class CrossSections:
             title = r'$^{nat}$' + foil +'(d,x)' + r'$^{{ {} }}$'.format(A+state) + reaction[-1:]  + ' - ' + type_CS[1:] 
         else:
             title = r'$^{nat}$' + foil + '(d,x)' + r'$^{{ {} }}$'.format(A+state) + reaction[-2:]  + ' - ' + type_CS[1:] 
-        
+        if title_on_plot!=False:
+            title = title_on_plot
         """    
         #plt.errorbar(E, CS_parent, marker='.', color='blue',linewidth=0.0001, xerr=dE, yerr=dCS_parent, elinewidth=1.0, capthick=1.0, capsize=3.0, label='Parent')
         plt.errorbar(E, CS_daughter, marker='.', color='green',linewidth=0.0001, xerr=dE, yerr=dCS_daughter, elinewidth=1.0, capthick=1.0, capsize=3.0, label='Cumulative')    
@@ -353,11 +385,17 @@ class CrossSections:
         #print(len(E))
         #print(len(new_CS))
         #print(len(new_dCS))
+        print("********" ,reaction_daughter)
+        for i in range(len(new_CS)):
+            print("{:.1f} ({:.1f})".format(new_CS[i], new_dCS[i]))
+
+
+
         csv_save_array = np.vstack((E, dE_tot, new_CS, new_dCS)).T
         #print(csv_save_array)
         path_to_cs_csv = os.getcwd() + '/CrossSections/CrossSections_csv/'
 
-
+        #for i in range(len(new_CS))
         if save_text==True:
             CS_daughter = [float('nan') if x==0 else x for x in CS_daughter]
             CS_parent = [float('nan') if x==0 else x for x in CS_parent]
@@ -489,7 +527,7 @@ class CrossSections:
 
 #CS.make_CS(Ir_189Ir(), 'Ir', 'Ir_189Ir.csv', 10, 'Ir_189Ir', csv_filename, '77', '189')    # need work on activity 
 
-    def modelling(self, model, foil, Z, A, reaction, file_ending,  independent, feeding, CS_colonne, BR, isomer_state, reaction_parent=False):
+    def modelling(self, model, foil, Z, A, reaction, file_ending,  independent, feeding, CS_colonne, BR, isomer_state, reaction_parent=False, isomer_feeding=False):
         #print("modelling:", model, foil )
         #print(feeding)
         SimCS = SimCrossSectionData() 
@@ -508,8 +546,18 @@ class CrossSections:
                 #print("A: ", A)
                 #print("Z: ", Z)
                 #print("Colonne: ", CS_colonne)
-                if feeding == None:
+
+
+
+
+
+
+                # if feeding == None:
+                if feeding!= 'beta+' or feeding!='beta-':
+
                     E, CS = SimCS.ALICE(foil, A, Z, CS_colonne)
+                    #else:
+                    #    pass
                     #print("foil: ", foil)
                     #print("A: ", A_p)
                     #print("Z: ", Z_p)
@@ -523,6 +571,15 @@ class CrossSections:
                     elif feeding == 'beta-':
                         Z_p = int(Z)-1; A_p = A
                         Z_p = str(Z_p)
+
+
+
+
+
+
+            
+
+
                     
                     #print("foil: ", foil)
                     #print("A: ", A_p)
@@ -544,6 +601,7 @@ class CrossSections:
 
 
 
+
                 """
                 if feeding==None:
                     E, CS = SimCS.ALICE(foil, A, Z, CS_colonne)
@@ -558,8 +616,8 @@ class CrossSections:
                 pass
         
         elif model == 'Empire':
-            print("EMPIRE")
-            print(Z, A)
+            #print("EMPIRE")
+            #print(Z, A)
             try:
                 #print("INDEPENDENT")
                 #print("coh feeding: ", feeding)
@@ -586,6 +644,24 @@ class CrossSections:
                     #print(E)
                     plt.plot(E, CS, label='EMPIRE-3.2.3', linestyle='--', color='red', linewidth=0.7)
                     #print(E)
+
+
+
+                elif feeding=='isomer_M':
+
+                    #print("EMPIRE", feeding)
+                    #print(BR)
+                    E, CS = SimCS.EMPIRE(foil, A, Z, reaction, isomer=isomer_state)
+                    E_p, CS_p = SimCS.EMPIRE(foil, A, Z, reaction=reaction_parent, isomer='M')
+                    
+                    CS_tot = CS+ CS_p*BR
+                    #print(CS)
+                    plt.plot(E, CS_tot, label='EMPIRE-3.2.3', linestyle='--', color='red', linewidth=0.7)
+                elif feeding== 'isomer_M2':
+                    E, CS = SimCS.EMPIRE(foil, A, Z, reaction, isomer=isomer_state)
+                    E_p, CS_p = SimCS.EMPIRE(foil, A, Z, reaction=reaction_parent, isomer='M2')
+                    CS_tot = CS+ CS_p*BR
+                    plt.plot(E, CS_tot, label='EMPIRE-3.2.3', linestyle='--', color='red', linewidth=0.7)
                 elif independent==False and feeding!=None:
                     #print("EMPIRE RUNS IF TEST")
                     E, CS = SimCS.EMPIRE(foil, A, Z, reaction, isomer=isomer_state)
@@ -604,9 +680,21 @@ class CrossSections:
                         if foil=='Ir':    # BAD LINE; SHOULD CHANGE IF POSSIBLE. 
                             reaction_new = reaction[:-2] + 'Pt'
                         #elif foil == 'Ni':
+                        E_p, CS_p = SimCS.EMPIRE(foil, A_p, Z_p, reaction=reaction_parent, isomer=isomer_state)
                     elif feeding=='beta-':
                         Z_p = int(Z)-1; A_p = A
                         Z_p =  str(Z_p)
+                        E_p, CS_p = SimCS.EMPIRE(foil, A_p, Z_p, reaction=reaction_parent, isomer=isomer_state)
+
+
+                    
+                    
+                    
+                    #elif feeding == 'isomer':
+                    #    isomer_state_p='M'
+                    #    print(isomer_state_p)
+                    #    E_p, CS_p = SimCS.EMPIRE(foil, A, Z, reaction=reaction_parent, isomer=isomer_state_p)
+
                         #reaction_new = reaction[:-2] + 'Pt'
                     #print("Not working:")
                     #print(foil)
@@ -617,7 +705,9 @@ class CrossSections:
                     #print("Z_p: ", Z_p, "A_p: ", A_p)
                     #print(reaction_parent)
                     #print(foil)
-                    E_p, CS_p = SimCS.EMPIRE(foil, A_p, Z_p, reaction=reaction_parent, isomer=isomer_state)
+                    
+
+                    #E_p, CS_p = SimCS.EMPIRE(foil, A_p, Z_p, reaction=reaction_parent, isomer=isomer_state)
 
                     CS_tot = CS+ CS_p*BR
                     plt.plot(E, CS_tot, label='EMPIRE-3.2.3', linestyle='--', color='red', linewidth=0.7)
@@ -636,7 +726,8 @@ class CrossSections:
             #print("talys")
             try:
                 #print(independent, feeding)
-                if independent==True or feeding==None:    ### SINCE TALYS & TENDL ONLY GIVE INDEPENDENT MEASUREMENTS, take beta-feeding into account
+                if independent==True or feeding!='beta+' and feeding!='beta-':
+                #if independent==True or feeding==None:    ### SINCE TALYS & TENDL ONLY GIVE INDEPENDENT MEASUREMENTS, take beta-feeding into account
                     #print("talys_ind")
                     E, CS = SimCS.TALYS(foil, A, Z, file_ending)
                     plt.plot(E, CS, label='TALYS-1.9', linestyle='-.', color='orange')
@@ -666,9 +757,11 @@ class CrossSections:
                 print("no talys file found")
 
         elif model == 'Exfor':
+
             #print("exfor function")
             try:
                 #print("exfor function 2")
+                #print(reaction, independent )
                 E, dE, CS, dCS, author =  SimCS.EXFOR(reaction, independent)
                 #print(E)
                 unique_author = [] 
@@ -690,7 +783,8 @@ class CrossSections:
         elif model == 'Tendl':
             #print("tendl")
             try:
-                if independent==True or feeding==None:
+                #if independent==True or feeding==None:
+                if independent==True or feeding!='beta+' and feeding!='beta-':
                     E, CS = SimCS.Tendl(foil, A, Z, file_ending)
                 #print(E)
                     if E is not 0:
@@ -735,6 +829,23 @@ class CrossSections:
                     E, CS = SimCS.COH(foil, A, Z, reaction, isomer=isomer_state)
                     #print(E)
                     plt.plot(E, CS, label='CoH-3.5.3', linestyle='-', color='dodgerblue', linewidth=0.7)
+                
+                elif feeding=='isomer_M':
+
+                    #print("EMPIRE", feeding)
+                    #print(BR)
+                    E, CS = SimCS.COH(foil, A, Z, reaction, isomer=isomer_state)
+                    E_p, CS_p = SimCS.COH(foil, A, Z, reaction=reaction_parent, isomer='M')
+                    
+                    CS_tot = CS+ CS_p*BR
+                    #print(CS)
+                    plt.plot(E, CS_tot, label='CoH-3.5.3', linestyle='-', color='dodgerblue', linewidth=0.7)
+                elif feeding== 'isomer_M2':
+                    E, CS = SimCS.COH(foil, A, Z, reaction, isomer=isomer_state)
+                    E_p, CS_p = SimCS.COH(foil, A, Z, reaction=reaction_parent, isomer='M2')
+                    CS_tot = CS+ CS_p*BR
+                    plt.plot(E, CS_tot, label='CoH-3.5.3', linestyle='-', color='dodgerblue', linewidth=0.7)
+
                 elif independent==False and feeding!=None:
                     E, CS = SimCS.COH(foil, A, Z, reaction, isomer=isomer_state)
                     #print("works:")
@@ -863,20 +974,30 @@ class CrossSections:
 
 
 
-    def mon_CS_test(self, react_func, foil, filename, n, reaction,scaling_parameter, BC_csv_filename):
+    def mon_CS_test(self, react_func, foil, filename, n, reaction,scaling_parameter, BC_csv_filename=False):
         #print("*")
         I_Fe, I_Ni, I_Cu, sigma_I = self.current_class.current_for_CS(mon_test=True)
         sigma_I = np.ones(len(I_Ni))*sigma_I
 
+        """
+        if BC_csv_filename!=False:
+            I = np.genfromtxt(BC_csv_filename, delimiter=',', usecols=[1])
+            #print(I)
+            #weighted_average_beam = weighted_average_beam[::-1]
+            dI = np.genfromtxt(BC_csv_filename, delimiter=',', usecols=[2])
 
-
+            I_Fe =I 
+            I_Ni = I
+            I_Cu = I 
+            sigma_I = I
+        """
 
 
 
         ### The weighted average beam current  - made by Andrew
 
         # weighted_average_beam = np.genfromtxt(BC_csv_filename, delimiter=',', usecols=[1])
-        # #weighted_average_beam = weighted_average_beam[::-1]
+        # weighted_average_beam = weighted_average_beam[::-1]
         # sigma_weighted_average_beam = np.genfromtxt(BC_csv_filename, delimiter=',', usecols=[2])
 
         # I_Fe = weighted_average_beam[:3]; sigma_I_Fe=sigma_weighted_average_beam[:3]
@@ -892,7 +1013,7 @@ class CrossSections:
         #I_Cu = np.true_divide(I_Cu, unit_factor)   #?????
         
 
-        #I, sigma_I = self.current_class.current_for_CS()
+        # I, sigma_I = self.current_class.current_for_CS()
 
         #print("I", I)
         #print("I_Ni", I_Ni)
@@ -921,7 +1042,7 @@ class CrossSections:
             #print(dCs_mon)
 
             self.modelling('Exfor', 'Fe', '26', '56', 'Fe_56Co', '.tot', independent=True, feeding=None, CS_colonne=5, BR=1.0, isomer_state=None)
-            
+            #self.modelling('')
 
             #self.modelling('Talys', 'Fe', '26', '56', 'Fe_56Co', '.tot')
             #self.modelling('Tendl', 'Fe', '26', '56', 'Fe_56Co', '.tot')
@@ -935,6 +1056,8 @@ class CrossSections:
             E_mon = np.loadtxt(filename, usecols=[0], skiprows=6)
             Cs_mon = np.loadtxt(filename, usecols=[1], skiprows=6)
             dCs_mon = np.loadtxt(filename, usecols=[2], skiprows=6)
+
+
             
             self.modelling('Exfor', 'Ni', '28', '61', 'Ni_61Cu', '.tot', independent=True, feeding=None, CS_colonne=5, BR=1.0, isomer_state=None)
             A = '61'; foil='Ni'; title = r'$^{nat}$' + foil + '(d,x)' + r'$^{{ {} }}$'.format(A) + reaction[-2:]  + ' - Independent' 
@@ -950,10 +1073,37 @@ class CrossSections:
             self.modelling('Exfor', 'Ni', '28', '56', 'Ni_56Co', '.tot', independent=False, feeding=None, CS_colonne=5, BR=1.0, isomer_state=None)
             CS = CS_56Co +  CS_56Ni
 
+            for i in range(len(E)):
+                print("56Co: {:.1f}".format(sigma_A0[i]/A0[i]*100))
+                if i <3:
+                    print("56Ni: {:.1f}".format(sigma_A0_[i]/A0_[i]*100))
+                    print("tot: {:.1f}".format(np.sqrt((sigma_A0_[i]/A0_[i])**2 +  (sigma_A0[i]/A0[i])**2 )*100))
+                else:
+                    #print("tot: {:.1f}".format(sigma_A0[i]))
+                    pass
+                print("********")
+
+
             Cumulative_flag = True
             yscale=100
+            #fraction_56Ni = dCS_56Ni/CS_56Ni
+            #for i in fraction_56Ni:
+            #       np.nan_to_num(i)
+            fraction_56Ni=[]
+            frac = dCS_56Ni/CS_56Ni
+            for i in range(len(CS)):
+                if np.isnan(frac[i]) == True:
+                    fraction_56Ni.append(0)
+                else:
+                    fraction_56Ni.append(frac[i])
+                    #print("Y")
+                    #i == 0
+            fraction_56Ni= np.array((fraction_56Ni))
+            #dCS = CS*np.sqrt( (dCS_56Co/CS_56Co)**2 + (dCS_56Ni/CS_56Ni)**2)
+            dCS = CS*np.sqrt( (dCS_56Co/CS_56Co)**2 + (fraction_56Ni)**2)
 
-            dCS = CS*np.sqrt( (dCS_56Co/CS_56Co)**2 + (dCS_56Ni/CS_56Ni)**2)
+
+
 
             E_mon = np.loadtxt(filename, usecols=[0], skiprows=6)
             Cs_mon = np.loadtxt(filename, usecols=[1], skiprows=6)
@@ -965,10 +1115,16 @@ class CrossSections:
         if reaction=='Ni_58Co':
             CS_58Co, dCS_58Co = self.cross_section_calc(n, A0, sigma_A0, mass_density, sigma_mass_density, I_Ni, sigma_I, lamb, reaction)
             E = self.E_Ni;dE = self.dE_Ni
+            #print("groundstate: {:.1f}".format(sigma_A0/A0*100))
             filename =  path_to_monitor_data+'nid58cot/nid58cot.txt'
             self.modelling('Exfor', 'Ni', '28', '58', 'Ni_58Co', '.tot', independent=False, feeding=None, CS_colonne=5, BR=1.0, isomer_state=None)
 
             lamb_, mass_density_, sigma_mass_density_, E_, dE_, A0_, sigma_A0_ = self.get_var(Ni_58mCo(), 'Ni', 'Ni_58mCo.csv', 10, 'Ni_58mCo')
+            for i in range(len(E)):
+                print("groundstate: {:.1f}".format(sigma_A0[i]/A0[i]*100))
+                print("isomer: {:.1f}".format(sigma_A0_[i]/A0_[i]*100))
+                print("total: {:.1f}".format(np.sqrt((sigma_A0_[i]/A0_[i])**2 + (sigma_A0[i]/A0[i])**2 )*100))
+                print("***************")
             CS_58mCo, dCS_58mCo = self.cross_section_calc(n, A0_, sigma_A0_, mass_density, sigma_mass_density, I_Ni, sigma_I, lamb_, 'Ni_58mCo')
 
             Cumulative_flag = True
@@ -1028,12 +1184,34 @@ class CrossSections:
         else:
             label = 'Monitor Data'
 
+
+
         CS = [float('nan') if x==0 else x for x in CS]
+
+        if foil == 'Ni':
+            I = I_Ni
+        elif foil == 'Cu':
+            I = I_Cu
+        elif foil == 'Fe':
+            I = I_Fe
+
+        for i in range(len(CS)):
+            print("foil: ", i+1)
+            print("cross section: {:.1f} ({:.1f})".format(CS[i], dCS[i]))
+            print("Relative uncertainty activity:  {:.1f}%".format((sigma_A0[i]/A0[i]*100)))
+            print("Relative uncertainty mass density:  {:.1f}%".format((sigma_mass_density[i]/mass_density[i]*100)))
+            print("Relative uncertainty beam current:  {:.1f}%".format((sigma_I[i]/I[i]*100)))
+            
+            print("Relative uncertainty CS: {:.1f}% ".format((dCS[i]/ CS[i]*100)))
+            print("------------------------------------------")
+
+
+
         plt.plot(E_mon, Cs_mon, label='Recommended CS (IAEA)')
         plt.fill_between(E_mon, Cs_mon+dCs_mon, Cs_mon-dCs_mon, color='blue', alpha=0.1)
         #self.setting_plotvalues(E, dE, CS, dCS, 'this data')
-        plt.errorbar(E, CS, marker='P', markersize=4, color='red', linewidth=0.0001, xerr=dE, yerr=dCS, elinewidth=0.5, capthick=0.25, capsize=3.0, label=label )
-        
+        #plt.errorbar(E, CS, marker='P', markersize=4, color='darkred', linewidth=0.0001, xerr=dE, yerr=dCS, elinewidth=0.5, capthick=0.25, capsize=3.0, label=label )
+        plt.errorbar(E, CS, marker='P', markersize=4, color='darkred', linewidth=0.0001, xerr=dE, yerr=dCS, elinewidth=1.0, capthick=1.0, capsize=3.0, label=label)
         if yscale!=None:
             self.plot_CrossSections(reaction, title, A=1, foil='foil', max_CS=yscale)
         else:

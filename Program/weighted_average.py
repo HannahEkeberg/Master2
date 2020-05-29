@@ -327,6 +327,10 @@ def Average_BeamCurrent(A0, sigma_A0, mass_density, sigma_mass_density, lambda_,
 
 	# Save final results to csv
     outfile = np.stack((np.transpose(output_foil_index),np.transpose(output_mu),np.transpose(output_unc_mu),np.transpose(output_percent_unc)), axis=-1)
+    
+
+    
+
     #import os
     #path = os.getcwd()
     #print("Does it save? ")

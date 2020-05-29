@@ -37,7 +37,7 @@ ss_back_h = 'ss_back_horizontal.csv'
 ss_back_v = 'ss_back_vertical.csv'
 
 
-Zn_16MeV_front = '16MeV_Zn_front.csv'
+# Zn_16MeV_front = '16MeV_Zn_front.csv'
 
 
 def Gauss(x, mu, sigma, A, B):
@@ -67,7 +67,7 @@ def half_max(x,y, popt):
 
 
 
-def read_csv(filename, title, save_title, mu=3, sigma=0.01, A=100, B=120):
+def read_csv(filename, title, save_title, mu=3, sigma=0.01, A=100, B=120, label='Random'):
 	x  = np.loadtxt(filename, delimiter=',', skiprows=1, usecols=[0])
 	y  = np.loadtxt(filename, delimiter=',', skiprows=1, usecols=[1])
 	#print(x)
@@ -76,9 +76,9 @@ def read_csv(filename, title, save_title, mu=3, sigma=0.01, A=100, B=120):
 
 	x_new = np.linspace(0, max(x), len(x))
 
-	fig, ax = plt.subplots()
+	# fig, ax = plt.subplots()
 	
-	ax.plot(x,y, '.', label='data')
+	# ax.plot(x,y, '.', label='data')
 
 	
 	#mu = 3; sigma=0.01; A=3000
@@ -112,26 +112,37 @@ def read_csv(filename, title, save_title, mu=3, sigma=0.01, A=100, B=120):
 	
 
 	
-	#ax.plot(x, gauss_fit, label='Fit')
-	#plt.plot(hmx, [half, half], label='FWHM: {:.2f} cm'.format(fwhm))
+	# ax.plot(x, gauss_fit, label=label)
+	# plt.plot(hmx, [half, half], label='FWHM: {:.2f} cm'.format(fwhm))
 
-
+	return x_new, gauss_fit, hmx, half, fwhm
 	#plt.title(title)
 	#plt.xlabel('Distance (cm)')
 	#plt.ylabel('Distance (cm)')
 	#plt.legend()
 	#plt.savefig(save_title, dpi=300)
-	#plt.show()
+	
 
 
 
 
-read_csv(Zn_16MeV_front, title='Horizontal beamprofile - front stack', save_title='ss_front_h.png')
+# read_csv(Zn_16MeV_front, title='Horizontal beamprofile - front stack', save_title='ss_front_h.png')
 
 
-#read_csv(ss_front_h, title='Horizontal beamprofile - front stack', save_title='ss_front_h.png')
-#print("**")
-#read_csv(ss_back_h, title='Horizontal beamprofile - back stack', save_title='ss_back_h.png')
+x, gauss_fit, hmx, half, fwhm= read_csv(ss_front_h, title='Horizontal beamprofile - front stack', save_title='ss_front_h.png', label='Front')
+fig, ax = plt.subplots()
+ax.plot(x, gauss_fit, label='Front')
+# plt.plot(hmx, [half, half], label='FWHM: {:.2f} cm'.format(fwhm))
+x, gauss_fit, hmx, half, fwhm=read_csv(ss_back_h, title='Horizontal beamprofile - back stack', save_title='ss_back_h.png', label='Back')
+# fig, ax = plt.subplots()
+ax.plot(x, gauss_fit, label='Back')
+# plt.plot(hmx, [half, half], label='FWHM: {:.2f} cm'.format(fwhm))
+plt.title('Random')
+plt.xlabel('Horizontal position (cm)')
+plt.ylabel('Relative deuteron beam intensity')
+plt.legend()
+plt.savefig('Horizontal.png', dpi=300)
+plt.show()
 #print("**")
 #read_csv(ss_front_v, title='Vertical beamprofile - front stack', save_title='ss_front_v.png')
 #print("**")
