@@ -8,10 +8,14 @@ from collections import OrderedDict
 from Tendl import *
 from CrossSectionData import *
 from Empire import *
+from Talys import *
+from Coh import *
 
 
 crossSectionCsvPath = os.getcwd() + '/CrossSections/CrossSections_csv/'
 empireFilePath = os.getcwd() + '/../EMPIRE/'
+talysFilePath = os.getcwd() + '/../talys_v2.04/'
+cohFilePath = os.getcwd() + '/../coh_v3.6.0/'
 dirUpdatedFigures = 'CrossSections/updatedExcitationFunctions'
 if not os.path.exists(dirUpdatedFigures):
     os.mkdir(dirUpdatedFigures)
@@ -39,13 +43,18 @@ natIr = {"Ir191": 0.373, "Ir193": 0.627}
 crossSectionData = CrossSection(crossSectionCsvPath)
 tendl_natIr = Tendl(natIr)
 empire_natIr = Empire(natIr, empireFilePath)
+talys = Talys(talysFilePath)
+coh_natIr = Coh(natIr, cohFilePath)
 
-crossSectionData.plotCrossSection('Ir_189Pt')
-tendl_natIr.plotTendl23(productZ='78', productA='189', isomerLevel=None)
-empire_natIr.plotEmpire(productZ='78', productA='189', reaction = 'Ir_189Pt', isomerState=None)
-plotExcitationFunction(r'$^{nat}$Ir(d,x)$^{{ {189} }}$Pt - Independent', "Ir_189Pt")
+# crossSectionData.plotCrossSection('Ir_189Pt')
+# tendl_natIr.plotTendl23(productZ='78', productA='189', isomerLevel=None)
+# empire_natIr.plotEmpire(productZ='78', productA='189', reaction = 'Ir_189Pt', isomerState=None)
+# talys.plotTalys(productZ='78', productA='189', targetFoil='Ir', isomerLevel=None)
+# plotExcitationFunction(r'$^{nat}$Ir(d,x)$^{{ {189} }}$Pt - Independent', "Ir_189Pt")
 
 crossSectionData.plotCrossSection('Ir_193mPt')
 tendl_natIr.plotTendl23(productZ='78', productA='193', isomerLevel='05')
 empire_natIr.plotEmpire(productZ='78', productA='193', reaction = 'Ir_193mPt', isomerState='m')
-plotExcitationFunction(r'$^{nat}$Ir(d,x)$^{{ {193m} }}$Pt - Independent', "Ir_193mPt")
+talys.plotTalys(productZ='78', productA='193', targetFoil='Ir', isomerLevel='05')
+coh_natIr.plotCoh(productZ = '78', productA='193', reaction='Ir_193mPt', isomerState = 'm')
+plotExcitationFunction(r'$^{nat}$Ir(d,x)$^{{ {193m} }}$Pt - Independent', "Ir_193mPt", show=True)

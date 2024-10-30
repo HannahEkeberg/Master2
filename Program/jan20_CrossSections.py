@@ -617,16 +617,7 @@ class CrossSections:
                 elif isomer_state==None:
                     isomer_state=None
 
-                #if independent==True or feeding==None:
-                #rint(feeding)
                 if feeding==None:
-                    #print("runs feeding=None")
-                    #print(foil)
-                    #print(A)
-                    #print(Z)
-                    #print(reaction)
-                    #print(isomer_state)
-
                     E, CS = SimCS.EMPIRE(foil, A, Z, reaction, isomer=isomer_state)
                     #print(E)
                     plt.plot(E, CS, label='EMPIRE-3.2.3', linestyle='--', color='red', linewidth=0.7)
@@ -652,15 +643,7 @@ class CrossSections:
                 elif independent==False and feeding!=None:
                     #print("EMPIRE RUNS IF TEST")
                     E, CS = SimCS.EMPIRE(foil, A, Z, reaction, isomer=isomer_state)
-                    #print(E)
-                    #E, CS = SimCS.EMPIRE('Ni', '52', '25', 'Ni_52Mn', isomer=None)
-                    #print("works:")
-                    #print(foil)
-                    #print(A)
-                    #print(Z)
-                    #print(reaction)
-                    #print(isomer_state)
-                    #print(E)
+
                     if feeding=='beta+':
                         Z_p = int(Z)+1; A_p = A
                         Z_p = str(Z_p)
@@ -672,30 +655,6 @@ class CrossSections:
                         Z_p = int(Z)-1; A_p = A
                         Z_p =  str(Z_p)
                         E_p, CS_p = SimCS.EMPIRE(foil, A_p, Z_p, reaction=reaction_parent, isomer=isomer_state)
-
-
-
-
-
-                    #elif feeding == 'isomer':
-                    #    isomer_state_p='M'
-                    #    print(isomer_state_p)
-                    #    E_p, CS_p = SimCS.EMPIRE(foil, A, Z, reaction=reaction_parent, isomer=isomer_state_p)
-
-                        #reaction_new = reaction[:-2] + 'Pt'
-                    #print("Not working:")
-                    #print(foil)
-                    #print(A_p)
-                    #print(Z_p)
-                    #print(reaction_parent)
-                    #print(isomer_state)
-                    #print("Z_p: ", Z_p, "A_p: ", A_p)
-                    #print(reaction_parent)
-                    #print(foil)
-
-
-                    #E_p, CS_p = SimCS.EMPIRE(foil, A_p, Z_p, reaction=reaction_parent, isomer=isomer_state)
-
                     CS_tot = CS+ CS_p*BR
                     plt.plot(E, CS_tot, label='EMPIRE-3.2.3', linestyle='--', color='red', linewidth=0.7)
 

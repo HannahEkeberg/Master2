@@ -25,9 +25,20 @@ class Tendl:
         E, Cs = Tools().interpolate(E[0], CsSummed)
         return E, Cs
 
-    def plotTendl23(self, productZ, productA, isomerLevel = None):
+    def plotTendl23(self, productZ, productA, isomerLevel = None, betaFeeding = None, branchingRatio = None, parentIsomerLevel = None):
         E, Cs = self.tendlDeuteronData(productZ, productA, isomerLevel)
+        if betaFeeding:
+            CsParent = self.correctForBetaFeeding(productZ, productA, betaFeeding, branchingRatio, parentIsomerLevel)[0]
+            Cs = Cs + CsParent
         plt.plot(E, Cs, label='TENDL-2023', linestyle='--', color='blue')
+
+    def correctForBetaFeeding(self, productZ, productA, betaFeeding, branchingRatio, parentIsomerLevel):
+        if (betaFeeding  == 'beta+'):
+            parentZ = str(int(productZ)+1); parentA = productA
+        elif (betaFeeding == 'beta-'):
+            parentZ = str(int(productZ)-1); parentA = productA
+        E, Cs = self.tendlDeuteronData(parentZ, parentA, parentIsomerLevel)
+        return E, Cs*branchingRatio
 
     def product(self, productZ, productA):
         if len(productZ) <= 2:
@@ -59,3 +70,13 @@ class Tendl:
         E = tendlData[:,0]
         Cs = tendlData[:,1]
         return E, Cs*abundance
+
+tendl = Tendl({"Ir191": 0.373, "Ir193": 0.627})
+tendl.plotTendl23( '78', '188', 'Ir_188Ir', betaFeeding = 'beta+', branchingRatio=1.0)
+
+
+# tendl.plotTendl23(productZ = '77',productA = '188', betaFeeding = 'beta+', branchingRatio=1.0)
+# tendl.plotTendl23(productZ = '77',productA = '188', betaFeeding = None, branchingRatio=None)
+#
+# # tendl.plotTendl23(productZ='78', productA='193', isomerLevel='05')
+# plt.show()
