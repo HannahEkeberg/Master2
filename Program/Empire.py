@@ -32,7 +32,7 @@ class Empire:
         productA,
         reaction,
         isomerState = None,
-        independent = True,
+        # independent = True,
         feeding = None,
         parentIsomerState = None,
         branchingRatio = None,

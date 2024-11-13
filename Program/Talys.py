@@ -28,15 +28,15 @@ class Talys:
     parentIsomerLevel = None,
     ):
         E, Cs = self.talysData(productZ, productA, targetFoil, isomerLevel)
-        if betaFeeding:
-            CsParent = self.correctForBetaFeeding(productZ, productA, targetFoil, betaFeeding, branchingRatio, parentIsomerLevel)
-            Cs = Cs + CsParent
+        # if betaFeeding:
+            # CsParent = self.correctForBetaFeeding(productZ, productA, targetFoil, betaFeeding, branchingRatio, parentIsomerLevel)
+            # Cs = Cs + CsParent
         plt.plot(E, Cs, label='TALYS-2.04', linestyle='-.', color='orange')
 
     def correctForBetaFeeding(self, productZ, productA, targetFoil, betaFeeding, branchingRatio, parentIsomerLevel):
-        if (feeding  == 'beta+'):
+        if (betaFeeding  == 'beta+'):
             parentZ = str(int(productZ)+1); parentA = productA
-        elif (feeding == 'beta-'):
+        elif (betaFeeding == 'beta-'):
             parentZ = str(int(productZ)-1); parentA = productA
         E, Cs = self.talysData(parentZ, parentA, targetFoil, parentIsomerLevel)
         return E, Cs*branchingRatio

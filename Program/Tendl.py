@@ -71,8 +71,8 @@ class Tendl:
         Cs = tendlData[:,1]
         return E, Cs*abundance
 
-tendl = Tendl({"Ir191": 0.373, "Ir193": 0.627})
-tendl.plotTendl23( '78', '188', 'Ir_188Ir', betaFeeding = 'beta+', branchingRatio=1.0)
+# tendl = Tendl({"Ir191": 0.373, "Ir193": 0.627})
+# tendl.plotTendl23( '78', '188', 'Ir_188Ir', betaFeeding = 'beta+', branchingRatio=1.0)
 
 
 # tendl.plotTendl23(productZ = '77',productA = '188', betaFeeding = 'beta+', branchingRatio=1.0)
