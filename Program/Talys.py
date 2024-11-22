@@ -27,11 +27,14 @@ class Talys:
     branchingRatio = None,
     parentIsomerLevel = None,
     ):
-        E, Cs = self.talysData(productZ, productA, targetFoil, isomerLevel)
-        # if betaFeeding:
-            # CsParent = self.correctForBetaFeeding(productZ, productA, targetFoil, betaFeeding, branchingRatio, parentIsomerLevel)
-            # Cs = Cs + CsParent
-        plt.plot(E, Cs, label='TALYS-2.04', linestyle='-.', color='orange')
+        try:
+            E, Cs = self.talysData(productZ, productA, targetFoil, isomerLevel)
+            if betaFeeding:
+                CsParent = self.correctForBetaFeeding(productZ, productA, targetFoil, betaFeeding, branchingRatio, parentIsomerLevel)[-1] # only cross section
+                Cs = Cs + CsParent
+            plt.plot(E, Cs, label='TALYS-2.04', linestyle='-.', color='orange')
+        except:
+            print("No talys file found for targetfoil: " + targetFoil + "and product Z: " + productZ + "and product A: " + productA)
 
     def correctForBetaFeeding(self, productZ, productA, targetFoil, betaFeeding, branchingRatio, parentIsomerLevel):
         if (betaFeeding  == 'beta+'):
@@ -57,4 +60,25 @@ class Talys:
 
 
 # talysFilePath = os.getcwd() + '/../talys_v2.04/'
-# Talys(talysFilePath).plotTalys('78', '193', 'Ir', '05')
+# Talys(talysFilePath).plotTalys(productZ = '77',
+#     productA = '188',
+#     targetFoil = 'Ir',
+#     isomerLevel = None,
+#     betaFeeding = 'beta+', # only beta+ beta-
+#     branchingRatio = 1.0,
+#     parentIsomerLevel = None)
+# plt.show()
+
+# reaction = 'Ir_188Ir', # 'Ir_193mPt'
+# targetFoil = 'Ir',
+# productZ = '77',
+# productA = '188',
+# isomerLevel = None, #'05', tot (tendl, talys)
+# isomerState = None, #m, m2 (empire, coh)
+# nuclearState = None, # groundState, isomer1, isomer2 (alice)
+# feeding = 'beta+', #beta+, beta-, isomer (empire only) (empire, coh, alice))
+# branchingRatio = 1.0, #1, 0.5 (empire, coh, alice)
+# parentIsomerLevel = None,
+# parentNuclearState = None,
+# parentIsomerState = None,
+# reactionParent = 'Ir_188Pt'

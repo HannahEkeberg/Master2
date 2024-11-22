@@ -558,16 +558,6 @@ class CrossSections:
                     elif feeding == 'beta-':
                         Z_p = int(Z)-1; A_p = A
                         Z_p = str(Z_p)
-
-
-
-
-
-
-
-
-
-
                     #print("foil: ", foil)
                     #print("A: ", A_p)
                     #print("Z: ", Z_p)
@@ -720,7 +710,6 @@ class CrossSections:
                 for i in range(len(E)):
                     for j in range(len(unique_author)):
                         if author[i]==unique_author[j]:
-
                             plt.errorbar(E[i], CS[i], marker='.', color=colors[j], markersize=1, linewidth=0.0001, xerr=dE[i], yerr=dCS[i], elinewidth=0.25, capthick=0.25, capsize=3.0, label=unique_author[j])
             except:
                 print("No exfor file found")

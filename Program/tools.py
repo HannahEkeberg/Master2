@@ -14,7 +14,11 @@ class Tools:
     def zeroPadding(self, x, y):
         if x[0]!=0:
             zero_padding = np.linspace(0,x[0]-0.5,10)
+            # zero_padding = np.linspace(0,x[0],10)
             zeros_y = np.zeros((len(zero_padding)))
             x = np.concatenate((zero_padding, x))
             y = np.concatenate((zeros_y, y))
         return x, y
+
+    def colors(self):
+        return ['mediumpurple', 'cyan', 'palevioletred', 'darkorange', 'forestgreen', 'orchid', 'dodgerblue', 'lime', 'crimson', 'indianred']

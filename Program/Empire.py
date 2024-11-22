@@ -24,6 +24,17 @@ class Empire:
         CsSummed = sum(Cs)
         E = next(item for item in E if item is not None) # Use first not None energy for reaction files
         E, Cs = Tools().interpolate(E, CsSummed)
+        # if E[1]==1:
+        #     zero_padding = np.linspace(0,1,5)
+        #     cs_zeros = np.zeros(len(zero_padding))
+        #     E = np.concatenate((zero_padding, E))
+        #     Cs = np.concatenate((cs_zeros, Cs))
+        if E[2]==1:
+            zero_padding = np.linspace(0,2,5)
+            cs_zeros = np.zeros(len(zero_padding))
+            E = np.concatenate((zero_padding, E))
+            Cs = np.concatenate((cs_zeros, Cs))
+        # E, Cs = Tools().zeroPadding(E, Cs)
         return E, Cs
 
     def plotEmpire(
@@ -38,11 +49,14 @@ class Empire:
         branchingRatio = None,
         reactionParent = None
         ):
-        E, Cs = self.empireData(productZ, productA, reaction, isomerState)
-        if feeding:
-            Cs_parent = self.correctForFeeding(feeding, productZ, productA, parentIsomerState, reactionParent, branchingRatio)[1]
-            Cs = Cs + Cs_parent
-        plt.plot(E, Cs, label='EMPIRE-3.2.3', linestyle='--', color='red', linewidth=0.7)
+        try:
+            E, Cs = self.empireData(productZ, productA, reaction, isomerState)
+            if feeding:
+                Cs_parent = self.correctForFeeding(feeding, productZ, productA, parentIsomerState, reactionParent, branchingRatio)[1]
+                Cs = Cs + Cs_parent
+            plt.plot(E, Cs, label='EMPIRE-3.2.3', linestyle='--', color='red', linewidth=0.7)
+        except:
+            print("No EMPIRE file found for: " + reaction)
 
     def correctForFeeding(self, feeding, productZ, productA, parentIsomerState, reactionParent, branchingRatio):
         if (feeding  == 'beta+'):

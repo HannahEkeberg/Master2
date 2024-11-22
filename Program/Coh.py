@@ -13,7 +13,9 @@ class Coh:
     def cohData(self, productZ, productA, reaction, isomerState = None):
         #reaction = 'Fe_51Cr'
         targetFoil = list(self.target.keys())[0][0:2]
+        print(targetFoil)
         filePath = self.cohFilepath + targetFoil + '/'
+        print("Coh file path: " + filePath)
         productA = self.formatAtomicNumber(productA)
         productZ = self.formatAtomicNumber(productZ)
         E = []; Cs = []
@@ -27,15 +29,18 @@ class Coh:
         return E, Cs
 
     def plotCoh(self, productZ, productA, reaction, isomerState = None):
-        E, Cs = self.cohData(productZ, productA, reaction, isomerState)
-        plt.plot(E, Cs, label='CoH-3.6.0', linestyle='-', color='dodgerblue', linewidth=0.7)
+        try:
+            E, Cs = self.cohData(productZ, productA, reaction, isomerState)
+            plt.plot(E, Cs, label='CoH-3.5.3', linestyle='-', color='dodgerblue', linewidth=0.7) ## TODO REPLACE WHEN NEW COH WORKS
+            # plt.plot(E, Cs, label='CoH-3.6.0', linestyle='-', color='dodgerblue', linewidth=0.7)
+        except:
+            print("Unable to model CoH for reaction: " + reaction)
 
     def retrieveDataFromCohFile(self, filepath, target, productZ, productA, reaction, isomerState):
         targetIsotopeNumber = target[2:]; targetFoil = target[:2]
         product = self.getProductFromReaction(reaction, isomerState) # feks Co, PtM, ptG V
         cohFile = (filepath + targetIsotopeNumber + targetFoil + '/'
             + productZ + '-' + productA + product + '_coh.txt')
-        print("*** " + cohFile)
         if os.path.isfile(cohFile):
             Cs = np.genfromtxt(cohFile, delimiter='\t', usecols=[1])
             E = np.genfromtxt(cohFile, delimiter='\t', usecols=[0])

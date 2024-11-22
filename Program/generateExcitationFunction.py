@@ -8,11 +8,12 @@ from Tendl import *
 from Talys import *
 from Empire import *
 from CrossSectionData import *
+from Exfor import *
 
 
 class AssembleExcitationFunctionForTarget:
 
-    def __init__(self, crossSectionCsvPath, target, empireFilePath, talysFilePath, cohFilePath, aliceFilePath):
+    def __init__(self, crossSectionCsvPath, target, empireFilePath, talysFilePath, cohFilePath, aliceFilePath, exforFilePath):
         self.crossSectionCsvPath = crossSectionCsvPath
         self.target = target
         self.empireFilePath = empireFilePath
@@ -20,10 +21,18 @@ class AssembleExcitationFunctionForTarget:
         self.aliceFilePath = aliceFilePath
         self.cohFilePath = cohFilePath
         self.crossSectionData = CrossSection(crossSectionCsvPath)
+        self.coh = Coh(target, cohFilePath)
         self.tendl = Tendl(target)
         self.empire = Empire(target, empireFilePath)
         self.talys = Talys(talysFilePath)
         self.alice = Alice(aliceFilePath)
+        self.exfor = Exfor(exforFilePath)
+
+    def collectCrossSections(self, reaction, label=None):
+        self.crossSectionData.plotCrossSection(reaction, label)
+
+    def plotComparableCrossSection(self, reaction, label, color):
+        self.crossSectionData.plotComparableCrossSection(reaction, label, color)
 
     def collectDataAndModels(
         self,
@@ -39,14 +48,17 @@ class AssembleExcitationFunctionForTarget:
         parentIsomerLevel = None,
         parentNuclearState = None,
         parentIsomerState = None,
-        reactionParent = None
+        reactionParent = None,
+        independent = None # For exfor. If None --> independent == True
         ):
-        self.crossSectionData.plotCrossSection(reaction = reaction)
-        self.tendl.plotTendl23(productZ, productA, isomerLevel, feeding, branchingRatio, parentIsomerLevel)
+        # self.crossSectionData.plotCrossSection(reaction = reaction)
+        self.tendl.plotTendl23(productZ, productA, isomerLevel, feeding, branchingRatio, parentIsomerLevel) # Not working on new mac
         self.empire.plotEmpire(productZ, productA, reaction, isomerState, feeding, parentIsomerState, branchingRatio, reactionParent)
         self.talys.plotTalys(productZ, productA, targetFoil, isomerLevel, feeding, branchingRatio, parentIsomerLevel)
-        # self.coh_natIr.plotCoh(productZ = '78', productA='193', reaction='Ir_193mPt', isomerState = 'm')
+        self.coh.plotCoh(productZ, productA, reaction, isomerState) # Not working with new datasets
+        # self.coh.plotCoh(productZ = '78', productA='193', reaction='Ir_193mPt', isomerState = 'm') # Not working with new datasets
         self.alice.plotAlice(productZ, productA, targetFoil, nuclearState, feeding, branchingRatio, parentNuclearState)
+        self.exfor.plotExforData(reaction, independent)
 
 
 class GenerateExcitationFunction:
@@ -54,7 +66,7 @@ class GenerateExcitationFunction:
     def __init__(self, directoryFigs = None):
         self.directoryFigs = directoryFigs
 
-    def plotExcitationFunction(self, title, reaction, maxCs=None, show=False, save=False):
+    def plotExcitationFunction(self, title=None, reaction=None, maxCs=None, show=False, save=False):
         # pathToFigs = os.getcwd() + '/' + dirUpdatedFigures + '/'
         plt.xlabel('Deuteron Energy (MeV)')
         plt.ylabel('Cross Section (mb)')
@@ -68,7 +80,10 @@ class GenerateExcitationFunction:
         else:
             plt.gca().set_ylim(bottom=0, top=maxCs)
         if save:
-            plt.savefig(self.figPath(reaction), dpi=300)
+            if reaction != None:
+                plt.savefig(self.figPath(reaction), dpi=300)
+            else: 
+                raise Exception("In order to save the excitation function, a reaction must be present (e.g. Ni_60Cu)")
         if show:
             plt.show()
 

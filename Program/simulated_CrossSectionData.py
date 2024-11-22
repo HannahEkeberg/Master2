@@ -1191,14 +1191,14 @@ class SimCrossSectionData:
 			#print("**")
 			#print(author)
 			#print(author)
-			author_new  = []
+			authors  = []
 			for auth in author:
 				#print(auth)
 				if '+' in auth:
 					#print("in")
-					author_new.append(auth.replace('+', ''))
+					authors.append(auth.replace('+', ''))
 			#print(author_new)
-			return E, dE, CS, dCS, author_new
+			return E, dE, CS, dCS, authors
 		else:
 			#print("exfor file does not exist for {}".format(reaction))
 			return 0, 0, 0, 0, '0'

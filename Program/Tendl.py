@@ -2,12 +2,12 @@ from tools import *
 import numpy as np
 import requests
 import matplotlib.pyplot as plt
+from urllib.request import urlopen
 
 class Tendl:
 
     def __init__(self, target):
-        # target = {"Ir191": 0.373, "Ir193": 0.627}
-        self.target = target
+        self.target = target # target = {"Ir191": 0.373, "Ir193": 0.627}
 
     def tendlDeuteronData(self, productZ, productA, isomerLevel = None):
         targetFoil = list(self.target.keys())[0][0:2]
@@ -26,11 +26,14 @@ class Tendl:
         return E, Cs
 
     def plotTendl23(self, productZ, productA, isomerLevel = None, betaFeeding = None, branchingRatio = None, parentIsomerLevel = None):
-        E, Cs = self.tendlDeuteronData(productZ, productA, isomerLevel)
-        if betaFeeding:
-            CsParent = self.correctForBetaFeeding(productZ, productA, betaFeeding, branchingRatio, parentIsomerLevel)[0]
-            Cs = Cs + CsParent
-        plt.plot(E, Cs, label='TENDL-2023', linestyle='--', color='blue')
+        try:
+            E, Cs = self.tendlDeuteronData(productZ, productA, isomerLevel)
+            if betaFeeding:
+                CsParent = self.correctForBetaFeeding(productZ, productA, betaFeeding, branchingRatio, parentIsomerLevel)[1]
+                Cs = Cs + CsParent
+            plt.plot(E, Cs, label='TENDL-2023', linestyle='--', color='blue')
+        except:
+            print("Unable to retrive tendl data, perhaps no internet connection?")
 
     def correctForBetaFeeding(self, productZ, productA, betaFeeding, branchingRatio, parentIsomerLevel):
         if (betaFeeding  == 'beta+'):
@@ -56,9 +59,11 @@ class Tendl:
         + targetFoil + '/' + target
         + '/tables/residual/rp'
         + product + fileEnding)
+        # https://tendl.web.psi.ch/tendl_2023/deuteron_file/Ir/Ir193/tables/residual/rp078193.L05
+        # https://tendl.web.psi.ch/tendl_2023/deuteron_file/Ir/193Ir/tables/residual/rp07819305
 
     def tendlFileEnding(self, isomerLevel=None):
-        return '.tot' if isomerLevel==None else '.L'+ isomerLevel
+        return '.tot' if isomerLevel==None else '.L' + isomerLevel
 
     def retrieveTendlDataFromUrl(self, url, target):
         try:
@@ -71,7 +76,12 @@ class Tendl:
         Cs = tendlData[:,1]
         return E, Cs*abundance
 
-# tendl = Tendl({"Ir191": 0.373, "Ir193": 0.627})
+    def retrieveDataFromUrlWithNumpy(self, url):
+        tendl_data = np.genfromtxt(urlopen("https://tendl.web.psi.ch/tendl_2023/deuteron_file/Ir/Ir193/tables/residual/rp078193.L05"), delimiter=" ")
+        energy = tendl_data[:,0]
+        xs = tendl_data[:,1]
+        return energy, xs
+
 # tendl.plotTendl23( '78', '188', 'Ir_188Ir', betaFeeding = 'beta+', branchingRatio=1.0)
 
 
