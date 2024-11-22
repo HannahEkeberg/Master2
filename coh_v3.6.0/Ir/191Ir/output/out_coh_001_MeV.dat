@@ -1,0 +1,51 @@
+###################################################################################################
+#                                                                                    3.6.0-Cordelia
+#
+#                                                      .oooooo.             ooooo   ooooo        
+#     Clair de Lune                                   d8P    Y8b             888     888         
+#     =============                                  888           .ooooo.   888     888         
+#                                                    888          d88   88b  888ooooo888         
+# Votre ame est un paysage choisi                    888          888   888  888     888  dP^Y8b 
+# Que vont charmant masques et bergamasques           88b    ooo  888   888  888     888      8P 
+# Jouant du luth et dansant et quasi                   Y8bood8P    Y8bod8P' o888o   o888o   <8B  
+# Tristes sous leurs deguisements fantasques.                                           8b    8b 
+#                                                                                        Y8oo8P  
+#
+# Tout en chantant sur le mode mineur            Au calme clair de lune triste et beau,
+# L'amour vainqueur et la vie opportune          Qui fait rever les oiseaux dans les arbres
+# Ils n'ont pas l'air de croire a leur bonheur   Et sangloter d'extase les jets d'eau,
+# Et leur chanson se mele au clair de lune,      Les grands jets d'eau sveltes parmi les marbres.
+# 
+#                                                                                   Paul Verlaine
+#
+######################################################################################## Moonage 11
+###################################################################################################
+#                                                                                    3.6.0-Cordelia
+#          
+#......................................................................../  077-191Ir //   1.000000
+#                                                                                 SYSTEM PARAMETERS
+#            AtomicNum    MassNum
+#    Target         77        191
+#  Incident          1          2
+#            Ecms[MeV]  Elab[MeV] ReduceMass WaveNumber
+     Energy 9.8956e-01 1.0000e+00 1.9931e+00 3.0719e-01
+#......................................................................../  077-191Ir //   1.000000
+#                                                                             ROTATIONAL STATE DATA
+#             Energy       Spin   WaveNum Eout[MeV]   Coulomb   Sig0   
+      Level   0.00000       1.5   0.30719   0.98956  17.20964  32.54044
+#......................................................................../  077-191Ir //   1.000000
+#                                                                            DEFORMATION PARAMETERS
+#              Lambda     Beta
+#......................................................................../  077-191Ir //   1.000000
+#                                                                           OPTICAL MODEL POTENTIAL
+# OMP  0      V         Vs        Wv        Ws        Vso       Wso       Coul
+      r[fm]   1.15065   0.00000   1.32231   1.36039   0.97200   0.00000      1.30
+      a[fm]   0.79156   0.00000   0.27910   0.88806   1.01100   0.00000
+ Depth[MeV] 100.18755   0.00000   1.16555  10.79972   7.11400   0.00000
+#......................................................................../  077-191Ir //   1.000000
+#                                                                      TOTAL REACTION CROSS SECTION
+  Sigma[mb] 0.0000e+00
+#......................................................................../  077-191Ir //   1.000000
+#                                                                     DISCRETE DIRECT CROSS SECTION
+#              Ex[MeV]     Spin    Eout[MeV]  Sigma[mb]
+  Direct  0    0.00000      1.5   9.8956e-01 1.2741e-51
