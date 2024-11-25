@@ -1,7 +1,18 @@
 import matplotlib.pylab as plt
-import os
+import os 
 
 class OrderCoh:
+    """
+    * createFolder must be run for each target
+
+    * unify files for parsing must be run for each target, unless this is done manually by running 
+    'cat out_coh_*_MeV.dat > out_coh_merged.dat' in the ./output directory to unify files for parsing
+
+    * readCoh is used for all isotopes with no isomers present. Will generate plot and txt-datafile without G, 
+
+    * readCohIsomers is used 
+
+    """
 
     def __init__(self, target, foil):
         self.target = target
@@ -11,6 +22,12 @@ class OrderCoh:
         path = self.foil + '/' + self.target +'/plots'
         if not os.path.exists(path):
             os.makedirs(path)
+
+    def unifyFilesForParsing(self):
+        os.chdir(self.foil + '/' + self.target +'/output')
+        command = 'cat out_coh_*_MeV.dat > out_coh_merged.dat'
+        os.system(command)
+        os.chdir('../../../')
 
     def readCoh(self, products):
                 # Run 'cat out_coh_*_MeV.dat > out_coh_merged.dat' in the ./output directory to unify files for parsing
@@ -86,9 +103,9 @@ class OrderCoh:
         # Run 'cat out_coh_*_MeV.dat > out_coh_merged.dat' in the ./output directory to unify files for parsing
         pathToTarget = self.foil + '/' + self.target
         with open(pathToTarget + '/output/out_coh_merged.dat','r') as f:
+
             energies = []
             cross_sections = dict.fromkeys(products)
-            # print(cross_sections)
             reading = False
 
             for line in f:
@@ -103,21 +120,42 @@ class OrderCoh:
                 elif reading:
                     isotope = line.split()[1]
                     if isotope in cross_sections.keys():
+                        # print(len(line.split()))
                         if cross_sections[isotope] is None:
-                            cross_sections[isotope] = {'G':[], 'M':[]}
-                        ex = float(line.split()[2]) #excitation energy
-                        if ex > 0:
-                            key = 'M'
-                        else:
-                            key = 'G'
-                        while len(cross_sections[isotope][key])<len(energies)-1:
-                            cross_sections[isotope][key].append(0.0)
+                            cross_sections[isotope] = {'G':[], 'M1':[], 'M2':[]}
+                        ex = float(line.split()[2])
+                        # print(isotope)
+                        # print(len(cross_sections[isotope]))
+                        # print(type(line.split()))
+                        if len(line.split()) == 6:
+                            if ex > 0:
+                                key = 'M1'
+                            else:
+                                key = 'G'
+                            while len(cross_sections[isotope][key])<len(energies)-1:
+                                cross_sections[isotope][key].append(0.0)
+                            cross_sections[isotope][key].append(float(line.split()[5]))
+                        elif len(line.split()) == 7:
+                            meta = int(line.split()[6])
+                            if (ex > 0) and (meta == 1):
+                                key = 'M1'
+                            elif (ex > 0) and (meta == 2):
+                                key = 'M2' 
+                            else:
+                                key = 'G'
+                            # print(cross_sections[isotope][key])
+                            while len(cross_sections[isotope][key])<len(energies)-1:
+                                cross_sections[isotope][key].append(0.0)
 
-                        cross_sections[isotope][key].append(float(line.split()[5]))
+                            cross_sections[isotope][key].append(float(line.split()[5]))
         for isotope in products:
-            for key in ['M','G']:
-                if cross_sections[isotope][key] is None:
-                    print('nothing for ', isotope)
+            if cross_sections[isotope] is None:
+                print('nothing for ', isotope)
+                continue
+            for key in ['M2','M1','G']:
+                print(cross_sections[isotope])
+                if len(cross_sections[isotope][key]) == 0:
+                    print('nothing for ', isotope, ', with key ', key)
                     continue
                 #print('plotting ', isotope)
                 try:
@@ -138,11 +176,3 @@ class OrderCoh:
 
                     for i in range(len(energies)):
                         f.write(str(energies[i])+"\t"+str(cross_sections[isotope][key][i])+"\n")
-
-groundstates = ['078-188Pt', '078-189Pt', '078-191Pt', '077-188Ir', '077-189Ir', '077-190Ir','077-192Ir', '077-194Ir']
-isomers = ['078-193Pt', '077-189Ir', '077-190Ir', '077-194Ir']
-coh = OrderCoh("193Ir", 'Ir')
-# coh.readCoh(groundstates)
-# coh.readCohIsomers(isomers)
-coh.readCohIsomers(['077-190Ir'])
-
