@@ -23,26 +23,44 @@ class Talys:
     productA,
     targetFoil,
     isomerLevel = None,
-    betaFeeding = None, # only beta+ beta-
-    branchingRatio = None,
-    parentIsomerLevel = None,
+    # betaFeeding = None, # only beta+ beta-
+    # branchingRatio = None,
+    # parentIsomerLevel = None,
     ):
         try:
             E, Cs = self.talysData(productZ, productA, targetFoil, isomerLevel)
-            if betaFeeding:
-                CsParent = self.correctForBetaFeeding(productZ, productA, targetFoil, betaFeeding, branchingRatio, parentIsomerLevel)[-1] # only cross section
-                Cs = Cs + CsParent
+            # if betaFeeding:
+            #     CsParent = self.correctForBetaFeeding(productZ, productA, targetFoil, betaFeeding, branchingRatio, parentIsomerLevel)[-1] # only cross section
+            #     Cs = Cs + CsParent
             plt.plot(E, Cs, label='TALYS-2.04', linestyle='-.', color='orange')
         except:
             print("No talys file found for targetfoil: " + targetFoil + "and product Z: " + productZ + "and product A: " + productA)
-
-    def correctForBetaFeeding(self, productZ, productA, targetFoil, betaFeeding, branchingRatio, parentIsomerLevel):
-        if (betaFeeding  == 'beta+'):
-            parentZ = str(int(productZ)+1); parentA = productA
-        elif (betaFeeding == 'beta-'):
-            parentZ = str(int(productZ)-1); parentA = productA
-        E, Cs = self.talysData(parentZ, parentA, targetFoil, parentIsomerLevel)
-        return E, Cs*branchingRatio
+   
+    def plotdataWithMultipleFeeding(self, productZ, productA, targetFoil, isomerLevel= None, betaPlusDecayChain = None, betaMinusDecayChain = None, isomerDecayChain = None):
+        # {isotope: [productZ, branchingRatio isomerLevel]} #beta+/beta-
+        # {isotope: [branchingRatio isomerLevel]} #isomer
+        try:
+            E, Cs = self.talysData(productZ, productA, targetFoil, isomerLevel)
+            Cs_betaplus = []; Cs_betaMinus = []; Cs_isomer = []
+            if betaPlusDecayChain:
+                for i in list(betaPlusDecayChain.keys()):
+                    Z = betaPlusDecayChain[i][0]
+                    branchingRatio= betaPlusDecayChain[i][1]
+                    isomerLevel = betaPlusDecayChain[i][2]
+                    E_bp, Cs_bp = self.talysData(Z, productA, targetFoil, isomerLevel)
+                    Cs_betaplus.append(Cs_bp*branchingRatio)
+            if betaMinusDecayChain:
+                print("Not yet implemented for beta minus TENDL")
+            if isomerDecayChain:
+                for i in list(isomerDecayChain.keys()):
+                    branchingRatio= isomerDecayChain[i][0]
+                    isomerLevel = isomerDecayChain[i][1]
+                    E_i, Cs_i = self.talysData(productZ, productA, isomerLevel)
+                    Cs_isomer.append(Cs_i*branchingRatio)
+            totCs = Cs + sum(Cs_betaplus) + sum(Cs_betaMinus) + sum(Cs_isomer)
+            plt.plot(E, totCs, label='TALYS-2.04', linestyle='-.', color='orange')
+        except:
+            print("Unable to retrive tendl data, perhaps no internet connection?")
 
     def product(self, productZ, productA):
         if len(productZ) <= 2:

@@ -10,6 +10,26 @@ from Empire import *
 from CrossSectionData import *
 from Exfor import *
 
+"""
+    *  isomerLevel - TENDL, TALYS:
+        examples: None (becomes '.tot') '00' - groundstate '05' - isomerstate 5. Check tendl what level isomer is at
+        If None, '.tot' is used, which is the cumulative cross section for isomer + ground state
+   
+    *  isomerState - EMPIRE, CoH:
+        examples: g, m, m2. None is total cross section. For coh: g->G, m->M1, m2->M2.
+        For empire: g->'', m->M, m2->M2
+        To get a total cross section, all isomers must be listed with branching ratio.
+        As well as beta feeding with branching ratio
+
+    *   nuclearState - ALICE 
+        Represents which column to look at in Alice file.
+        None or 'total' - total cross section column 3,
+        'groundstate' - column 5, 'isomer1' - column 7, 'isomer2' - column 9
+
+    *   betafeeding - {parentIsomer}
+
+    *  independent - implies whether experimental exfor data is independent or cumulative
+"""
 
 class AssembleExcitationFunctionForTarget:
 
@@ -30,36 +50,55 @@ class AssembleExcitationFunctionForTarget:
 
     def collectCrossSections(self, reaction, label=None):
         self.crossSectionData.plotCrossSection(reaction, label)
+    
+    def plotCrossSectionWithLeftRightUncertainty(self, reaction, label=None):
+        self.crossSectionData.plotCrossSectionWithLeftRightUncertainty(reaction, label)
 
     def plotComparableCrossSection(self, reaction, label, color):
         self.crossSectionData.plotComparableCrossSection(reaction, label, color)
 
+    def plotMonitorCrossSections(self, reactionDir, label = None):
+        self.crossSectionData.plotMonitorCrossSection(reactionDir, label)
+
     def collectDataAndModels(
         self,
         reaction, # 'Ir_193mPt'
-        targetFoil,
+        targetFoil, # 'Ir'
         productZ,
         productA,
         isomerLevel = None, #'05', tot (tendl, talys)
         isomerState = None, #m, m2 (empire, coh)
         nuclearState = None, # groundState, isomer1, isomer2 (alice)
-        feeding = None, #beta+, beta- (empire, coh, alice))
-        branchingRatio = None, #1, 0.5 (empire, coh, alice)
+        feeding = None,
+        branchingRatio = None,
         parentIsomerLevel = None,
-        parentNuclearState = None,
         parentIsomerState = None,
+        parentNuclearState = None,
         reactionParent = None,
         independent = None # For exfor. If None --> independent == True
         ):
-        # self.crossSectionData.plotCrossSection(reaction = reaction)
-        self.tendl.plotTendl23(productZ, productA, isomerLevel, feeding, branchingRatio, parentIsomerLevel) # Not working on new mac
-        self.empire.plotEmpire(productZ, productA, reaction, isomerState, feeding, parentIsomerState, branchingRatio, reactionParent)
-        self.talys.plotTalys(productZ, productA, targetFoil, isomerLevel, feeding, branchingRatio, parentIsomerLevel)
-        self.coh.plotCoh(productZ, productA, reaction, isomerState) # Not working with new datasets
-        # self.coh.plotCoh(productZ = '78', productA='193', reaction='Ir_193mPt', isomerState = 'm') # Not working with new datasets
-        self.alice.plotAlice(productZ, productA, targetFoil, nuclearState, feeding, branchingRatio, parentNuclearState)
+        self.tendl.plotTendl23(productZ, productA, isomerLevel)#, feeding, branchingRatio, parentIsomerLevel)
+        self.empire.plotEmpire(productZ, productA, reaction, isomerState)# , feeding, parentIsomerState, branchingRatio, reactionParent)
+        self.talys.plotTalys(productZ, productA, targetFoil, isomerLevel)#, feeding, branchingRatio, parentIsomerLevel)
+        self.coh.plotCoh(productZ, productA, reaction, isomerState)
+        self.alice.plotAlice(productZ, productA, targetFoil, nuclearState)#, feeding, branchingRatio, parentNuclearState)
         self.exfor.plotExforData(reaction, independent)
 
+    # def collectDataAndModelsWithFeeding(
+    #     self,
+    #     reaction, # 'Ir_193mPt'
+    #     targetFoil, # 'Ir'
+    #     productZ,
+    #     productA,
+    #     isomerLevel = None, #'05', tot (tendl, talys)
+    #     isomerState = None, #m, m2 (empire, coh)
+    #     nuclearState = None, # groundState, isomer1, isomer2 (alice)
+    #     betaPlusDecayChain=None,
+    #     betaMinusDecayChain=None,
+    #     isomerDecayChain=None
+    # ):
+    #     self.empire.plotdataWithMultipleFeeding(productZ, productA, reaction, isomerState, betaPlusDecayChain=None, betaMinusDecayChain=None, isomerDecayChain=None)
+    #     self.coh.plotdataWithMultipleFeeding(productZ, productA, reaction, isomerState, betaPlusDecayChain=None, betaMinusDecayChain=None, isomerDecayChain=None)
 
 class GenerateExcitationFunction:
 
@@ -95,3 +134,15 @@ class GenerateExcitationFunction:
             return figName + '.png'
         else:
             return os.getcwd() + '/' + self.directoryFigs + '/' + figName + '.png'
+
+"""
+Beta decay chain:
+give the highest Z to desired isotope (which we already have).
+If beta +, proton -1. If beta -
+
+Give list of branching ratios. 
+Find reaction modelling code per ... 
+
+
+Can do the same with isomers... 
+"""

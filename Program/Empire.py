@@ -24,17 +24,11 @@ class Empire:
         CsSummed = sum(Cs)
         E = next(item for item in E if item is not None) # Use first not None energy for reaction files
         E, Cs = Tools().interpolate(E, CsSummed)
-        # if E[1]==1:
-        #     zero_padding = np.linspace(0,1,5)
-        #     cs_zeros = np.zeros(len(zero_padding))
-        #     E = np.concatenate((zero_padding, E))
-        #     Cs = np.concatenate((cs_zeros, Cs))
         if E[2]==1:
             zero_padding = np.linspace(0,2,5)
             cs_zeros = np.zeros(len(zero_padding))
             E = np.concatenate((zero_padding, E))
             Cs = np.concatenate((cs_zeros, Cs))
-        # E, Cs = Tools().zeroPadding(E, Cs)
         return E, Cs
 
     def plotEmpire(
@@ -42,33 +36,61 @@ class Empire:
         productZ,
         productA,
         reaction,
-        isomerState = None,
+        isomerState = None
         # independent = True,
-        feeding = None,
-        parentIsomerState = None,
-        branchingRatio = None,
-        reactionParent = None
+        # feeding = None,
+        # parentIsomerState = None,
+        # branchingRatio = None,
+        # reactionParent = None
         ):
         try:
             E, Cs = self.empireData(productZ, productA, reaction, isomerState)
-            if feeding:
-                Cs_parent = self.correctForFeeding(feeding, productZ, productA, parentIsomerState, reactionParent, branchingRatio)[1]
-                Cs = Cs + Cs_parent
+            # if feeding:
+                # Cs_parent = self.correctForFeeding(feeding, productZ, productA, parentIsomerState, reactionParent, branchingRatio)[1]
+                # Cs = Cs + Cs_parent
             plt.plot(E, Cs, label='EMPIRE-3.2.3', linestyle='--', color='red', linewidth=0.7)
         except:
             print("No EMPIRE file found for: " + reaction)
 
-    def correctForFeeding(self, feeding, productZ, productA, parentIsomerState, reactionParent, branchingRatio):
-        if (feeding  == 'beta+'):
-            parentZ = str(int(productZ)+1); parentA = productA
-        elif (feeding == 'beta-'):
-            parentZ = str(int(productZ)-1); parentA = productA
-        elif feeding == 'isomer':
-            parentZ = productZ; parentA = productA
-        else:
-            raise Exception("Feeding invalid: " + feeding)
-        E, Cs_parent = self.empireData(parentZ, parentA, reactionParent, parentIsomerState)
-        return E, Cs_parent*branchingRatio
+    def plotdataWithMultipleFeeding(self, productZ, productA, reaction, isomerState, betaPlusDecayChain=None, betaMinusDecayChain=None, isomerDecayChain=None):
+        # Decay chain {"189Pt": [78, 1.0, None]} --> {nucleus: [productZ, branchingRatio, state]}
+        # Decay chain {"189Pt": [1.0, None]} --> {nucleus: [branchingRatio, state]} isomer
+        try:
+            E, Cs = self.empireData(productZ, productA, reaction, isomerState)
+            Cs_betaplus = []; Cs_betaMinus = []; Cs_isomer = []
+            if betaPlusDecayChain:
+                for i in list(betaPlusDecayChain.keys()):
+                    Z = betaPlusDecayChain[i][0]
+                    branchingRatio= betaPlusDecayChain[i][1]
+                    isomerState=betaPlusDecayChain[i][2]
+                    reaction = betaPlusDecayChain[i][3]
+                    E_bp, Cs_bp = self.empireData(Z, productA, reaction, isomerState)
+                    Cs_betaplus.append(Cs_bp*branchingRatio)
+            if betaMinusDecayChain:
+                print("Coh not implemented for beta minus decay chain")
+            if isomerDecayChain:
+                for i in list(isomerDecayChain.keys()):
+                    branchingRatio= isomerDecayChain[i][0]
+                    isomerState=isomerDecayChain[i][1]
+                    reaction = isomerDecayChain[i][2]
+                    E_i, Cs_i = self.empireData(productZ, productA, reaction, isomerState)
+                    Cs_isomer.append(Cs_i*branchingRatio)
+            totCs = Cs + sum(Cs_betaplus) + sum(Cs_betaMinus) + sum(Cs_isomer)
+            plt.plot(E, totCs, label='EMPIRE-3.2.3', linestyle='--', color='red', linewidth=0.7)
+        except:
+            print("No EMPIRE file found for: " + reaction)
+
+    # def correctForFeeding(self, feeding, productZ, productA, parentIsomerState, reactionParent, branchingRatio):
+    #     if (feeding  == 'beta+'):
+    #         parentZ = str(int(productZ)+1); parentA = productA
+    #     elif (feeding == 'beta-'):
+    #         parentZ = str(int(productZ)-1); parentA = productA
+    #     elif feeding == 'isomer':
+    #         parentZ = productZ; parentA = productA
+    #     else:
+    #         raise Exception("Feeding invalid: " + feeding)
+    #     E, Cs_parent = self.empireData(parentZ, parentA, reactionParent, parentIsomerState)
+    #     return E, Cs_parent*branchingRatio
 
     def retrieveDataFromEmpireFile(self, filepath, target, productZ, productA, reaction):
         targetIsotopeNumber = target[2:]; targetFoil = target[:2]

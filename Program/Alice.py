@@ -10,7 +10,8 @@ class Alice:
 
     def aliceData(self, productZ, productA, targetFoil, nuclearState = 'total'):
         # nuclearState = total, groundState, isomer1, isomer2
-        E, Cs = self.extractDataFromAliceFile(productZ, productA, targetFoil, nuclearState)
+        E, Cs = self.extractDataFromAliceFile(productZ, productA, targetFoil, nuclearState) 
+        Cs = self.checkIfValidCs(Cs)
         E, Cs = Tools().interpolate(E, Cs)
         if E[1]==1:
             zero_padding = np.linspace(0,1,5)
@@ -19,25 +20,48 @@ class Alice:
             Cs = np.concatenate((cs_zeros, Cs))
         return E, Cs
 
-    def plotAlice(self, productZ, productA, targetFoil, nuclearState = None, betaFeeding = None, branchingRatio = None, parentNuclearState = None):
+    def plotAlice(self, productZ, productA, targetFoil, nuclearState = None): #, betaFeeding = None, branchingRatio = None, parentNuclearState = None):
         try:
             if nuclearState == None:
                 nuclearState = 'total'
             E, Cs = self.aliceData(productZ, productA, targetFoil, nuclearState)
-            if betaFeeding:
-                if parentNuclearState == None:
-                    parentNuclearState = 'total'
-                CsParent = self.correctForBetaFeeding(productZ, productA, targetFoil, betaFeeding, branchingRatio, parentNuclearState)[1]
-                Cs = Cs + CsParent
             E, Cs = Tools().zeroPadding(E, Cs)
             plt.plot(E, Cs, label='ALICE-2020', color='green', linestyle=':')
         except:
-            print("No alice file found for targetfoil: " + targetFoil + "and product Z: " + productZ + "and product A: " + productA)
+            print("No alice file found for targetfoil: " + targetFoil + " and product Z: " + productZ + " and product A: " + productA)
+
+    def plotAliceWithFeeding(self, productZ, productA, targetFoil, nuclearState = None, betaPlusDecayChain = None, betaMinusDecayChain = None, isomerDecayChain = None):
+        # {isotope: [productZ, branchingRatio, nuclearState]} beta +/-
+        # {isotope: [branchingRatio, nuclearState]} isomer
+        if nuclearState == None:
+                nuclearState = 'total'
+        E, Cs = self.aliceData(productZ, productA, targetFoil, nuclearState)
+        Cs_betaplus = []; Cs_betaMinus = []; Cs_isomer = []
+        if betaPlusDecayChain:
+            for i in list(betaPlusDecayChain.keys()):
+                Z = betaPlusDecayChain[i][0]
+                branchingRatio= betaPlusDecayChain[i][1]
+                state = betaPlusDecayChain[i][2]
+                nuclearState= state if state is not None else 'total'
+                E_bp, Cs_bp = self.aliceData(Z, productA, targetFoil, nuclearState)
+                Cs_betaplus.append(Cs_bp*branchingRatio)
+        if betaMinusDecayChain:
+            print("Alice not implemented for beta minus decay chain")
+        if isomerDecayChain:
+            for i in list(isomerDecayChain.keys()):
+                branchingRatio= isomerDecayChain[i][0]
+                state = isomerDecayChain[i][1]
+                nuclearState= state if state is not None else 'total'
+                E_i, Cs_i = self.aliceData(productZ, productA, targetFoil, nuclearState)
+                Cs_isomer.append(Cs_i*branchingRatio)
+        totCs = Cs + sum(Cs_betaplus) + sum(Cs_betaMinus) + sum(Cs_isomer)
+        plt.plot(E, totCs, label='ALICE-2020', color='green', linestyle=':')
+        pass
 
     def extractDataFromAliceFile(self, productZ, productA, targetFoil, nuclearState):
         filename = self.aliceFilepath + 'plot_' + targetFoil #+ '_data'
         csColumn = self.getCsColumnFromNuclearState(nuclearState)
-        E = []; Cs = [];
+        E = []; Cs = []
         content = self.getDataFromAliceFile(filename)
         for line in range(len(content)):
             formatLine = ",".join(content[line].split())
@@ -57,16 +81,17 @@ class Alice:
         ind_end   = [line for line in range(len(content_full)) if endMark in content_full[line]][0]-2  # list of different, only want the first element
         return content_full[ind_begin:ind_end]
 
-    def correctForBetaFeeding(self, productZ, productA,  targetFoil, betaFeeding, branchingRatio, parentNuclearState):
-        if (betaFeeding  == 'beta+'):
-            parentZ = str(int(productZ)+1); parentA = productA
-        elif (betaFeeding == 'beta-'):
-            parentZ = str(int(productZ)-1); parentA = productA
-        csColumnParent = self.getCsColumnFromNuclearState(parentNuclearState)
-        E, Cs = self.aliceData(parentZ, parentA, targetFoil, parentNuclearState)
-        return E, Cs*branchingRatio
+    # def correctForBetaFeeding(self, productZ, productA,  targetFoil, betaFeeding, branchingRatio, parentNuclearState):
+    #     if (betaFeeding  == 'beta+'):
+    #         parentZ = str(int(productZ)+1); parentA = productA
+    #     elif (betaFeeding == 'beta-'):
+    #         parentZ = str(int(productZ)-1); parentA = productA
+    #     csColumnParent = self.getCsColumnFromNuclearState(parentNuclearState)
+    #     E, Cs = self.aliceData(parentZ, parentA, targetFoil, parentNuclearState)
+    #     return E, Cs*branchingRatio
 
     def getCsColumnFromNuclearState(self, nuclearState):
+        print(nuclearState)
         if nuclearState == 'total':
             return 3
         elif nuclearState == 'groundState':
@@ -77,6 +102,12 @@ class Alice:
             return 9
         else:
             raise Exception("Invalid nuclear state for Alice: " + nuclearState)
+
+    def checkIfValidCs(self, Cs):
+        for i in range(len(Cs)):
+            if "*" in Cs[i]:
+                Cs[i] = 0
+        return Cs
 
 # alicePath = os.getcwd() + '/../alice2020/'
 # alice = Alice(alicePath).aliceData('78', '193', 'Ir', 'total')
