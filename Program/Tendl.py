@@ -32,12 +32,27 @@ class Tendl:
         return E, Cs
 
     def plotTendl23(self, productZ, productA, isomerLevel = None): #, feeding = None, branchingRatio = None, parentIsomerLevel = None):
+        # try:
+        E, Cs = self.tendlDeuteronData(productZ, productA, isomerLevel)
+        # if feeding == 'beta+' or feeding == 'beta-':
+            # CsParent = self.correctForFeeding(productZ, productA, feeding, branchingRatio, parentIsomerLevel)[1]
+            # Cs = Cs + CsParent
+        plt.plot(E, Cs, label='TENDL-2023', linestyle='--', color='blue')
+    # except:
+        # print("Unable to retrive tendl data, perhaps no internet connection?")
+
+    def plotTendl23Unique(self, productZ, productA, isomerLevel = None, color=None, lineStyle=None, label=None):
+        E, Cs = self.tendlDeuteronData(productZ, productA, isomerLevel)
+        plt.plot(E, Cs, label=label, linestyle=lineStyle, color=color)
         try:
+            # if color==None:
+            #     color='blue'
+            # if lineStyle==None:
+            #     linestyle='--'
+            # if label==None:
+            #     label = 'TENDL-2023'
             E, Cs = self.tendlDeuteronData(productZ, productA, isomerLevel)
-            # if feeding == 'beta+' or feeding == 'beta-':
-                # CsParent = self.correctForFeeding(productZ, productA, feeding, branchingRatio, parentIsomerLevel)[1]
-                # Cs = Cs + CsParent
-            plt.plot(E, Cs, label='TENDL-2023', linestyle='--', color='blue')
+            plt.plot(E, Cs, label=label, linestyle=linestyle, color=color)
         except:
             print("Unable to retrive tendl data, perhaps no internet connection?")
 
@@ -46,7 +61,7 @@ class Tendl:
         # {isotope: [branchingRatio isomerLevel]} #isomer
         try:
             E, Cs = self.tendlDeuteronData(productZ, productA, isomerLevel)
-            Cs_betaplus = []; Cs_betaMinus = []; Cs_isomer = []
+            Cs_betaplus = []; Cs_betaminus = []; Cs_isomer = []
             if betaPlusDecayChain:
                 for i in list(betaPlusDecayChain.keys()):
                     Z = betaPlusDecayChain[i][0]
@@ -55,14 +70,19 @@ class Tendl:
                     E_bp, Cs_bp = self.tendlDeuteronData(Z, productA, isomerLevel)
                     Cs_betaplus.append(Cs_bp*branchingRatio)
             if betaMinusDecayChain:
-                print("Not yet implemented for beta minus TENDL")
+                for i in list(betaMinusDecayChain.keys()):
+                    Z = betaMinusDecayChain[i][0]
+                    branchingRatio= betaMinusDecayChain[i][1]
+                    isomerLevel = betaMinusDecayChain[i][2]
+                    E_bm, Cs_bm = self.tendlDeuteronData(Z, productA, isomerLevel)
+                    Cs_betaminus.append(Cs_bm*branchingRatio)
             if isomerDecayChain:
                 for i in list(isomerDecayChain.keys()):
                     branchingRatio= isomerDecayChain[i][0]
                     isomerLevel = isomerDecayChain[i][1]
                     E_i, Cs_i = self.tendlDeuteronData(productZ, productA, isomerLevel)
                     Cs_isomer.append(Cs_i*branchingRatio)
-            totCs = Cs + sum(Cs_betaplus) + sum(Cs_betaMinus) + sum(Cs_isomer)
+            totCs = Cs + sum(Cs_betaplus) + sum(Cs_betaminus) + sum(Cs_isomer)
             plt.plot(E, totCs, label='TENDL-2023', linestyle='--', color='blue')
         except:
             print("Unable to retrive tendl data, perhaps no internet connection?")

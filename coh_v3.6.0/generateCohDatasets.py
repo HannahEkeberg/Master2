@@ -37,12 +37,14 @@ def generateCohDatasetsForNi():
 def generateCohDatasetsForCu():
     targetIsotopes = ['63Cu', '65Cu']
     noIsomers = ['029-064Cu','029-061Cu','026-059Fe', '027-061Co', '027-057Co', '027-056Co','028-065Ni' '030-065Zn', '030-063Zn', '030-062Zn']
+    # noIsomers = ['028-065Ni']
+    # groundStatesAndIsomes = ['028-065Ni']
     groundStatesAndIsomes = ['027-060Co', '025-052Mn']
     for target in targetIsotopes:
         coh = OrderCoh(target, 'Cu')
         coh.createFolder()
         coh.unifyFilesForParsing()
-        coh.readCoh(noIsomers)
+        # coh.readCoh(noIsomers)
         coh.readCohIsomers(groundStatesAndIsomes)
 
 generateCohDatasetsForCu()

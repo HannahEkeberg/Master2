@@ -182,7 +182,7 @@ class CrossSections:
         #print("I after", I)
         #print("I_Ni after", I_Ni)
         #I = self.I; dI = self.sigma_I_est
-        CS, dCS= self.cross_section_calc(n, A0, dA0, mass_density, sigma_mass_density, I, dI, lamb, reaction)
+        CS, dCS= self.(n, A0, dA0, mass_density, sigma_mass_density, I, dI, lamb, reaction)
 
         print("Relative uncertainty in cross section: ", dCS/CS*100)
         #self.modelling('Tendl', foil, Z, A, reaction, file_ending)
@@ -227,8 +227,8 @@ class CrossSections:
         else:
             type_CS='_independent'
 
-        if save_text==True:
-            np.savetxt(path_to_cs_csv  + reaction + type_CS, csv_save_array, delimiter=',', header='E, dE_l, dE_r, CS, dCS', fmt="%s"  )#, %.6f, %.6f")
+        # if save_text==True:
+            # np.savetxt(path_to_cs_csv  + reaction + type_CS, csv_save_array, delimiter=',', header='E, dE_l, dE_r, CS, dCS', fmt="%s"  )#, %.6f, %.6f")
 
 
 
@@ -1216,10 +1216,11 @@ class CrossSections:
             plt.gca().set_ylim(bottom=0, top=max_CS)
 
         if subtract!= None:
-            plt.savefig(path_to_cs_figs + reaction+'_subtracted.png', dpi=300)
+            pass
+            # plt.savefig(path_to_cs_figs + reaction+'_subtracted.png', dpi=300)
         else:
-
-            plt.savefig(path_to_cs_figs + reaction+'.png', dpi=300)
+            pass
+            # plt.savefig(path_to_cs_figs + reaction+'.png', dpi=300)
 
 
         plt.show()

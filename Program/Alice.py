@@ -8,53 +8,56 @@ class Alice:
     def __init__(self, aliceFilepath):
         self.aliceFilepath = aliceFilepath
 
-    def aliceData(self, productZ, productA, targetFoil, nuclearState = 'total'):
+    def aliceData(self, productZ, productA, targetFoil, nuclearState = 'total', threshold=None):
         # nuclearState = total, groundState, isomer1, isomer2
         E, Cs = self.extractDataFromAliceFile(productZ, productA, targetFoil, nuclearState) 
         Cs = self.checkIfValidCs(Cs)
-        E, Cs = Tools().interpolate(E, Cs)
-        if E[1]==1:
-            zero_padding = np.linspace(0,1,5)
-            cs_zeros = np.zeros(len(zero_padding))
-            E = np.concatenate((zero_padding, E))
-            Cs = np.concatenate((cs_zeros, Cs))
+        E, Cs = Tools().interpolate(E, Cs, True)
+        if threshold != None:
+            E,Cs = Tools().setThreshold(E, Cs, threshold)
         return E, Cs
 
-    def plotAlice(self, productZ, productA, targetFoil, nuclearState = None): #, betaFeeding = None, branchingRatio = None, parentNuclearState = None):
+    def plotAlice(self, productZ, productA, targetFoil, nuclearState = None, threshold=None): #, betaFeeding = None, branchingRatio = None, parentNuclearState = None):
         try:
             if nuclearState == None:
                 nuclearState = 'total'
-            E, Cs = self.aliceData(productZ, productA, targetFoil, nuclearState)
+            E, Cs = self.aliceData(productZ, productA, targetFoil, nuclearState, threshold)
             E, Cs = Tools().zeroPadding(E, Cs)
             plt.plot(E, Cs, label='ALICE-2020', color='green', linestyle=':')
         except:
             print("No alice file found for targetfoil: " + targetFoil + " and product Z: " + productZ + " and product A: " + productA)
 
-    def plotAliceWithFeeding(self, productZ, productA, targetFoil, nuclearState = None, betaPlusDecayChain = None, betaMinusDecayChain = None, isomerDecayChain = None):
+    def plotAliceWithFeeding(self, productZ, productA, targetFoil, nuclearState = None, betaPlusDecayChain = None, betaMinusDecayChain = None, isomerDecayChain = None, threshold=None):
         # {isotope: [productZ, branchingRatio, nuclearState]} beta +/-
         # {isotope: [branchingRatio, nuclearState]} isomer
         if nuclearState == None:
                 nuclearState = 'total'
-        E, Cs = self.aliceData(productZ, productA, targetFoil, nuclearState)
-        Cs_betaplus = []; Cs_betaMinus = []; Cs_isomer = []
+        E, Cs = self.aliceData(productZ, productA, targetFoil, nuclearState, threshold)
+        Cs_betaplus = []; Cs_betaminus = []; Cs_isomer = []
         if betaPlusDecayChain:
             for i in list(betaPlusDecayChain.keys()):
                 Z = betaPlusDecayChain[i][0]
                 branchingRatio= betaPlusDecayChain[i][1]
                 state = betaPlusDecayChain[i][2]
                 nuclearState= state if state is not None else 'total'
-                E_bp, Cs_bp = self.aliceData(Z, productA, targetFoil, nuclearState)
+                E_bp, Cs_bp = self.aliceData(Z, productA, targetFoil, nuclearState, threshold)
                 Cs_betaplus.append(Cs_bp*branchingRatio)
         if betaMinusDecayChain:
-            print("Alice not implemented for beta minus decay chain")
+            for i in list(betaMinusDecayChain.keys()):
+                Z = betaMinusDecayChain[i][0]
+                branchingRatio= betaMinusDecayChain[i][1]
+                state = betaMinusDecayChain[i][2]
+                nuclearState= state if state is not None else 'total'
+                E_bm, Cs_bm = self.aliceData(Z, productA, targetFoil, nuclearState, threshold)
+                Cs_betaminus.append(Cs_bm*branchingRatio)
         if isomerDecayChain:
             for i in list(isomerDecayChain.keys()):
                 branchingRatio= isomerDecayChain[i][0]
                 state = isomerDecayChain[i][1]
                 nuclearState= state if state is not None else 'total'
-                E_i, Cs_i = self.aliceData(productZ, productA, targetFoil, nuclearState)
+                E_i, Cs_i = self.aliceData(productZ, productA, targetFoil, nuclearState, threshold)
                 Cs_isomer.append(Cs_i*branchingRatio)
-        totCs = Cs + sum(Cs_betaplus) + sum(Cs_betaMinus) + sum(Cs_isomer)
+        totCs = Cs + sum(Cs_betaplus) + sum(Cs_betaminus) + sum(Cs_isomer)
         plt.plot(E, totCs, label='ALICE-2020', color='green', linestyle=':')
         pass
 
@@ -91,7 +94,6 @@ class Alice:
     #     return E, Cs*branchingRatio
 
     def getCsColumnFromNuclearState(self, nuclearState):
-        print(nuclearState)
         if nuclearState == 'total':
             return 3
         elif nuclearState == 'groundState':

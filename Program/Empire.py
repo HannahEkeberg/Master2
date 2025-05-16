@@ -10,7 +10,7 @@ class Empire:
         self.target = target
         self.empireFilePath = empireFilePath
 
-    def empireData(self, productZ, productA, reaction, isomerState = None):
+    def empireData(self, productZ, productA, reaction, isomerState = None, threshold=None):
         #reaction = 'Fe_51Cr'
         targetFoil = list(self.target.keys())[0][0:2]
         filePath = self.empireFilePath + targetFoil + '/'
@@ -24,11 +24,8 @@ class Empire:
         CsSummed = sum(Cs)
         E = next(item for item in E if item is not None) # Use first not None energy for reaction files
         E, Cs = Tools().interpolate(E, CsSummed)
-        if E[2]==1:
-            zero_padding = np.linspace(0,2,5)
-            cs_zeros = np.zeros(len(zero_padding))
-            E = np.concatenate((zero_padding, E))
-            Cs = np.concatenate((cs_zeros, Cs))
+        if threshold != None:
+            E,Cs = Tools().setThreshold(E, Cs, threshold)
         return E, Cs
 
     def plotEmpire(
@@ -36,46 +33,45 @@ class Empire:
         productZ,
         productA,
         reaction,
-        isomerState = None
-        # independent = True,
-        # feeding = None,
-        # parentIsomerState = None,
-        # branchingRatio = None,
-        # reactionParent = None
+        isomerState = None,
+        threshold=None
         ):
         try:
-            E, Cs = self.empireData(productZ, productA, reaction, isomerState)
-            # if feeding:
-                # Cs_parent = self.correctForFeeding(feeding, productZ, productA, parentIsomerState, reactionParent, branchingRatio)[1]
-                # Cs = Cs + Cs_parent
+            E, Cs = self.empireData(productZ, productA, reaction, isomerState, threshold)
             plt.plot(E, Cs, label='EMPIRE-3.2.3', linestyle='--', color='red', linewidth=0.7)
         except:
             print("No EMPIRE file found for: " + reaction)
 
-    def plotdataWithMultipleFeeding(self, productZ, productA, reaction, isomerState, betaPlusDecayChain=None, betaMinusDecayChain=None, isomerDecayChain=None):
+    def plotdataWithMultipleFeeding(self, productZ, productA, reaction, isomerState, betaPlusDecayChain=None, betaMinusDecayChain=None, isomerDecayChain=None, threshold=None):
         # Decay chain {"189Pt": [78, 1.0, None]} --> {nucleus: [productZ, branchingRatio, state]}
         # Decay chain {"189Pt": [1.0, None]} --> {nucleus: [branchingRatio, state]} isomer
         try:
-            E, Cs = self.empireData(productZ, productA, reaction, isomerState)
-            Cs_betaplus = []; Cs_betaMinus = []; Cs_isomer = []
+            E, Cs = self.empireData(productZ, productA, reaction, isomerState, threshold)
+            Cs_betaplus = []; Cs_betaminus = []; Cs_isomer = []
             if betaPlusDecayChain:
                 for i in list(betaPlusDecayChain.keys()):
                     Z = betaPlusDecayChain[i][0]
                     branchingRatio= betaPlusDecayChain[i][1]
                     isomerState=betaPlusDecayChain[i][2]
                     reaction = betaPlusDecayChain[i][3]
-                    E_bp, Cs_bp = self.empireData(Z, productA, reaction, isomerState)
+                    E_bp, Cs_bp = self.empireData(Z, productA, reaction, isomerState, threshold)
                     Cs_betaplus.append(Cs_bp*branchingRatio)
             if betaMinusDecayChain:
-                print("Coh not implemented for beta minus decay chain")
+                for i in list(betaMinusDecayChain.keys()):
+                    Z = betaMinusDecayChain[i][0]
+                    branchingRatio= betaMinusDecayChain[i][1]
+                    isomerState=betaMinusDecayChain[i][2]
+                    reaction = betaMinusDecayChain[i][3]
+                    E_bm, Cs_bm = self.empireData(Z, productA, reaction, isomerState, threshold)
+                    Cs_betaminus.append(Cs_bm*branchingRatio)
             if isomerDecayChain:
                 for i in list(isomerDecayChain.keys()):
                     branchingRatio= isomerDecayChain[i][0]
                     isomerState=isomerDecayChain[i][1]
                     reaction = isomerDecayChain[i][2]
-                    E_i, Cs_i = self.empireData(productZ, productA, reaction, isomerState)
+                    E_i, Cs_i = self.empireData(productZ, productA, reaction, isomerState, threshold)
                     Cs_isomer.append(Cs_i*branchingRatio)
-            totCs = Cs + sum(Cs_betaplus) + sum(Cs_betaMinus) + sum(Cs_isomer)
+            totCs = Cs + sum(Cs_betaplus) + sum(Cs_betaminus) + sum(Cs_isomer)
             plt.plot(E, totCs, label='EMPIRE-3.2.3', linestyle='--', color='red', linewidth=0.7)
         except:
             print("No EMPIRE file found for: " + reaction)
@@ -121,7 +117,7 @@ class Empire:
     def getProductFromReaction(self, reaction):
         product = reaction[-2:] # If product is two letters
         for i in range(1,9):
-            if reaction[-2]==i:
+            if str(i) == reaction[-2]:
                 # If product is single letter.
                 # For instance 48V --> reaction[-2:] = 8V instead of just V
                 product = reaction[-1]

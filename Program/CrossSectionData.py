@@ -13,6 +13,7 @@ class CrossSection:
         E = np.genfromtxt(csvFile, delimiter=',', usecols=[0])
         dE = np.genfromtxt(csvFile, delimiter=',', usecols=[1])
         Cs = np.genfromtxt(csvFile, delimiter=',', usecols=[2])
+        print(Cs)
         dCs = np.genfromtxt(csvFile, delimiter=',', usecols=[3])
         Cs = [float('nan') if x==0 else x for x in Cs]
         return E, dE, Cs, dCs
@@ -25,10 +26,11 @@ class CrossSection:
         xerr=dE, yerr=dCs, elinewidth=1.0, capthick=1.0, capsize=3.0,
         label=label)
 
-    def plotCrossSectionWithLeftRightUncertainty(self, reaction, label= None):
+    def plotCrossSectionWithLeftRightUncertainty(self, reaction, label= None, color=None):
         if label == None:
             label = 'This Work'
-        # E, dEl, dEr, Cs, dCs = 
+        if color== None:
+            color = 'darkred'
         csvFile = self.crossSectionCsvPath + reaction
         E = np.genfromtxt(csvFile, delimiter=',', usecols=[0])
         dEl = np.genfromtxt(csvFile, delimiter=',', usecols=[1])
@@ -36,7 +38,7 @@ class CrossSection:
         Cs = np.genfromtxt(csvFile, delimiter=',', usecols=[3])
         dCs = np.genfromtxt(csvFile, delimiter=',', usecols=[4])
         Cs = [float('nan') if x==0 else x for x in Cs]
-        plt.errorbar(E, Cs, marker='P', color='darkred',linewidth=0.0001,
+        plt.errorbar(E, Cs, marker='P', color=color,linewidth=0.0001,
         xerr=[dEl, dEr], yerr=dCs, elinewidth=1.0, capthick=1.0, capsize=3.0,
         label=label)
 

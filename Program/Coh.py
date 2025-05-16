@@ -10,7 +10,7 @@ class Coh:
         self.target = target
         self.cohFilepath = cohFilepath
 
-    def cohData(self, productZ, productA, reaction, isomerState = None):
+    def cohData(self, productZ, productA, reaction, isomerState = None, threshold=None):
         #reaction = 'Fe_51Cr'
         targetFoil = list(self.target.keys())[0][0:2]
         filePath = self.cohFilepath + targetFoil + '/'
@@ -28,41 +28,55 @@ class Coh:
         CsSummed = sum(Cs)
         E = next(item for item in E if item is not None) # Use first not None energy for reaction files
         E, Cs = Tools().interpolate(E, CsSummed, zeroPadding=True)
+        print(threshold)
+        print("Threshold on coh active")
+        if threshold != None:
+            print("Threshold on coh active")
+            E,Cs = Tools().setThreshold(E, Cs, threshold)
         return E, Cs
 
     def plotCoh(self, productZ, productA, reaction, isomerState = None,
-        feeding = None, parentIsomerState = None, branchingRatio = None,reactionParent = None):
+        feeding = None, parentIsomerState = None, branchingRatio = None,reactionParent = None, threshold=None):
         try:
-            E, Cs = self.cohData(productZ, productA, reaction, isomerState)
+            E, Cs = self.cohData(productZ, productA, reaction, isomerState, threshold)
             plt.plot(E, Cs, label='CoH-3.6.0', linestyle='-', color='dodgerblue', linewidth=0.7)
         except:
             print("Unable to model CoH for reaction: " + reaction)
 
-    def plotdataWithMultipleFeeding(self, productZ, productA, reaction, isomerState, betaPlusDecayChain=None, betaMinusDecayChain=None, isomerDecayChain=None):
+    def plotdataWithMultipleFeeding(self, productZ, productA, reaction, isomerState, betaPlusDecayChain=None, betaMinusDecayChain=None, isomerDecayChain=None, threshold=None):
         # Decay chain {"189Pt": [78, 1.0, None]} --> {nucleus: [productZ, branchingRatio, state]}
         #{isotope: [Z, br, isomerState, reaction]} beta+/-
         #{isotope: [br, isomerState, reaction]} isomer
         try:
-            E, Cs = self.cohData(productZ, productA, reaction, isomerState)
-            Cs_betaplus = []; Cs_betaMinus = []; Cs_isomer = []
-            if betaPlusDecayChain:
-                for i in list(betaPlusDecayChain.keys()):
-                    Z = betaPlusDecayChain[i][0]
-                    branchingRatio= betaPlusDecayChain[i][1]
-                    isomerState=betaPlusDecayChain[i][2]
-                    reaction = betaPlusDecayChain[i][3]
-                    E_bp, Cs_bp = self.cohData(Z, productA, reaction, isomerState)
-                    Cs_betaplus.append(Cs_bp*branchingRatio)
-            if betaMinusDecayChain:
-                print("Coh not implemented for beta minus decay chain")
-            if isomerDecayChain:
-                for i in list(isomerDecayChain.keys()):
-                    branchingRatio= isomerDecayChain[i][0]
-                    isomerState=isomerDecayChain[i][1]
-                    reaction = isomerDecayChain[i][2]
-                    E_i, Cs_i = self.cohData(productZ, productA, reaction, isomerState)
-                    Cs_isomer.append(Cs_i*branchingRatio)
-            totCs = Cs + sum(Cs_betaplus) + sum(Cs_betaMinus) + sum(Cs_isomer)
+            E, Cs = self.cohData(productZ, productA, reaction, isomerState, threshold)
+            Cs_betaplus = []; Cs_betaminus = []; Cs_isomer = []
+            try:
+                if betaPlusDecayChain:
+                    for i in list(betaPlusDecayChain.keys()):
+                        Z = betaPlusDecayChain[i][0]
+                        branchingRatio= betaPlusDecayChain[i][1]
+                        isomerState=betaPlusDecayChain[i][2]
+                        reaction = betaPlusDecayChain[i][3]
+                        E_bp, Cs_bp = self.cohData(Z, productA, reaction, isomerState, threshold)
+                        Cs_betaplus.append(Cs_bp*branchingRatio)
+                if betaMinusDecayChain:
+                    for i in list(betaMinusDecayChain.keys()):
+                        Z = betaMinusDecayChain[i][0]
+                        branchingRatio= betaMinusDecayChain[i][1]
+                        isomerState=betaMinusDecayChain[i][2]
+                        reaction = betaMinusDecayChain[i][3]
+                        E_bm, Cs_bm = self.cohData(Z, productA, reaction, isomerState, threshold)
+                        Cs_betaminus.append(Cs_bm*branchingRatio)
+                if isomerDecayChain:
+                    for i in list(isomerDecayChain.keys()):
+                        branchingRatio= isomerDecayChain[i][0]
+                        isomerState=isomerDecayChain[i][1]
+                        reaction = isomerDecayChain[i][2]
+                        E_i, Cs_i = self.cohData(productZ, productA, reaction, isomerState, threshold)
+                        Cs_isomer.append(Cs_i*branchingRatio)
+            except:
+                pass
+            totCs = Cs + sum(Cs_betaplus) + sum(Cs_betaminus) + sum(Cs_isomer)
             plt.plot(E, totCs, label='CoH-3.6.0', linestyle='-', color='dodgerblue', linewidth=0.7)
         except:
             print("Unable to model CoH for reaction: " + reaction)

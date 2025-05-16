@@ -332,7 +332,7 @@ CS = CrossSections(files[index])
 #CS.make_CS(Ir_193mPt(), 'Ir', 'Ir_193mPt.csv', 10, 'Ir_193mPt', csv_filename, '78', '193', file_ending='.L05', independent=True, CS_colonne_ALICE=6)   
 
 #CS.make_CS(Ir_194Ir(), 'Ir', 'Ir_194Ir.csv', 10, 'Ir_194Ir', csv_filename, '77', '194', file_ending='.L00', independent=False)    
-#CS.make_CS(Ir_194m2Ir(), 'Ir', 'Ir_194m2Ir.csv', 10, 'Ir_194m2Ir', csv_filename, '77', '194', file_ending='not', isomer_state='m2', independent=True, CS_colonne_ALICE=None)     #talys=.L34
+CS.make_CS(Ir_194m2Ir(), 'Ir', 'Ir_194m2Ir.csv', 10, 'Ir_194m2Ir', csv_filename, '77', '194', file_ending='not', isomer_state='m2', independent=True, CS_colonne_ALICE=None)     #talys=.L34
 
 
 

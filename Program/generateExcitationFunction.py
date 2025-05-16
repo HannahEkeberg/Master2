@@ -51,8 +51,8 @@ class AssembleExcitationFunctionForTarget:
     def collectCrossSections(self, reaction, label=None):
         self.crossSectionData.plotCrossSection(reaction, label)
     
-    def plotCrossSectionWithLeftRightUncertainty(self, reaction, label=None):
-        self.crossSectionData.plotCrossSectionWithLeftRightUncertainty(reaction, label)
+    def plotCrossSectionWithLeftRightUncertainty(self, reaction, label=None, color=None):
+        self.crossSectionData.plotCrossSectionWithLeftRightUncertainty(reaction, label, color)
 
     def plotComparableCrossSection(self, reaction, label, color):
         self.crossSectionData.plotComparableCrossSection(reaction, label, color)

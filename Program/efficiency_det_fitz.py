@@ -90,6 +90,8 @@ class Efficiency_calculations(Detector_Information_fitz):
         self.eps_Cs = self.Nc_Cs*self.lamb[0]/(self.A_0[0]*self.I_Cs137*(1-np.exp(-self.lamb[0]*self.live_time[0]))*np.exp(-self.lamb[0]*self.time_delay[0]))
         self.eps_Ba = self.Nc_Ba*self.lamb[1]/(self.A_0[1]*self.I_Ba133*(1-np.exp(-self.lamb[1]*self.live_time[1]))*np.exp(-self.lamb[1]*self.time_delay[1]))
         self.eps_Eu = self.Nc_Eu*self.lamb[2]/(self.A_0[2]*self.I_Eu152*(1-np.exp(-self.lamb[2]*self.live_time[2]))*np.exp(-self.lamb[2]*self.time_delay[2]))
+        
+        
         """
         print("Nc:{} ".format(self.Nc_Ba))
         print("lambda {}".format(self.lamb[1]))

@@ -69,4 +69,5 @@ class Exfor:
             return 0, 0, 0, 0, '0'
 
     def colors(self):
-        return ['mediumpurple', 'cyan', 'palevioletred', 'darkorange', 'forestgreen', 'orchid', 'dodgerblue', 'lime', 'crimson', 'indianred']
+        # return ['mediumpurple', 'cyan', 'palevioletred', 'darkorange', 'forestgreen', 'orchid', 'dodgerblue', 'lime', 'crimson', 'indianred']
+        return [ 'crimson','cyan', 'forestgreen', 'palevioletred', 'darkorange', 'indianred', 'orchid', 'dodgerblue', 'lime','mediumpurple']
